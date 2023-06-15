@@ -1,0 +1,31 @@
+name: MongoDB Backup
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # This will schedule the backup to run daily at midnight
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install MongoDB tools
+        run: sudo apt-get install -y mongodb-org-tools
+
+      - name: Create backup
+        run: mongodump --uri="${{ secrets.MONGODB_URI }}" --archive --gzip > backup.gz
+
+      # Configure AWS Credentials
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2 # Specify the AWS region here, you may need to change this to the region your S3 bucket is in
+
+      # Upload backup to S3
+      - name: Upload backup to S3
+        run: aws s3 cp backup.gz s3://andrea-portfolio-backup/backup-$(date +%F-%H-%M-%S).gz

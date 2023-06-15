@@ -1,0 +1,23 @@
+name: Performance Monitoring with Lighthouse
+
+on:
+  push:
+    branches:
+      - main # You can change this to the branch you want to monitor
+  schedule:
+    # This schedules the action to run at 00:00 UTC daily
+    - cron: "0 0 * * *"
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Audit Web Performance
+        uses: treosh/lighthouse-ci-action@v7
+        with:
+          urls: "https://andrea-portfolio-pi.vercel.app/" # Replace with your website's URL
+          temporaryPublicStorage: true # This stores the report so you can access it later
