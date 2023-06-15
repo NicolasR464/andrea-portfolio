@@ -1,0 +1,7 @@
+version: 2
+updates:
+  # Maintain dependencies for npm
+  - package-ecosystem: "npm"
+    directory: "/" # Location of package.json file
+    schedule:
+      interval: "daily" # check for updates daily
