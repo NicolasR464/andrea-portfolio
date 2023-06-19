@@ -1,5 +1,5 @@
 import Image from "next/image";
-import clientPromise from "../../utils/mongodb";
+import clientPromise from "../utils/mongodb";
 
 export default function Home() {
   return (
