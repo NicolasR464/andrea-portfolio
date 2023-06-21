@@ -29,3 +29,27 @@ body {
 h1 {
   font-family: var(--font-tilt_prism);
 }
+
+input[type="number"] {
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+/* fade transition */
+/* .fade-in {
+  opacity: 1;
+  max-height: 500px; /* or an appropriate value */
+/* overflow: hidden;
+  transition: opacity 0.5s ease-in-out, max-height 0.5s ease-in-out;
+}
+
+.hidden {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+} */

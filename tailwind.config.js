@@ -6,5 +6,15 @@ module.exports = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {},
-  plugins: [require("flowbite/plugin")],
+  plugins: [require("daisyui")],
+  daisyui: {
+    themes: [
+      "cupcake",
+      {
+        mytheme: {
+          neutral: "#f4ebe6",
+        },
+      },
+    ],
+  },
 };

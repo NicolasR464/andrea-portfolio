@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    serverActions: true,
+    serverComponentsExternalPackages: ["mongoose"],
+  },
   webpack(config) {
     config.experiments = { ...config.experiments, topLevelAwait: true };
     config.resolve.fallback = {
@@ -7,6 +11,9 @@ const nextConfig = {
       aws4: false,
     };
     return config;
+  },
+  images: {
+    domains: ["res.cloudinary.com"],
   },
 };
 

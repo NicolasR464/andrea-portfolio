@@ -1,6 +1,7 @@
 import "./globals.css";
 import { Inter, Roboto_Mono, Tilt_Prism, Tenor_Sans } from "next/font/google";
 import Script from "next/script";
+import NavBar from "../components/NavBar";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -37,8 +38,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html className={`${tenor_sans.variable} ${tilt_prism.variable}`} lang="en">
-      <body className={inter.className}>{children}</body>
+    <html
+      data-theme="cupcake"
+      className={`${tenor_sans.variable} ${tilt_prism.variable}`}
+      lang="en"
+    >
+      <body className={inter.className}>
+        <NavBar />
+        {children}
+      </body>
       <Script src="./custom.js" />
     </html>
   );
