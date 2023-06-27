@@ -5,8 +5,14 @@ const stripe = new Stripe(process.env.STRIPE_KEY as string, {
   apiVersion: "2022-11-15",
 });
 
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(req: NextRequest) {
+  console.log("🔥POST");
+
   const body = await req.json();
+
+  console.log("BODY 👀");
+
+  console.log(body);
 
   const { name, active, description, metadata, price_amount } = body;
 
