@@ -1,5 +1,8 @@
 import Stripe from "stripe";
 import { NextRequest, NextResponse } from "next/server";
+import connectMongoose from "../../../utils/mongoose";
+import Drawing from "../../../models/drawing";
+
 // import { v2 as cloudinary } from "cloudinary";
 // import * as Cloudinary from "cloudinary";
 
@@ -22,6 +25,7 @@ const stripe = new Stripe(process.env.STRIPE_KEY as string, {
 
 export async function POST(req: NextRequest, res: NextResponse) {
   console.log("🔥POST");
+  connectMongoose();
 
   const formData = await req.formData();
   const img = formData.get("image") as File;
@@ -83,6 +87,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
   ////////// *** STRIPE 💸 ***
 
+  let stripeId: string = "";
   if (isForSell) {
     try {
       const product = await stripe.products.create({
@@ -98,6 +103,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
       });
       console.log(product);
 
+      stripeId = product.id;
+
       return NextResponse.json(product, { status: 201 });
     } catch (error: unknown) {
       if (typeof error === "object" && error !== null && "message" in error) {
@@ -111,7 +118,31 @@ export async function POST(req: NextRequest, res: NextResponse) {
     }
   }
 
-  return NextResponse.json({ message: "DONE FOR NOW" });
+  // return NextResponse.json({ message: "DONE FOR NOW" });
 
   ///////////// TO MONGO
+
+  const drawingObj = {
+    name: name,
+    drawing_collection: collection,
+    description: description || undefined,
+    cloudinaryImageUrl: cloudinaryImageUrl || undefined,
+    isForSell,
+    image: cloudinaryImageUrl,
+    price: price || undefined,
+    print_number: print_number || undefined,
+    metadataX: metadataX || undefined,
+    metadataY: metadataY || undefined,
+    stripeId: stripeId || undefined,
+  };
+
+  try {
+    const drawing = await Drawing.create(drawingObj);
+    console.log(drawing);
+
+    return NextResponse.json({ message: "MONGO STORED", data: drawing });
+  } catch (err) {
+    console.log(err);
+    return NextResponse.json({ message: "MONGO ERROR" });
+  }
 }
