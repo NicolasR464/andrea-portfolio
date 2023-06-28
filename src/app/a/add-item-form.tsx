@@ -68,6 +68,7 @@ export default function Form() {
               type="text"
               name="name"
               placeholder="What's its title?"
+              required
             />
           </label>
           <label className="input-group mt-2">
@@ -77,6 +78,7 @@ export default function Form() {
               type="text"
               name="collection"
               placeholder="Does it belong to a collection?"
+              required
             />
           </label>
           <label className="mt-2 input-group">

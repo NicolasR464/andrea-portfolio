@@ -28,7 +28,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "public/custom.js"
+    "public/custom.js",
+    "src/utils/multer.js"
   ],
   "exclude": ["node_modules"]
 }
