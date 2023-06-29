@@ -2,6 +2,9 @@ import Stripe from "stripe";
 import { NextRequest, NextResponse } from "next/server";
 import connectMongoose from "../../../utils/mongoose";
 import Drawing from "../../../models/drawing";
+import { revalidateTag } from "next/cache";
+
+const e = process.env;
 
 // import { v2 as cloudinary } from "cloudinary";
 // import * as Cloudinary from "cloudinary";
@@ -13,7 +16,7 @@ import Drawing from "../../../models/drawing";
 // import streamifier from "streamifier";
 // import multer from "multer";
 
-const stripe = new Stripe(process.env.STRIPE_KEY as string, {
+const stripe = new Stripe(e.STRIPE_KEY as string, {
   apiVersion: "2022-11-15",
 });
 
@@ -46,7 +49,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
   const stripeMeta = {
     name,
     collection,
-    print_number,
+    print_number_set: print_number,
+    print_number_left: print_number,
     metadataX,
     metadataY,
   };
@@ -57,11 +61,11 @@ export async function POST(req: NextRequest, res: NextResponse) {
   const cloudinaryForm = new FormData();
 
   cloudinaryForm.append("file", img);
-  cloudinaryForm.append("api_key", process.env.CLOUDINARY_API_KEY!);
-  cloudinaryForm.append("api_secret", process.env.CLOUDINARY_API_SECRET!);
-  cloudinaryForm.append("upload_preset", process.env.CLOUDINARY_UPLOAD_PRESET!);
+  cloudinaryForm.append("api_key", e.CLOUDINARY_API_KEY!);
+  cloudinaryForm.append("api_secret", e.CLOUDINARY_API_SECRET!);
+  cloudinaryForm.append("upload_preset", e.CLOUDINARY_UPLOAD_PRESET!);
   cloudinaryForm.append("timestamp", Date.now().toString());
-  cloudinaryForm.append("folder", "andrea-drawing-portfolio/drawing-pics");
+  cloudinaryForm.append("folder", e.CLOUDINARY_UPLOAD_IMG_DRAWING_FOLDER!);
   cloudinaryForm.append("context", cloudiMeta);
   // cloudinaryForm.append("tags", tags);
   // cloudinaryForm.append("background_removal", "cloudinary_ai");
@@ -70,7 +74,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
   try {
     const response = await fetch(
-      `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload`,
+      `https://api.cloudinary.com/v1_1/${e.CLOUDINARY_CLOUD_NAME}/image/upload`,
       {
         method: "POST",
         body: cloudinaryForm,
@@ -80,7 +84,10 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
     cloudinaryImageUrl = cloudinaryRes.secure_url;
   } catch (err) {
-    return NextResponse.json({ message: "CLOUDINARY error", data: err });
+    return NextResponse.json(
+      { message: "CLOUDINARY error", data: err },
+      { status: 500 }
+    );
   }
 
   // return NextResponse.json({ message: "CLOUDINARY", data: cloudinaryImageUrl });
@@ -91,10 +98,9 @@ export async function POST(req: NextRequest, res: NextResponse) {
   if (isForSell) {
     try {
       const product = await stripe.products.create({
-        name,
+        name: name || `${collection}_${Date.now()}`,
         active: isForSell,
         images: [cloudinaryImageUrl],
-        description,
         metadata: stripeMeta,
         default_price_data: {
           unit_amount: +price * 100,
@@ -105,7 +111,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
       stripeId = product.id;
 
-      return NextResponse.json(product, { status: 201 });
+      // return NextResponse.json(product, { status: 201 });
     } catch (error: unknown) {
       if (typeof error === "object" && error !== null && "message" in error) {
         const message = (error as { message: string }).message;
@@ -121,28 +127,54 @@ export async function POST(req: NextRequest, res: NextResponse) {
   // return NextResponse.json({ message: "DONE FOR NOW" });
 
   ///////////// TO MONGO
+  console.log("⭐️");
+
+  console.log(print_number);
 
   const drawingObj = {
-    name: name,
+    name: name || `${collection}_${Date.now()}`,
     drawing_collection: collection,
     description: description || undefined,
     cloudinaryImageUrl: cloudinaryImageUrl || undefined,
     isForSell,
     image: cloudinaryImageUrl,
     price: price || undefined,
-    print_number: print_number || undefined,
-    metadataX: metadataX || undefined,
-    metadataY: metadataY || undefined,
+    print_number_set: print_number || undefined,
+    print_number_left: print_number || undefined,
+    width: metadataX || undefined,
+    height: metadataY || undefined,
     stripeId: stripeId || undefined,
   };
 
   try {
     const drawing = await Drawing.create(drawingObj);
     console.log(drawing);
-
-    return NextResponse.json({ message: "MONGO STORED", data: drawing });
   } catch (err) {
     console.log(err);
-    return NextResponse.json({ message: "MONGO ERROR" });
+    return NextResponse.json({ message: "MONGO ERROR", data: err });
+  }
+
+  revalidateTag("drawings");
+  return NextResponse.json(
+    {
+      message: "new drawing added ✔️",
+    },
+    { status: 201 }
+  );
+}
+
+export async function GET(req: NextRequest, res: NextResponse) {
+  console.log("GET API ART");
+
+  connectMongoose();
+  try {
+    const drawings = await Drawing.find();
+    return NextResponse.json({ data: drawings, status: 200 });
+  } catch (err) {
+    console.log(err);
+    return NextResponse.json(
+      { message: "something went wrong" },
+      { status: 500 }
+    );
   }
 }

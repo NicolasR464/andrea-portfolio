@@ -3,13 +3,14 @@ import mongoose from "mongoose";
 const { Schema, model, models } = mongoose;
 
 const drawingSchema = new Schema({
-  name: { type: String, required: true },
+  name: String,
   drawing_collection: { type: String, required: true },
   description: String,
-  image: String,
+  image: { type: String, required: true },
   isForSell: Boolean,
   price: Number,
-  print_number: Number,
+  print_number_set: Number,
+  print_number_left: Number,
   width: Number,
   height: Number,
   stripeId: String,

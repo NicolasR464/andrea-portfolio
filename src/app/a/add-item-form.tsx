@@ -1,12 +1,28 @@
 "use client";
 import { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/navigation";
 
 export default function Form() {
   const [forSell, setForSell] = useState<boolean>(false);
+  const [isPosting, setPosting] = useState<boolean>(false);
+  const [name, setName] = useState<any>("");
+  const [drawingCollection, setDrawingCollection] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [image, setImage] = useState<any>();
+  const [price, setPrice] = useState<any>();
+  const [print_number, setPrint_number] = useState<any>();
+  const [width, setWidth] = useState<any>();
+  const [height, setHeight] = useState<any>();
+
+  const router = useRouter();
+
   const handleChange = (e: any) => setForSell(e.target.checked);
 
   const handleNewItem = async (event: any) => {
     event.preventDefault();
+    setPosting(true);
 
     // console.log(event.target.image.files[0]);
     // return;
@@ -30,14 +46,30 @@ export default function Form() {
     };
 
     // delete options.headers["Content-Type"];
-
     // api call
     try {
       const fetchRes = await fetch("/api/art", options);
-      console.log(fetchRes);
+      fetchRes.ok
+        ? toast.success("new drawing added! 🧑🏻‍🎨")
+        : toast.error("something went wrong, try again.");
+
+      //EMPTY form values
+      setForSell(false);
+      setName("");
+      setDrawingCollection("");
+      setDescription("");
+      setImage("");
+      setPrice("");
+      setPrint_number("");
+      setWidth("");
+      setHeight("");
+
+      router.replace("/a");
     } catch (err) {
       console.log(err);
+      toast.error("something went wrong, try again.");
     }
+    setPosting(false);
   };
 
   //   const additionalFieldsClassName = forSell ? "fade-in" : "hidden";
@@ -45,35 +77,42 @@ export default function Form() {
   const additionalFieldsStyle: React.CSSProperties = forSell
     ? {
         opacity: 1,
+        zIndex: 0,
         maxHeight: "500px",
         transition: "opacity 0.5s, max-height 0.5s",
       }
     : {
         opacity: 0,
         maxHeight: 0,
+        zIndex: -1,
         transition: "opacity 0.5s, max-height 0.5s",
       };
 
   return (
     <>
+      <ToastContainer position="top-center" hideProgressBar theme="colored" />
       <section className="w-screen flex justify-center ">
         <form
-          className="flex flex-col items-center border-2 rounded-xl p-6"
+          className="flex flex-col items-center border-2 rounded-xl p-6 form"
           onSubmit={handleNewItem}
         >
+          <span>add a new drawing ✨</span>
           <label className="input-group mt-2">
             <span>title</span>
             <input
+              value={name}
+              onChange={(e: any) => setName(e.target.value)}
               className="input input-bordered w-full max-w-xs"
               type="text"
               name="name"
               placeholder="What's its title?"
-              required
             />
           </label>
           <label className="input-group mt-2">
             <span>collection</span>
             <input
+              value={drawingCollection}
+              onChange={(e) => setDrawingCollection(e.target.value)}
               className="input input-bordered w-full max-w-xs"
               type="text"
               name="collection"
@@ -84,6 +123,8 @@ export default function Form() {
           <label className="mt-2 input-group">
             <span>description</span>
             <textarea
+              value={description}
+              onChange={(e: any) => setDescription(e.target.value)}
               className="textarea textarea-bordered w-full"
               name="description"
               placeholder="Does it have a story?"
@@ -92,9 +133,12 @@ export default function Form() {
           <label className="input-group mt-2">
             <span>upload an image</span>
             <input
+              value={image}
+              onChange={(e: any) => setImage(e.target.value)}
               type="file"
               name="image"
               className="file-input file-input-ghost w-full max-w-xs"
+              required
             />
           </label>
           <label className="input-group mt-2">
@@ -108,6 +152,7 @@ export default function Form() {
                   type="checkbox"
                   className="toggle toggle-primary"
                   onChange={handleChange}
+                  checked={forSell}
                 />
                 <span className="rounded-xl label-text">yes</span>
               </label>
@@ -117,6 +162,8 @@ export default function Form() {
             <label className="input-group mt-2">
               <span>price €</span>
               <input
+                value={price}
+                onChange={(e: any) => setPrice(e.target.value)}
                 className="input input-bordered w-full max-w-xs cursor-auto"
                 type="number"
                 name="price"
@@ -128,6 +175,8 @@ export default function Form() {
             <label className="mt-2 input-group">
               <span>number of prints</span>
               <input
+                value={print_number}
+                onChange={(e: any) => setPrint_number(e.target.value)}
                 className="input input-bordered w-full max-w-xs cursor-default"
                 type="number"
                 name="print_number"
@@ -137,8 +186,10 @@ export default function Form() {
             </label>
 
             <label className="input-group mt-2">
-              <span>dimension</span>
+              <span className="text-center">dimension (cm)</span>
               <input
+                value={width}
+                onChange={(e: any) => setWidth(e.target.value)}
                 className="input input-bordered w-full max-w-xs cursor-default"
                 type="number"
                 name="metadataX"
@@ -148,6 +199,8 @@ export default function Form() {
               />
               <span>X</span>
               <input
+                value={height}
+                onChange={(e: any) => setHeight(e.target.value)}
                 className="input input-bordered w-full max-w-xs cursor-default"
                 type="number"
                 name="metadataY"
@@ -157,37 +210,21 @@ export default function Form() {
             </label>
           </div>
 
-          <button className="btn mt-2 max-w-xs z-10" type="submit">
-            ADD
+          <button
+            className="btn mt-2 max-w-xs z-10"
+            type="submit"
+            disabled={isPosting}
+          >
+            {isPosting ? (
+              <span className="text-center">
+                SENDING<span className="loading loading-ball loading-sm"></span>
+              </span>
+            ) : (
+              <span className="text-center">ADD</span>
+            )}
           </button>
         </form>
       </section>
     </>
   );
 }
-
-// const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-//   const files = event.target.files;
-//   const data = new FormData();
-//   if (files) {
-//     for (let i = 0; i < files.length; i++) {
-//       data.append("file", files[i]);
-//       data.append("upload_preset", "kjeqxjut");
-
-//       const response = await fetch(
-//         `https://api.cloudinary.com/v1_1/dgarygsq5/image/upload`,
-//         {
-//           method: "POST",
-//           body: data,
-//         }
-//       );
-
-//       const file = await response.json();
-
-//       setUserData((prevState) => ({
-//         ...prevState,
-//         pictures: [...prevState.pictures, file.secure_url],
-//       }));
-//     }
-//   }
-// };
