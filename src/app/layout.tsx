@@ -39,7 +39,7 @@ export default function RootLayout({
 }) {
   return (
     <html
-      data-theme="cupcake"
+      data-theme="bumblebee"
       className={`${tenor_sans.variable} ${tilt_prism.variable}`}
       lang="en"
     >
@@ -48,6 +48,11 @@ export default function RootLayout({
         {children}
       </body>
       <Script src="./custom.js" />
+      <Script
+        defer
+        src="https://kit.fontawesome.com/766e633129.js"
+        crossOrigin="anonymous"
+      ></Script>
     </html>
   );
 }

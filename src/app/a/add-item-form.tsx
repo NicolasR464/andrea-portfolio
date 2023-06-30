@@ -3,9 +3,10 @@ import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
+import formData from "./form-template";
 
 export default function Form() {
-  const [forSell, setForSell] = useState<boolean>(false);
+  const [forSale, setForSale] = useState<boolean>(false);
   const [isPosting, setPosting] = useState<boolean>(false);
   const [name, setName] = useState<any>("");
   const [drawingCollection, setDrawingCollection] = useState<string>("");
@@ -18,7 +19,7 @@ export default function Form() {
 
   const router = useRouter();
 
-  const handleChange = (e: any) => setForSell(e.target.checked);
+  const handleChange = (e: any) => setForSale(e.target.checked);
 
   const handleNewItem = async (event: any) => {
     event.preventDefault();
@@ -27,44 +28,58 @@ export default function Form() {
     // console.log(event.target.image.files[0]);
     // return;
 
-    const formData = new FormData();
+    // const formData = new FormData();
 
-    formData.append("name", event.target.name.value);
-    formData.append("collection", event.target.collection.value);
-    formData.append("description", event.target.description.value);
-    formData.append("image", event.target.image.files[0]);
-    formData.append("active", event.target.for_sale.checked);
-    formData.append("price", event.target.price.value);
-    formData.append("print_number", event.target.print_number.value);
-    formData.append("metadataX", event.target.metadataX.value);
-    formData.append("metadataY", event.target.metadataY.value);
+    // formData.append("name", event.target.name.value);
+    // formData.append("collection", event.target.collection.value);
+    // formData.append("description", event.target.description.value);
+    // formData.append("image", event.target.image.files[0]);
+    // formData.append("active", event.target.for_sale.checked);
+    // formData.append("price", event.target.price.value);
+    // formData.append("print_number", event.target.print_number.value);
+    // formData.append("metadataX", event.target.metadataX.value);
+    // formData.append("metadataY", event.target.metadataY.value);
+
+    const form = formData(
+      event.target.name.value,
+      event.target.collection.value,
+      event.target.description.value,
+      event.target.image.files[0],
+      event.target.for_sale.checked,
+      event.target.price.value,
+      event.target.print_number.value,
+      event.target.metadataX.value,
+      event.target.metadataY.value
+    );
 
     const options = {
       method: "POST",
-
-      body: formData,
+      body: form,
     };
 
     // delete options.headers["Content-Type"];
     // api call
     try {
       const fetchRes = await fetch("/api/art", options);
-      fetchRes.ok
-        ? toast.success("new drawing added! 🧑🏻‍🎨")
-        : toast.error("something went wrong, try again.");
 
-      //EMPTY form values
-      setForSell(false);
-      setName("");
-      setDrawingCollection("");
-      setDescription("");
-      setImage("");
-      setPrice("");
-      setPrint_number("");
-      setWidth("");
-      setHeight("");
+      if (fetchRes.ok) {
+        toast.success("new drawing added! 🧑🏻‍🎨");
 
-      router.replace("/a");
+        //EMPTY form values
+        setForSale(false);
+        setName("");
+        setDrawingCollection("");
+        setDescription("");
+        setImage("");
+        setPrice("");
+        setPrint_number("");
+        setWidth("");
+        setHeight("");
+
+        router.replace("/a");
+      } else {
+        toast.error("something went wrong, try again.");
+      }
     } catch (err) {
       console.log(err);
       toast.error("something went wrong, try again.");
@@ -72,9 +87,9 @@ export default function Form() {
     setPosting(false);
   };
 
-  //   const additionalFieldsClassName = forSell ? "fade-in" : "hidden";
+  //   const additionalFieldsClassName = forSale ? "fade-in" : "hidden";
 
-  const additionalFieldsStyle: React.CSSProperties = forSell
+  const additionalFieldsStyle: React.CSSProperties = forSale
     ? {
         opacity: 1,
         zIndex: 0,
@@ -150,9 +165,9 @@ export default function Form() {
                 <input
                   name="for_sale"
                   type="checkbox"
-                  className="toggle toggle-primary"
+                  className="toggle toggle-success"
                   onChange={handleChange}
-                  checked={forSell}
+                  checked={forSale}
                 />
                 <span className="rounded-xl label-text">yes</span>
               </label>
@@ -168,8 +183,8 @@ export default function Form() {
                 type="number"
                 name="price"
                 placeholder="What's its price?"
-                disabled={!forSell}
-                required={forSell}
+                disabled={!forSale}
+                required={forSale}
               />
             </label>
             <label className="mt-2 input-group">
@@ -180,8 +195,8 @@ export default function Form() {
                 className="input input-bordered w-full max-w-xs cursor-default"
                 type="number"
                 name="print_number"
-                disabled={!forSell}
-                required={forSell}
+                disabled={!forSale}
+                required={forSale}
               />
             </label>
 
@@ -194,8 +209,8 @@ export default function Form() {
                 type="number"
                 name="metadataX"
                 placeholder="width"
-                disabled={!forSell}
-                required={forSell}
+                disabled={!forSale}
+                required={forSale}
               />
               <span>X</span>
               <input
@@ -205,7 +220,8 @@ export default function Form() {
                 type="number"
                 name="metadataY"
                 placeholder="height"
-                disabled={!forSell}
+                disabled={!forSale}
+                required={forSale}
               />
             </label>
           </div>

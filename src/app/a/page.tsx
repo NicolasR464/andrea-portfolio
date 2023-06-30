@@ -1,5 +1,8 @@
 import Form from "./add-item-form";
 import Image from "next/image";
+import Vignette from "./vignette";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAnglesDown } from "@fortawesome/free-solid-svg-icons";
 
 const fetchItems = async () => {
   //will fetch all items - with a set revalidate tags to update the UI
@@ -23,31 +26,36 @@ export default async function Dashboard() {
       <h1 className="text-center text-5xl">Dashboard</h1>
       <Form />
       {!items ? (
-        <span className="loading loading-ring loading-md"></span>
+        <div className="w-full flex justify-center">
+          <span className="loading loading-ring loading-md mt-10"></span>
+        </div>
       ) : items && items.length === 0 ? (
         <div className="w-screen flex justify-center">
           <span>You have no drawings registered 😔</span>
         </div>
       ) : (
         <>
-          <h4 className="text-center">
-            {items.length > 1 ? "Your collections" : "Your collection"}
-          </h4>
-          <div className="flex flex-col-reverse items-center">
+          <div className="flex w-full justify-center p-3">
+            <FontAwesomeIcon
+              className="max-w-logo"
+              icon={faAnglesDown}
+              size="xs"
+            />
+            <h4 className="text-center px-2">
+              {items.length > 1
+                ? "edit/delete your drawings 🎨"
+                : "edit/delete your drawing 🎨"}
+            </h4>
+            <FontAwesomeIcon
+              className="max-w-logo"
+              icon={faAnglesDown}
+              size="xs"
+            />
+          </div>
+
+          <div className="flex justify-center flex-row-reverse flex-wrap ">
             {items.map((item: any, index: number) => (
-              <article
-                className="p-3 flex flex-col-reverse border-solid border-2 rounded-xl mt-3 max-w-2-3 items-center"
-                key={index}
-              >
-                <span>{item.drawing_collection}</span>
-                <Image
-                  src={item.image}
-                  width={200}
-                  height={200}
-                  style={{ objectFit: "contain" }}
-                  alt="drawing picture"
-                />
-              </article>
+              <Vignette item={item} key={index} />
             ))}
           </div>
         </>

@@ -41,16 +41,17 @@ export async function POST(req: NextRequest, res: NextResponse) {
   const metadataX = formData.get("metadataX") as string;
   const metadataY = formData.get("metadataY") as string;
 
-  const isForSell = active === "true";
+  const isForSale = active === "true";
 
   // return NextResponse.json({ message: "TESTS" });
 
   const cloudiMeta = `name=${name}|collection=${collection}`;
+
   const stripeMeta = {
     name,
     collection,
     print_number_set: print_number,
-    print_number_left: print_number,
+    print_number_sold: 0,
     metadataX,
     metadataY,
   };
@@ -95,11 +96,11 @@ export async function POST(req: NextRequest, res: NextResponse) {
   ////////// *** STRIPE 💸 ***
 
   let stripeId: string = "";
-  if (isForSell) {
+  if (isForSale) {
     try {
       const product = await stripe.products.create({
         name: name || `${collection}_${Date.now()}`,
-        active: isForSell,
+        active: isForSale,
         images: [cloudinaryImageUrl],
         metadata: stripeMeta,
         default_price_data: {
@@ -132,15 +133,15 @@ export async function POST(req: NextRequest, res: NextResponse) {
   console.log(print_number);
 
   const drawingObj = {
-    name: name || `${collection}_${Date.now()}`,
-    drawing_collection: collection,
+    name: name || `${collection.trim().toLowerCase()}_${Date.now()}`,
+    drawing_collection: collection.trim().toLowerCase(),
     description: description || undefined,
     cloudinaryImageUrl: cloudinaryImageUrl || undefined,
-    isForSell,
+    isForSale,
     image: cloudinaryImageUrl,
     price: price || undefined,
     print_number_set: print_number || undefined,
-    print_number_left: print_number || undefined,
+    print_number_sold: isForSale ? 0 : undefined,
     width: metadataX || undefined,
     height: metadataY || undefined,
     stripeId: stripeId || undefined,
