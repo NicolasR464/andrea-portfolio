@@ -13,6 +13,7 @@ const Vignette: React.FC<Props> = ({ item }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [name, setName] = useState<any>("");
   const [drawingCollection, setDrawingCollection] = useState<string>("");
+  const [newImg, setNewImg] = useState<File>();
   const [description, setDescription] = useState<string>("");
   const [image, setImage] = useState<any>();
   const [price, setPrice] = useState<any>();
@@ -81,11 +82,13 @@ const Vignette: React.FC<Props> = ({ item }) => {
   const editVignette = async (id: string) => {
     console.log(id);
 
+    const img = newImg ? newImg : image;
+
     const form = formData(
       name,
       drawingCollection,
       description,
-      image,
+      img,
       forSale,
       price,
       print_number,
@@ -117,6 +120,7 @@ const Vignette: React.FC<Props> = ({ item }) => {
         style={{ objectFit: "contain" }}
         alt="drawing picture"
       />
+
       <div className="form-control">
         <label className="label">
           <span className="label-text-alt text-center">name</span>
@@ -137,6 +141,16 @@ const Vignette: React.FC<Props> = ({ item }) => {
           value={drawingCollection}
           placeholder="name of collection"
           onChange={(e) => setDrawingCollection(e.target.value)}
+        />
+      </div>
+      <div className="form-control">
+        <label className="label">
+          <span className="label-text-alt text-center">upload new photo</span>
+        </label>
+        <input
+          type="file"
+          className="file-input file-input-ghost w-full max-w-xs"
+          onChange={(e: any) => setNewImg(e.target.files[0])}
         />
       </div>
       <div className="form-control  w-full">

@@ -6,7 +6,10 @@ const drawingSchema = new Schema({
   name: String,
   drawing_collection: { type: String, required: true },
   description: String,
-  image: { type: String, required: true },
+  image: {
+    public_id: { type: String, required: true },
+    url: { type: String, required: true },
+  },
   isForSale: Boolean,
   price: Number,
   print_number_set: Number,

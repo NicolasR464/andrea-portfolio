@@ -59,6 +59,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
   /// SAVE IMAGE TO CLOUDINARY
   let cloudinaryImageUrl: string;
+  let cloudinaryPublicId: string;
   const cloudinaryForm = new FormData();
 
   cloudinaryForm.append("file", img);
@@ -84,6 +85,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const cloudinaryRes = await response.json();
 
     cloudinaryImageUrl = cloudinaryRes.secure_url;
+    cloudinaryPublicId = cloudinaryRes.public_id;
   } catch (err) {
     return NextResponse.json(
       { message: "CLOUDINARY error", data: err },
@@ -138,7 +140,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     description: description || undefined,
     cloudinaryImageUrl: cloudinaryImageUrl || undefined,
     isForSale,
-    image: cloudinaryImageUrl,
+    image: { public_id: cloudinaryPublicId, url: cloudinaryImageUrl },
     price: price || undefined,
     print_number_set: print_number || undefined,
     print_number_sold: isForSale ? 0 : undefined,

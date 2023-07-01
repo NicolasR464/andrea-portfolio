@@ -43,6 +43,10 @@ export default function RootLayout({
       className={`${tenor_sans.variable} ${tilt_prism.variable}`}
       lang="en"
     >
+      <head>
+        <link rel="icon" href="/logo.ico" sizes="any" />
+        {/* <title>Andréa Rocagel Art</title> */}
+      </head>
       <body className={inter.className}>
         <NavBar />
         {children}

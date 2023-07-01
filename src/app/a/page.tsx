@@ -19,7 +19,7 @@ const fetchItems = async () => {
 
 export default async function Dashboard() {
   const items = await fetchItems();
-  console.log(items);
+  // console.log(items);
 
   return (
     <>
