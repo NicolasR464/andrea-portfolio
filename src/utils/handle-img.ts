@@ -1,41 +1,79 @@
-import { v2 as cloudinary } from "cloudinary";
-import streamifier from "streamifier";
+import crypto from "crypto";
 
-const imgHandler = async (
-  req: any,
-  folder: string,
-  file: any, // buffer?
-  tags: Array<string>,
-  metadata: Object
-) => {
-  //
-  let streamUpload = () => {
-    return new Promise((resolve, reject) => {
-      let stream = cloudinary.uploader.upload_stream(
-        {
-          folder: `saf_portfolio/${folder}`,
-          tags: tags,
-          context: metadata,
-        },
-        (error, result) => {
-          if (result) {
-            resolve(result);
-          } else {
-            reject(error);
-          }
-        }
-      );
+const e = process.env;
 
-      streamifier.createReadStream(file).pipe(stream);
-    });
-  };
-
-  async function upload() {
-    let result = await streamUpload();
-    return result;
-  }
-
-  return upload();
+const generateSHA1 = (data: any) => {
+  const hash = crypto.createHash("sha1");
+  hash.update(data);
+  return hash.digest("hex");
 };
 
-module.exports = imgHandler;
+const generateSignature = (publicId: string, apiSecret: string) => {
+  const timestamp = new Date().getTime();
+  return `public_id=${publicId}&timestamp=${timestamp}${apiSecret}`;
+};
+
+export const deleteImage = async (publicId: string) => {
+  const cloudName = e.CLOUDINARY_CLOUD_NAME!;
+  const timestamp: any = new Date().getTime();
+  const apiKey = e.CLOUDINARY_API_KEY!;
+  const apiSecret = e.CLOUDINARY_API_SECRET!;
+  const signature = generateSHA1(generateSignature(publicId, apiSecret));
+  const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/destroy`;
+
+  const cloudinaryForm = new FormData();
+
+  cloudinaryForm.append("public_id", publicId);
+  cloudinaryForm.append("signature", signature);
+  cloudinaryForm.append("api_key", apiKey);
+  cloudinaryForm.append("timestamp", timestamp);
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      body: cloudinaryForm,
+    });
+
+    const cloudinaryRes = await response.json();
+
+    return cloudinaryRes;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const uploadImage = async (
+  img: File,
+  name: string,
+  collection: string
+) => {
+  const cloudinaryForm = new FormData();
+
+  const cloudiMeta = `name=${name}|collection=${collection}`;
+
+  cloudinaryForm.append("file", img);
+  cloudinaryForm.append("api_key", e.CLOUDINARY_API_KEY!);
+  cloudinaryForm.append("api_secret", e.CLOUDINARY_API_SECRET!);
+  cloudinaryForm.append("upload_preset", e.CLOUDINARY_UPLOAD_PRESET!);
+  cloudinaryForm.append("timestamp", Date.now().toString());
+  cloudinaryForm.append("folder", e.CLOUDINARY_UPLOAD_IMG_DRAWING_FOLDER!);
+  cloudinaryForm.append("context", cloudiMeta);
+
+  try {
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/${e.CLOUDINARY_CLOUD_NAME}/image/upload`,
+      {
+        method: "POST",
+        body: cloudinaryForm,
+      }
+    );
+    if (response.ok) {
+      const cloudiRes = await response.json();
+
+      return cloudiRes;
+    }
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+};

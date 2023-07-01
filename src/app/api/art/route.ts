@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectMongoose from "../../../utils/mongoose";
 import Drawing from "../../../models/drawing";
 import { revalidateTag } from "next/cache";
+import { uploadImage } from "../../../utils/handle-img";
 
 const e = process.env;
 
@@ -58,42 +59,22 @@ export async function POST(req: NextRequest, res: NextResponse) {
   // const tags = `${name}, ${collection}`;
 
   /// SAVE IMAGE TO CLOUDINARY
-  let cloudinaryImageUrl: string;
-  let cloudinaryPublicId: string;
-  const cloudinaryForm = new FormData();
 
-  cloudinaryForm.append("file", img);
-  cloudinaryForm.append("api_key", e.CLOUDINARY_API_KEY!);
-  cloudinaryForm.append("api_secret", e.CLOUDINARY_API_SECRET!);
-  cloudinaryForm.append("upload_preset", e.CLOUDINARY_UPLOAD_PRESET!);
-  cloudinaryForm.append("timestamp", Date.now().toString());
-  cloudinaryForm.append("folder", e.CLOUDINARY_UPLOAD_IMG_DRAWING_FOLDER!);
-  cloudinaryForm.append("context", cloudiMeta);
+  // const cloudinaryForm = new FormData();
+
+  // cloudinaryForm.append("file", img);
+  // cloudinaryForm.append("api_key", e.CLOUDINARY_API_KEY!);
+  // cloudinaryForm.append("api_secret", e.CLOUDINARY_API_SECRET!);
+  // cloudinaryForm.append("upload_preset", e.CLOUDINARY_UPLOAD_PRESET!);
+  // cloudinaryForm.append("timestamp", Date.now().toString());
+  // cloudinaryForm.append("folder", e.CLOUDINARY_UPLOAD_IMG_DRAWING_FOLDER!);
+  // cloudinaryForm.append("context", cloudiMeta);
   // cloudinaryForm.append("tags", tags);
   // cloudinaryForm.append("background_removal", "cloudinary_ai");
 
   // console.log(img["name"]);
 
-  try {
-    const response = await fetch(
-      `https://api.cloudinary.com/v1_1/${e.CLOUDINARY_CLOUD_NAME}/image/upload`,
-      {
-        method: "POST",
-        body: cloudinaryForm,
-      }
-    );
-    const cloudinaryRes = await response.json();
-
-    cloudinaryImageUrl = cloudinaryRes.secure_url;
-    cloudinaryPublicId = cloudinaryRes.public_id;
-  } catch (err) {
-    return NextResponse.json(
-      { message: "CLOUDINARY error", data: err },
-      { status: 500 }
-    );
-  }
-
-  // return NextResponse.json({ message: "CLOUDINARY", data: cloudinaryImageUrl });
+  const uploadResp = await uploadImage(img, name, collection);
 
   ////////// *** STRIPE 💸 ***
 
@@ -103,7 +84,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       const product = await stripe.products.create({
         name: name || `${collection}_${Date.now()}`,
         active: isForSale,
-        images: [cloudinaryImageUrl],
+        images: [uploadResp.secure_url],
         metadata: stripeMeta,
         default_price_data: {
           unit_amount: +price * 100,
@@ -131,6 +112,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
   ///////////// TO MONGO
   console.log("⭐️");
+  console.log(uploadResp.public_id);
+  console.log(uploadResp.secure_url);
 
   console.log(print_number);
 
@@ -138,9 +121,9 @@ export async function POST(req: NextRequest, res: NextResponse) {
     name: name || `${collection.trim().toLowerCase()}_${Date.now()}`,
     drawing_collection: collection.trim().toLowerCase(),
     description: description || undefined,
-    cloudinaryImageUrl: cloudinaryImageUrl || undefined,
+
     isForSale,
-    image: { public_id: cloudinaryPublicId, url: cloudinaryImageUrl },
+    image: { public_id: uploadResp.public_id, url: uploadResp.secure_url },
     price: price || undefined,
     print_number_set: print_number || undefined,
     print_number_sold: isForSale ? 0 : undefined,

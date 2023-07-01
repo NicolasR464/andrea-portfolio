@@ -3,19 +3,8 @@ import Stripe from "stripe";
 import connectMongoose from "../../../../utils/mongoose";
 import Drawing from "../../../../models/drawing";
 import { revalidateTag } from "next/cache";
-import crypto from "crypto";
-import axios from "axios";
 
-const generateSHA1 = (data: any) => {
-  const hash = crypto.createHash("sha1");
-  hash.update(data);
-  return hash.digest("hex");
-};
-
-const generateSignature = (publicId: string, apiSecret: string) => {
-  const timestamp = new Date().getTime();
-  return `public_id=${publicId}&timestamp=${timestamp}${apiSecret}`;
-};
+import { deleteImage, uploadImage } from "../../../../utils/handle-img";
 
 const e = process.env;
 
@@ -31,7 +20,7 @@ export async function PUT(
 
   //   console.log(params.id);
 
-  const oldData = await Drawing.findById(params.id);
+  const mongoData = await Drawing.findById(params.id);
 
   //   console.log(oldData);
   //   return NextResponse.json({ message: "testing" });
@@ -49,38 +38,36 @@ export async function PUT(
 
   const isOldImg = typeof img == "string";
 
+  console.log({ active });
+
   if (!isOldImg) {
     // let's CLOUDINARY
 
     console.log("OLD IMAGE TO DELETE");
-    console.log(oldData.image.public_id);
+    console.log(mongoData.image.public_id);
     console.log("NEW IMAGE TO UPLOAD");
 
-    // return;
+    try {
+      const res = await deleteImage(mongoData.image.public_id);
+      console.log(res);
+    } catch (err) {
+      return NextResponse.json({ message: err }, { status: 500 });
+    }
 
-    const handleDeleteImage = async (publicId: any) => {
-      const cloudName = e.CLOUDINARY_CLOUD_NAME!;
-      const timestamp = new Date().getTime();
-      const apiKey = e.CLOUDINARY_API_KEY!;
-      const apiSecret = e.CLOUDINARY_API_SECRET!;
-      const signature = generateSHA1(generateSignature(publicId, apiSecret));
-      const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/destroy`;
+    try {
+      const imageRes = await uploadImage(img, name, collection);
+      console.log(imageRes);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
-      try {
-        const response = await axios.post(url, {
-          public_id: publicId,
-          signature: signature,
-          api_key: apiKey,
-          timestamp: timestamp,
-        });
-
-        console.error(response);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    handleDeleteImage(oldData.image.public_id);
+  // IF 'ACTIVE' WE STRIPE
+  // https://stripe.com/docs/api/products/update
+  if (active && mongoData.stripId) {
+    const product = await stripe.products.update(mongoData.stripId, {
+      metadata: { order_id: "6735" },
+    });
   }
 
   return NextResponse.json({ name: "RESSS" });

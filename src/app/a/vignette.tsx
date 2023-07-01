@@ -114,7 +114,7 @@ const Vignette: React.FC<Props> = ({ item }) => {
   return (
     <article className="min-w-[400px] p-2 m-4 flex flex-col  border-solid border-2 rounded-xl  max-w-2-3 items-center  transition duration-500 hover:scale-105 ">
       <Image
-        src={item.image}
+        src={item.image.url}
         width={200}
         height={200}
         style={{ objectFit: "contain" }}
