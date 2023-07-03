@@ -3,7 +3,6 @@ import Stripe from "stripe";
 import connectMongoose from "../../../../utils/mongoose";
 import Drawing from "../../../../models/drawing";
 import { revalidateTag } from "next/cache";
-
 import { deleteImage, uploadImage } from "../../../../utils/handle-img";
 
 const e = process.env;
@@ -18,15 +17,11 @@ export async function PUT(
 ) {
   await connectMongoose();
 
-  //   console.log(params.id);
-
   const mongoData = await Drawing.findById(params.id);
 
-  //   console.log(oldData);
-  //   return NextResponse.json({ message: "testing" });
-
+  // PARSE REQ DATA
   const formData = await req.formData();
-  const img = formData.get("image") as File;
+  const img = (formData.get("image") as File) || undefined;
   const name = formData.get("name") as string;
   const collection = formData.get("collection") as string;
   const description = formData.get("description") as string;
@@ -36,41 +31,159 @@ export async function PUT(
   const metadataX = formData.get("metadataX") as string;
   const metadataY = formData.get("metadataY") as string;
 
-  const isOldImg = typeof img == "string";
+  const changeImg = typeof img !== "string";
 
-  console.log({ active });
+  let cloudinaryUrl;
+  let cloudinaryPublic_id;
 
-  if (!isOldImg) {
-    // let's CLOUDINARY
+  let stripeId = mongoData.stripe.productId || undefined;
+  let priceId = mongoData.stripe.priceId || undefined;
 
-    console.log("OLD IMAGE TO DELETE");
-    console.log(mongoData.image.public_id);
-    console.log("NEW IMAGE TO UPLOAD");
+  const isForSale = active === "true";
 
+  if (changeImg) {
     try {
       const res = await deleteImage(mongoData.image.public_id);
-      console.log(res);
     } catch (err) {
       return NextResponse.json({ message: err }, { status: 500 });
     }
 
     try {
       const imageRes = await uploadImage(img, name, collection);
-      console.log(imageRes);
+      cloudinaryUrl = imageRes.secure_url;
+      cloudinaryPublic_id = imageRes.public_id;
     } catch (err) {
       console.log(err);
     }
   }
 
-  // IF 'ACTIVE' WE STRIPE
-  // https://stripe.com/docs/api/products/update
-  if (active && mongoData.stripId) {
-    const product = await stripe.products.update(mongoData.stripId, {
-      metadata: { order_id: "6735" },
-    });
+  // STRIPE UPDATE
+
+  if (
+    name != mongoData.name ||
+    isForSale != mongoData.isForSale ||
+    changeImg ||
+    +price != mongoData.price ||
+    +print_number != mongoData.print_number_set ||
+    +metadataX != mongoData.width ||
+    +metadataY != mongoData.height
+  ) {
+    const stripeMeta = {
+      collection,
+      print_number_set: print_number,
+      metadataX,
+      metadataY,
+    };
+
+    if (mongoData?.stripe?.productId !== undefined) {
+      if (+price != mongoData.price) {
+        try {
+          stripe.prices.update(mongoData.stripe.priceId, {
+            active: false,
+          });
+        } catch (err) {
+          console.log(err);
+          return NextResponse.json(
+            "An error occured with Stripe on 'putting old price off'",
+            { status: 500 }
+          );
+        }
+
+        try {
+          const priceRes = await stripe.prices.create({
+            unit_amount: +price * 100,
+            currency: "eur",
+            product: mongoData.stripe.productId,
+          });
+          priceId = priceRes.id;
+        } catch (err) {
+          console.log(err);
+          return NextResponse.json(
+            "An error occured with Stripe on 'creating new priceID'",
+            { status: 500 }
+          );
+        }
+      }
+
+      // THEN - update the product
+      try {
+        stripe.products.update(mongoData.stripe.productId, {
+          name,
+          active: isForSale,
+          images: changeImg ? [cloudinaryUrl] : [mongoData.image.url],
+          metadata: stripeMeta,
+          default_price: priceId,
+        });
+      } catch (err) {
+        console.log(err);
+        return NextResponse.json(
+          "An error occured with Stripe on 'update product'",
+          { status: 500 }
+        );
+      }
+    } else if (isForSale) {
+      try {
+        const product = await stripe.products.create({
+          name: name,
+          active: isForSale,
+          images: changeImg ? [cloudinaryUrl] : [mongoData.image.url],
+          metadata: stripeMeta,
+          default_price_data: {
+            unit_amount: +price * 100,
+            currency: "EUR",
+          },
+        });
+        // console.log(product);
+
+        stripeId = product.id;
+        priceId = product.default_price;
+
+        // return NextResponse.json(product, { status: 201 });
+      } catch (error: unknown) {
+        if (typeof error === "object" && error !== null && "message" in error) {
+          const message = (error as { message: string }).message;
+          console.error(error);
+          return NextResponse.json(message, { status: 500 });
+        } else {
+          console.error("Error creating product: ", error);
+          return NextResponse.json(
+            "An error occured with Stripe on 'create new product'",
+            { status: 500 }
+          );
+        }
+      }
+    }
   }
+  // MONGO UPDATE
+  const mongObj = {
+    name,
+    drawing_collection: collection,
+    description: description == "undefined" ? undefined : description,
+    image: changeImg
+      ? {
+          public_id: cloudinaryPublic_id,
+          url: cloudinaryUrl,
+        }
+      : undefined,
+    isForSale,
+    price: +price || undefined,
+    print_number_set: +print_number || undefined,
+    width: +metadataX || undefined,
+    height: +metadataY || undefined,
+    stripe:
+      stripeId === undefined ? undefined : { productId: stripeId, priceId },
+  };
 
-  return NextResponse.json({ name: "RESSS" });
-
-  // FIRST DO A FETCH TO MONGO TO COMPARE THE VALUES
+  try {
+    const mongoRes = await Drawing.findByIdAndUpdate(mongoData._id, mongObj);
+    console.log(mongoRes);
+    revalidateTag("drawings");
+    return NextResponse.json(mongoRes, { status: 200 });
+  } catch (err) {
+    console.log(err);
+    return NextResponse.json(
+      { message: "Something went wrong with Mongo" },
+      { status: 500 }
+    );
+  }
 }

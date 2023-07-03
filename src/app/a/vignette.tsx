@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import React from "react";
 import formData from "./form-template";
+import { useRouter } from "next/navigation";
 
 interface Props {
   item?: any;
@@ -15,12 +16,15 @@ const Vignette: React.FC<Props> = ({ item }) => {
   const [drawingCollection, setDrawingCollection] = useState<string>("");
   const [newImg, setNewImg] = useState<File>();
   const [description, setDescription] = useState<string>("");
-  const [image, setImage] = useState<any>();
+  const [imageUrl, setImageUrl] = useState<any>();
+  const [imageFile, setImageFile] = useState<File>();
   const [price, setPrice] = useState<any>();
   const [print_number, setPrint_number] = useState<any>();
   const [sale_number, setSale_number] = useState<any>();
   const [width, setWidth] = useState<any>();
   const [height, setHeight] = useState<any>();
+
+  const router = useRouter();
 
   const handleChange = (e: any) => setForSale(e.target.checked);
 
@@ -51,7 +55,8 @@ const Vignette: React.FC<Props> = ({ item }) => {
   }, [item.description]);
 
   useEffect(() => {
-    setImage(item.image);
+    setImageUrl(item.image.url);
+    // setNewImg(item.image.url);
   }, [item.image]);
 
   useEffect(() => {
@@ -78,17 +83,30 @@ const Vignette: React.FC<Props> = ({ item }) => {
     setHeight(item.height);
   }, [item.height]);
 
+  // UPDATE IMAGE
+
+  const updateImg = (file: any) => {
+    if (file) {
+      const url = window.URL.createObjectURL(
+        new Blob([file], { type: "image/jpg" })
+      );
+      setImageUrl(url);
+      setImageFile(file);
+    }
+  };
+
   //EDIT FN
+
   const editVignette = async (id: string) => {
     console.log(id);
 
-    const img = newImg ? newImg : image;
+    // const img = newImg ? newImg : image;
 
     const form = formData(
       name,
       drawingCollection,
       description,
-      img,
+      imageFile ? imageFile : undefined,
       forSale,
       price,
       print_number,
@@ -102,8 +120,10 @@ const Vignette: React.FC<Props> = ({ item }) => {
     };
     try {
       const fetchMethod = await fetch(`/api/art/${id}`, options);
-      const fetchRes = await fetchMethod.json();
-      console.log(fetchRes);
+      router.replace("/a");
+      setNewImg(undefined);
+      // const fetchRes = await fetchMethod.json();
+      // console.log(fetchRes);
 
       // if (fetchRes.ok)
     } catch (err) {
@@ -114,7 +134,7 @@ const Vignette: React.FC<Props> = ({ item }) => {
   return (
     <article className="min-w-[400px] p-2 m-4 flex flex-col  border-solid border-2 rounded-xl  max-w-2-3 items-center  transition duration-500 hover:scale-105 ">
       <Image
-        src={item.image.url}
+        src={imageUrl}
         width={200}
         height={200}
         style={{ objectFit: "contain" }}
@@ -150,7 +170,7 @@ const Vignette: React.FC<Props> = ({ item }) => {
         <input
           type="file"
           className="file-input file-input-ghost w-full max-w-xs"
-          onChange={(e: any) => setNewImg(e.target.files[0])}
+          onChange={(e: any) => updateImg(e.target.files[0])}
         />
       </div>
       <div className="form-control  w-full">

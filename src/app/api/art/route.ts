@@ -49,8 +49,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
   const cloudiMeta = `name=${name}|collection=${collection}`;
 
   const stripeMeta = {
-    name,
-    collection,
+    name: name.toLowerCase(),
+    collection: collection.toLowerCase(),
     print_number_set: print_number,
     print_number_sold: 0,
     metadataX,
@@ -78,7 +78,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
   ////////// *** STRIPE 💸 ***
 
-  let stripeId: string = "";
+  let productId: string = "";
+  let priceId: any;
   if (isForSale) {
     try {
       const product = await stripe.products.create({
@@ -93,7 +94,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
       });
       console.log(product);
 
-      stripeId = product.id;
+      productId = product.id;
+      priceId = product.default_price;
 
       // return NextResponse.json(product, { status: 201 });
     } catch (error: unknown) {
@@ -118,7 +120,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
   console.log(print_number);
 
   const drawingObj = {
-    name: name || `${collection.trim().toLowerCase()}_${Date.now()}`,
+    name:
+      name.toLowerCase() || `${collection.trim().toLowerCase()}_${Date.now()}`,
     drawing_collection: collection.trim().toLowerCase(),
     description: description || undefined,
 
@@ -129,7 +132,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     print_number_sold: isForSale ? 0 : undefined,
     width: metadataX || undefined,
     height: metadataY || undefined,
-    stripeId: stripeId || undefined,
+    stripeId: { productId, priceId },
   };
 
   try {
@@ -137,7 +140,10 @@ export async function POST(req: NextRequest, res: NextResponse) {
     console.log(drawing);
   } catch (err) {
     console.log(err);
-    return NextResponse.json({ message: "MONGO ERROR", data: err });
+    return NextResponse.json(
+      { message: "MONGO ERROR", data: err },
+      { status: 500 }
+    );
   }
 
   revalidateTag("drawings");

@@ -16,7 +16,7 @@ const drawingSchema = new Schema({
   print_number_sold: Number,
   width: Number,
   height: Number,
-  stripeId: String,
+  stripe: { productId: { type: String }, priceId: { type: String } },
 });
 
 const Drawing = models.Drawing || model("Drawing", drawingSchema);
