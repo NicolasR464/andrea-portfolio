@@ -4,6 +4,7 @@ import Image from "next/image";
 import React from "react";
 import formData from "./form-template";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 interface Props {
   item?: any;
@@ -99,6 +100,7 @@ const Vignette: React.FC<Props> = ({ item }) => {
 
   const editVignette = async (id: string) => {
     console.log(id);
+    setIsEditing(true);
 
     // const img = newImg ? newImg : image;
 
@@ -119,20 +121,25 @@ const Vignette: React.FC<Props> = ({ item }) => {
       body: form,
     };
     try {
-      const fetchMethod = await fetch(`/api/art/${id}`, options);
+      const fetchRes = await fetch(`/api/art/${id}`, options);
+
       router.replace("/a");
       setNewImg(undefined);
       // const fetchRes = await fetchMethod.json();
       // console.log(fetchRes);
+      if (fetchRes.ok) toast.success("drawing info updated! 👌");
 
       // if (fetchRes.ok)
     } catch (err) {
       console.log(err);
+      toast.error("something went wrong, try again...");
     }
+    setIsEditing(false);
   };
 
   return (
     <article className="min-w-[400px] p-2 m-4 flex flex-col  border-solid border-2 rounded-xl  max-w-2-3 items-center  transition duration-500 hover:scale-105 ">
+      {/* <ToastContainer /> */}
       <Image
         src={imageUrl}
         width={200}
@@ -263,8 +270,15 @@ const Vignette: React.FC<Props> = ({ item }) => {
       <button
         onClick={() => editVignette(item._id)}
         className="btn  btn-outline btn-success mt-1"
+        disabled={isEditing}
       >
-        edit
+        {isEditing ? (
+          <span className="text-green-600	flex items-center">
+            editing<span className="loading loading-ring loading-sm"></span>
+          </span>
+        ) : (
+          "edit"
+        )}
       </button>
       <button className="btn mt-1 btn-outline btn-error">delete</button>
     </article>

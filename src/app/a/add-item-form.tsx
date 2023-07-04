@@ -232,8 +232,8 @@ export default function Form() {
             disabled={isPosting}
           >
             {isPosting ? (
-              <span className="text-center">
-                SENDING<span className="loading loading-ball loading-sm"></span>
+              <span className="text-center text-neutral-600	  flex items-center">
+                SENDING<span className="loading loading-ring loading-sm"></span>
               </span>
             ) : (
               <span className="text-center">ADD</span>
