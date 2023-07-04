@@ -131,7 +131,7 @@ export default function Form() {
               className="input input-bordered w-full max-w-xs"
               type="text"
               name="collection"
-              placeholder="Does it belong to a collection?"
+              placeholder="Does it belong to any?"
               required
             />
           </label>

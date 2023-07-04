@@ -5,6 +5,8 @@ import React from "react";
 import formData from "./form-template";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface Props {
   item?: any;
@@ -24,6 +26,7 @@ const Vignette: React.FC<Props> = ({ item }) => {
   const [sale_number, setSale_number] = useState<any>();
   const [width, setWidth] = useState<any>();
   const [height, setHeight] = useState<any>();
+  const [deleteModal, setDeleteModal] = useState<boolean>(false);
 
   const router = useRouter();
 
@@ -39,7 +42,7 @@ const Vignette: React.FC<Props> = ({ item }) => {
     : {
         opacity: 0,
         maxHeight: 0,
-        zIndex: -1,
+        zIndex: -3,
         transition: "opacity 0.5s, max-height 0.5s",
       };
 
@@ -57,7 +60,6 @@ const Vignette: React.FC<Props> = ({ item }) => {
 
   useEffect(() => {
     setImageUrl(item.image.url);
-    // setNewImg(item.image.url);
   }, [item.image]);
 
   useEffect(() => {
@@ -99,10 +101,7 @@ const Vignette: React.FC<Props> = ({ item }) => {
   //EDIT FN
 
   const editVignette = async (id: string) => {
-    console.log(id);
     setIsEditing(true);
-
-    // const img = newImg ? newImg : image;
 
     const form = formData(
       name,
@@ -123,13 +122,10 @@ const Vignette: React.FC<Props> = ({ item }) => {
     try {
       const fetchRes = await fetch(`/api/art/${id}`, options);
 
-      router.replace("/a");
+      // router.replace("/a");
       setNewImg(undefined);
-      // const fetchRes = await fetchMethod.json();
-      // console.log(fetchRes);
-      if (fetchRes.ok) toast.success("drawing info updated! 👌");
 
-      // if (fetchRes.ok)
+      if (fetchRes.ok) toast.success("drawing info updated! 👌");
     } catch (err) {
       console.log(err);
       toast.error("something went wrong, try again...");
@@ -137,9 +133,29 @@ const Vignette: React.FC<Props> = ({ item }) => {
     setIsEditing(false);
   };
 
+  const handleDelete = async (id: string) => {
+    setDeleteModal(true);
+    console.log(id);
+    // fetch delete
+
+    const options = {
+      method: "DELETE",
+    };
+    try {
+      const fetchRes = await fetch(`/api/art/${id}`, options);
+      setDeleteModal(false);
+      router.replace("/a");
+      // setNewImg(undefined);
+
+      if (fetchRes.ok) toast.info("drawing deleted!");
+    } catch (err) {
+      console.log(err);
+      toast.error("something went wrong, try again...");
+    }
+  };
+
   return (
-    <article className="min-w-[400px] p-2 m-4 flex flex-col  border-solid border-2 rounded-xl  max-w-2-3 items-center  transition duration-500 hover:scale-105 ">
-      {/* <ToastContainer /> */}
+    <article className=" md:min-w-[400px] mt-2 p-2 md:m-4 flex flex-col  border-solid border-2 rounded-xl  md:max-w-2-3 items-center  transition duration-500 md:hover:scale-105 ">
       <Image
         src={imageUrl}
         width={200}
@@ -280,7 +296,54 @@ const Vignette: React.FC<Props> = ({ item }) => {
           "edit"
         )}
       </button>
-      <button className="btn mt-1 btn-outline btn-error">delete</button>
+      <div>
+        {deleteModal && (
+          <div className=" md:w-96 bg-rose-200 absolute border-solid -translate-y-3/4 -translate-x-1/2 border-2 p-10 rounded-lg border-rose-500 b-0 left-1/2">
+            <p className="text-center">Are you sure you want to delete it?</p>
+            <div className="collapse  bg-rose-200">
+              <input type="checkbox" />
+              <div className=" collapse-title">
+                <p className="text-center flex justify-center">
+                  <FontAwesomeIcon
+                    className="max-w-logo translate-x-4"
+                    icon={faInfoCircle}
+                    size="xl"
+                  />
+                </p>
+              </div>
+              <div className="collapse-content">
+                <p className="text-center">
+                  Its data will be archived if it has been on sale at least once
+                  (excluding the image).
+                </p>
+              </div>
+            </div>
+
+            <div className="flex justify-between">
+              <button
+                onClick={() => setDeleteModal(false)}
+                className="btn m-1  btn-outline "
+              >
+                cancel
+              </button>
+              <button
+                onClick={() => handleDelete(item._id)}
+                className="btn m-1 btn-outline btn-error"
+              >
+                delete
+              </button>
+            </div>
+          </div>
+        )}
+
+        <button
+          onClick={() => setDeleteModal(true)}
+          className="btn mt-1 btn-outline btn-error"
+          disabled={deleteModal}
+        >
+          delete
+        </button>
+      </div>
     </article>
   );
 };

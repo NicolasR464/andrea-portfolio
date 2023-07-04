@@ -132,7 +132,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     print_number_sold: isForSale ? 0 : undefined,
     width: metadataX || undefined,
     height: metadataY || undefined,
-    stripeId: { productId, priceId },
+    stripe: { productId, priceId },
   };
 
   try {

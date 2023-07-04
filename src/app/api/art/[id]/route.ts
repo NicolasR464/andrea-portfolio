@@ -187,3 +187,39 @@ export async function PUT(
     );
   }
 }
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  await connectMongoose();
+  const mongoData = await Drawing.findById(params.id);
+
+  try {
+    await deleteImage(mongoData.image.public_id);
+  } catch (err) {
+    return NextResponse.json({ message: err }, { status: 500 });
+  }
+
+  try {
+    stripe.products.update(mongoData.stripe.productId, {
+      active: false,
+    });
+  } catch (err) {
+    console.log(err);
+    return NextResponse.json(
+      "An error occured with Stripe on 'delete product'",
+      { status: 500 }
+    );
+  }
+
+  try {
+    const mongoData = await Drawing.findByIdAndDelete(params.id);
+    console.log(mongoData);
+    revalidateTag("drawings");
+    return NextResponse.json({ mongoData }, { status: 200 });
+  } catch (err) {
+    console.log(err);
+    return NextResponse.json({ err }, { status: 500 });
+  }
+}
