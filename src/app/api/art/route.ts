@@ -7,25 +7,9 @@ import { uploadImage } from "../../../utils/handle-img";
 
 const e = process.env;
 
-// import { v2 as cloudinary } from "cloudinary";
-// import * as Cloudinary from "cloudinary";
-
-// import { Buffer } from "node:buffer";
-// import streamifier from "streamifier";
-// import formidable from "formidable";
-
-// import streamifier from "streamifier";
-// import multer from "multer";
-
 const stripe = new Stripe(e.STRIPE_KEY as string, {
   apiVersion: "2022-11-15",
 });
-
-// cloudinary.config({
-//   cloud_name: "niikkoo",
-//   api_key: "457368962555864",
-//   api_secret: "F4heIn74E1CwxpTLndKx-B17lZk",
-// });
 
 export async function POST(req: NextRequest, res: NextResponse) {
   console.log("🔥POST");
@@ -44,10 +28,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
   const isForSale = active === "true";
 
-  // return NextResponse.json({ message: "TESTS" });
-
-  const cloudiMeta = `name=${name}|collection=${collection}`;
-
   const stripeMeta = {
     name: name.toLowerCase(),
     collection: collection.toLowerCase(),
@@ -56,30 +36,13 @@ export async function POST(req: NextRequest, res: NextResponse) {
     metadataX,
     metadataY,
   };
-  // const tags = `${name}, ${collection}`;
-
-  /// SAVE IMAGE TO CLOUDINARY
-
-  // const cloudinaryForm = new FormData();
-
-  // cloudinaryForm.append("file", img);
-  // cloudinaryForm.append("api_key", e.CLOUDINARY_API_KEY!);
-  // cloudinaryForm.append("api_secret", e.CLOUDINARY_API_SECRET!);
-  // cloudinaryForm.append("upload_preset", e.CLOUDINARY_UPLOAD_PRESET!);
-  // cloudinaryForm.append("timestamp", Date.now().toString());
-  // cloudinaryForm.append("folder", e.CLOUDINARY_UPLOAD_IMG_DRAWING_FOLDER!);
-  // cloudinaryForm.append("context", cloudiMeta);
-  // cloudinaryForm.append("tags", tags);
-  // cloudinaryForm.append("background_removal", "cloudinary_ai");
-
-  // console.log(img["name"]);
 
   const uploadResp = await uploadImage(img, name, collection);
 
   ////////// *** STRIPE 💸 ***
 
-  let productId: string = "";
-  let priceId: any;
+  let productId: string | undefined = undefined;
+  let priceId: any = undefined;
   if (isForSale) {
     try {
       const product = await stripe.products.create({

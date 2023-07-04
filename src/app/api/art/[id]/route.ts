@@ -198,7 +198,10 @@ export async function DELETE(
   try {
     await deleteImage(mongoData.image.public_id);
   } catch (err) {
-    return NextResponse.json({ message: err }, { status: 500 });
+    return NextResponse.json(
+      { message: "couldn't delete the image from Cloudinary" },
+      { status: 500 }
+    );
   }
 
   try {

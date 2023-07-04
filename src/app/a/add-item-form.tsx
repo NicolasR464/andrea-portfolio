@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
+
 import { useRouter } from "next/navigation";
 import formData from "./form-template";
 
@@ -25,21 +25,6 @@ export default function Form() {
     event.preventDefault();
     setPosting(true);
 
-    // console.log(event.target.image.files[0]);
-    // return;
-
-    // const formData = new FormData();
-
-    // formData.append("name", event.target.name.value);
-    // formData.append("collection", event.target.collection.value);
-    // formData.append("description", event.target.description.value);
-    // formData.append("image", event.target.image.files[0]);
-    // formData.append("active", event.target.for_sale.checked);
-    // formData.append("price", event.target.price.value);
-    // formData.append("print_number", event.target.print_number.value);
-    // formData.append("metadataX", event.target.metadataX.value);
-    // formData.append("metadataY", event.target.metadataY.value);
-
     const form = formData(
       event.target.name.value,
       event.target.collection.value,
@@ -57,8 +42,6 @@ export default function Form() {
       body: form,
     };
 
-    // delete options.headers["Content-Type"];
-    // api call
     try {
       const fetchRes = await fetch("/api/art", options);
 
@@ -76,7 +59,9 @@ export default function Form() {
         setWidth("");
         setHeight("");
 
-        router.replace("/a");
+        router.refresh();
+        const scrollPosition = window.scrollY;
+        console.log(scrollPosition);
       } else {
         toast.error("something went wrong, try again.");
       }
@@ -86,8 +71,6 @@ export default function Form() {
     }
     setPosting(false);
   };
-
-  //   const additionalFieldsClassName = forSale ? "fade-in" : "hidden";
 
   const additionalFieldsStyle: React.CSSProperties = forSale
     ? {
@@ -105,7 +88,6 @@ export default function Form() {
 
   return (
     <>
-      <ToastContainer position="top-center" hideProgressBar theme="colored" />
       <section className="w-screen flex justify-center ">
         <form
           className="flex flex-col items-center border-2 rounded-xl p-6 form"

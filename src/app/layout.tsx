@@ -2,6 +2,8 @@ import "./globals.css";
 import { Inter, Roboto_Mono, Tilt_Prism, Tenor_Sans } from "next/font/google";
 import Script from "next/script";
 import NavBar from "../components/NavBar";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -46,7 +48,8 @@ export default function RootLayout({
       <head></head>
       <body className={inter.className}>
         <NavBar />
-        {children}
+        <ToastContainer position="top-center" hideProgressBar theme="colored" />
+        <div className="translate-y-24">{children}</div>
       </body>
       <Script src="./custom.js" />
       <Script

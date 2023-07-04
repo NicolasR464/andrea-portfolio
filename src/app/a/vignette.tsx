@@ -122,7 +122,7 @@ const Vignette: React.FC<Props> = ({ item }) => {
     try {
       const fetchRes = await fetch(`/api/art/${id}`, options);
 
-      // router.replace("/a");
+      router.refresh();
       setNewImg(undefined);
 
       if (fetchRes.ok) toast.success("drawing info updated! 👌");
@@ -144,13 +144,13 @@ const Vignette: React.FC<Props> = ({ item }) => {
     try {
       const fetchRes = await fetch(`/api/art/${id}`, options);
       setDeleteModal(false);
-      router.replace("/a");
-      // setNewImg(undefined);
+      router.refresh();
 
-      if (fetchRes.ok) toast.info("drawing deleted!");
+      if (fetchRes.ok) toast.success("drawing deleted!");
     } catch (err) {
       console.log(err);
       toast.error("something went wrong, try again...");
+      router.replace("/a");
     }
   };
 
@@ -313,8 +313,7 @@ const Vignette: React.FC<Props> = ({ item }) => {
               </div>
               <div className="collapse-content">
                 <p className="text-center">
-                  Its data will be archived if it has been on sale at least once
-                  (excluding the image).
+                  Its data will be archived if it was on sale at least once.
                 </p>
               </div>
             </div>

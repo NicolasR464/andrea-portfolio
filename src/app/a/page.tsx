@@ -31,11 +31,11 @@ export default async function Dashboard() {
         </div>
       ) : items && items.length === 0 ? (
         <div className="w-screen flex justify-center">
-          <span>You have no drawings registered 😔</span>
+          <span>You have no drawings saved 😔</span>
         </div>
       ) : (
         <>
-          <div className="flex w-full justify-center p-3">
+          <div className="flex w-full items-center justify-center p-3">
             <FontAwesomeIcon
               className="max-w-logo"
               icon={faAnglesDown}
