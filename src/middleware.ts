@@ -2,12 +2,10 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  // console.log("MIDDLEWARE 🔥");
-  // console.log(request.method);
-  // console.log(request.url);
-  // console.log(request.headers);
-  // const origin = request.headers.get("origin");
-  // console.log(origin);
+  // Store current request url in a custom header, which you can read later
+
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-invoke-path", request.url);
 
   if (
     request.nextUrl.pathname.startsWith("/api/art") &&
@@ -15,13 +13,18 @@ export function middleware(request: NextRequest) {
   ) {
     // console.log("ADMIN ROUTTTEEE");
   }
-  return NextResponse.next();
+  return NextResponse.next({
+    request: {
+      // Apply new request headers
+      headers: requestHeaders,
+    },
+  });
 
-  if (request.nextUrl.pathname.startsWith("/a")) {
-    return request;
-  }
+  // if (request.nextUrl.pathname.startsWith("/a")) {
+  //   return request;
+  // }
 }
 
-export const config = {
-  matcher: ["/api/:path*"],
-};
+// export const config = {
+//   matcher: ["/api/:path*"],
+// };

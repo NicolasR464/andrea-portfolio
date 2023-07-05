@@ -120,7 +120,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
 export async function GET(req: NextRequest, res: NextResponse) {
   console.log("GET API ART");
-
   connectMongoose();
   try {
     const drawings = await Drawing.find();

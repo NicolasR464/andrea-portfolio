@@ -156,13 +156,15 @@ const Vignette: React.FC<Props> = ({ item }) => {
 
   return (
     <article className=" md:min-w-[400px] mt-2 p-2 md:m-4 flex flex-col  border-solid border-2 rounded-xl  md:max-w-2-3 items-center  transition duration-500 md:hover:scale-105 ">
-      <Image
-        src={imageUrl}
-        width={200}
-        height={200}
-        style={{ objectFit: "contain" }}
-        alt="drawing picture"
-      />
+      {imageUrl && (
+        <Image
+          src={imageUrl}
+          width={200}
+          height={200}
+          style={{ objectFit: "contain" }}
+          alt="drawing picture"
+        />
+      )}
 
       <div className="form-control">
         <label className="label">
@@ -188,7 +190,7 @@ const Vignette: React.FC<Props> = ({ item }) => {
       </div>
       <div className="form-control">
         <label className="label">
-          <span className="label-text-alt text-center">upload new photo</span>
+          <span className="label-text-alt text-center">upload new image</span>
         </label>
         <input
           type="file"
