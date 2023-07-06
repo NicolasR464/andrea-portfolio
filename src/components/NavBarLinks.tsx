@@ -6,7 +6,7 @@ export default function NavBarLinks() {
   const pathname = usePathname();
   return (
     <div className="navbar-end">
-      <div className="tabs">
+      <div className="tabs mr-3">
         <Link
           className={pathname == "/buy" ? "tab tab-active" : "tab"}
           href="/buy"
