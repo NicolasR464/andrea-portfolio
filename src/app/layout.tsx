@@ -2,6 +2,8 @@ import "./globals.css";
 import { Inter, Roboto_Mono, Tilt_Prism, Tenor_Sans } from "next/font/google";
 import Script from "next/script";
 import NavBar from "../components/NavBar";
+import CartDrawer from "../components/CartDrawer";
+import DrawerOverlay from "../components/DrawerOverlay";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -48,15 +50,19 @@ export default function RootLayout({
       <head></head>
       <body className={inter.className}>
         <NavBar />
+        <CartDrawer />
+        <DrawerOverlay />
         <ToastContainer position="top-center" hideProgressBar theme="colored" />
+
         <div className="translate-y-24">{children}</div>
+
+        <Script src="./main.js" />
+        <Script
+          defer
+          src="https://kit.fontawesome.com/766e633129.js"
+          crossOrigin="anonymous"
+        ></Script>
       </body>
-      <Script src="./custom.js" />
-      <Script
-        defer
-        src="https://kit.fontawesome.com/766e633129.js"
-        crossOrigin="anonymous"
-      ></Script>
     </html>
   );
 }

@@ -4,7 +4,7 @@ import NavBarLinks from "./NavBarLinks";
 
 export default function NavBar({ params }: any) {
   return (
-    <div className="fixed w-full z-50">
+    <div className="fixed w-full z-40">
       <div className="navbar backdrop-blur-md">
         <div className="navbar-start">
           <Link href="/">

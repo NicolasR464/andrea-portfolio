@@ -1,4 +1,6 @@
 import ShopCard from "./ShopCard";
+import { useStore } from "@/store";
+import StoreInitializer from "@/components/StoreInitializer";
 
 const fetchItems = async () => {
   //will fetch all items - with a set revalidate tags to update the UI
@@ -16,8 +18,11 @@ export default async function Buy() {
 
   console.log(items);
 
+  // useStore.setState({ isOpen: true, price: 400 });
+
   return (
     <div>
+      {/* <StoreInitializer price={400} isOpen={true} /> */}
       <h2 className="text-center text-5xl">shop</h2>
       {items.map((item: any, index: number) => (
         <ShopCard item={item} key={index} />

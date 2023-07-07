@@ -3,7 +3,7 @@ import connectMongoose from "../../../utils/mongoose";
 import Drawing from "../../../models/drawing";
 import { revalidateTag } from "next/cache";
 import Stripe from "stripe";
-import allowed_countries from "../../../utils/stripe_shipping_allowed_countries";
+import allowed_countriesArr from "../../../utils/stripe_shipping_allowed_countries";
 
 const e = process.env;
 
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     cancel_url: e.DOMAIN! + "/buy?cancel=true",
     line_items: [{ price: body.drawingStripeId, quantity: 1 }],
     mode: "payment",
-    shipping_address_collection: { allowed_countries: allowed_countries },
+    shipping_address_collection: { allowed_countries: allowed_countriesArr },
   });
 
   return NextResponse.json({ url: session.url, id: session.id });
