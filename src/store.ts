@@ -1,13 +1,21 @@
 import { create } from "zustand";
 
+interface Item {
+  id: string;
+  stripeId: string;
+  collection: string;
+  img: string;
+  price: number;
+  prints_left: number;
+  amount_selected: number;
+}
+
 export const useStore = create<{
   isOpen: Boolean;
-  collection: string;
-  price: number;
+  bag: Item[];
   cartTotal: number;
 }>((set) => ({
   isOpen: false,
-  collection: "",
-  price: 0,
+  bag: [],
   cartTotal: 0,
 }));

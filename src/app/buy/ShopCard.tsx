@@ -26,7 +26,14 @@ export default function ShopCard({ item }: { item: any }) {
           </span>
           <p>{item.description}</p>
           <div className="card-actions justify-end">
-            <ShopBtn stripeId={item.stripe.priceId} />
+            <ShopBtn
+              idProp={item._id}
+              imgProp={item.image.url}
+              collectionProp={item.drawing_collection}
+              priceProp={item.price}
+              prints_leftProp={item.print_number_set}
+              stripeProductId={item.stripe.priceId}
+            />
           </div>
         </div>
       </div>

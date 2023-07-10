@@ -1,55 +1,91 @@
 "use client";
 import { useStore } from "@/store";
-import { loadStripe } from "@stripe/stripe-js";
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_TOKEN!);
+// import { loadStripe } from "@stripe/stripe-js";
+// const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_TOKEN!);
 import StoreInitializer from "@/components/StoreInitializer";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export default function ShopBtn({ stripeId }: { stripeId: any }) {
-  const [isOpen, setIsOpen] = useState(false);
+export default function ShopBtn({
+  idProp,
+  stripeProductId,
+  imgProp,
+  priceProp,
+  collectionProp,
+  prints_leftProp,
+}: {
+  idProp: string;
+  stripeProductId: string;
+  priceProp: number;
+  collectionProp: string;
+  prints_leftProp: number;
+  imgProp: string;
+}) {
+  // const [isOpen, setIsOpen] = useState(false);
+  const [isAdded, setIsAdded] = useState(false);
+  const [id, setId] = useState("");
+  const [stripeProdId, setStripeProductId] = useState("");
+  const [img, setImg] = useState("");
+  const [price, setPrice] = useState(0);
+  const [collection, setCollection] = useState("");
+  const [printLeft, setPrintLeft] = useState(0);
 
-  const handlePurchaseClick = async (id: string) => {
-    setIsOpen(!isOpen);
+  useEffect(() => {
+    setId(idProp);
+  }, [idProp]);
 
-    return;
-    const stripe: any = await stripePromise;
+  useEffect(() => {
+    setStripeProductId(stripeProductId);
+  }, [stripeProductId]);
 
-    const bodyObj = {
-      drawingStripeId: id,
-    };
+  useEffect(() => {
+    setImg(imgProp);
+  }, [imgProp]);
 
-    const stripeApi = await fetch("/api/shop", {
-      method: "POST",
-      body: JSON.stringify(bodyObj),
-      mode: "no-cors",
-    });
+  useEffect(() => {
+    setPrice(priceProp);
+  }, [priceProp]);
 
-    const stripeRes = await stripeApi.json();
-    console.log(stripeRes);
+  useEffect(() => {
+    setCollection(collectionProp);
+  }, [collectionProp]);
 
-    const result = await stripe.redirectToCheckout({
-      sessionId: stripeRes.id,
-    });
+  useEffect(() => {
+    setPrintLeft(prints_leftProp);
+  }, [prints_leftProp]);
 
-    console.log(result);
+  const handlePurchaseClick = async () => {
+    useStore.setState((state) => ({
+      isOpen: !state.isOpen,
+    }));
 
-    if (result.error) {
-      alert(result.error.message);
+    if (!isAdded) {
+      const bagObj = {
+        id,
+        stripeId: stripeProdId,
+        collection,
+        img,
+        price: price,
+        prints_left: printLeft,
+        amount_selected: 1,
+      };
+
+      useStore.setState((state) => ({
+        bag: [...state.bag, bagObj],
+        cartTotal: state.cartTotal + price,
+      }));
     }
-
-    // return stripeRes;
+    setIsAdded(true);
   };
-
-  useStore.setState({ isOpen: isOpen, price: 400 });
 
   return (
     <>
-      <StoreInitializer price={400} isOpen={isOpen} />
       <button
-        onClick={() => handlePurchaseClick(stripeId!)}
+        onClick={() => handlePurchaseClick()}
         className="btn btn-outline btn-success cart-in"
       >
-        buy
+        {isAdded ? <FontAwesomeIcon icon={faHeart} /> : "buy"}
       </button>
     </>
   );
