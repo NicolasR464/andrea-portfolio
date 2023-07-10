@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { useStore } from "@/store";
 
 export default function CartVignette({ item }: { item: any }) {
   const [isAdded, setIsAdded] = useState(false);
@@ -10,14 +11,17 @@ export default function CartVignette({ item }: { item: any }) {
   const [price, setPrice] = useState(0);
   const [collection, setCollection] = useState("");
   const [printLeft, setPrintLeft] = useState(0);
+  const [printSelecNum, setPrintSelecNum] = useState(0);
+
+  const { bag } = useStore();
 
   useEffect(() => {
     setId(item.id);
   }, [item.id]);
 
   useEffect(() => {
-    setStripeProductId(item.stripeProductId);
-  }, [item.stripeProductId]);
+    setStripeProductId(item.stripeId);
+  }, [item.stripeId]);
 
   useEffect(() => {
     setImg(item.img);
@@ -35,22 +39,61 @@ export default function CartVignette({ item }: { item: any }) {
     setPrintLeft(item.prints_left);
   }, [item.prints_left]);
 
+  const removeItem = () => {
+    useStore.setState((state) => ({
+      bag: [...state.bag.filter((el) => el.id !== id)],
+    }));
+    useStore.setState((state) => ({
+      isOpen: state.bag.length === 0 ? false : state.isOpen,
+    }));
+    useStore.setState((state) => {
+      const updateTotal = state.bag.reduce(
+        (acc, item) => acc + item.amount_selected * item.price,
+        0
+      );
+      return { cartTotal: updateTotal };
+    });
+  };
+
+  const changeSelecNum = (n: string) => {
+    useStore.setState((state) => {
+      const updatedBag = state.bag.map((obj) =>
+        obj.id === id ? { ...obj, amount_selected: +n } : obj
+      );
+
+      const updatedTotal = updatedBag.reduce(
+        (acc, item) => acc + item.amount_selected * item.price,
+        0
+      );
+
+      return { bag: updatedBag, cartTotal: updatedTotal };
+    });
+  };
+
+  console.log(bag);
+
   return (
     <article className="flex p-2 m-2 rounded-xl justify-center   border-solid border-2  md:flex-row">
       <section className="flex justify-center flex-col   items-center">
         <span>{collection}</span>
-        <span>{price} €</span>
+        <span>{price}€ / print</span>
         <div className="form-control w-full max-w-xs">
           <label className="label">
             <span className="label-text">how many prints?</span>
           </label>
-          <select className="select select-bordered  w-full max-w-xs">
+          <select
+            onChange={(e) => changeSelecNum(e.target.value)}
+            className="select select-bordered  w-full max-w-xs"
+          >
             {Array(printLeft)
               .fill(null)
               .map((_, x) => (
                 <option key={x}>{x + 1}</option>
               ))}
           </select>
+          <button onClick={removeItem} className="link">
+            remove
+          </button>
         </div>
       </section>
       <section className="m-2 flex justify-center   items-center">
@@ -63,9 +106,21 @@ export default function CartVignette({ item }: { item: any }) {
           src={img}
           width={150}
           height={150}
-          alt="Drawing image in shopping bag"
+          alt="Drawing image in cart section"
         />
       </section>
     </article>
   );
 }
+
+// const updatedObj = {
+//     id,
+//     collection,
+//     price,
+//     prints_left: printLeft,
+//     amount_selected: n,
+//   };
+
+//   // useStore.setState((state) => (
+//   //   bag: state.bag.map((obj:any) => (obj.id === id ? updatedObj : obj)),
+//   // ));

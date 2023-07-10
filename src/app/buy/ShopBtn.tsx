@@ -30,6 +30,7 @@ export default function ShopBtn({
   const [price, setPrice] = useState(0);
   const [collection, setCollection] = useState("");
   const [printLeft, setPrintLeft] = useState(0);
+  const { bag } = useStore();
 
   useEffect(() => {
     setId(idProp);
@@ -56,6 +57,7 @@ export default function ShopBtn({
   }, [prints_leftProp]);
 
   const handlePurchaseClick = async () => {
+    console.log(stripeProdId);
     useStore.setState((state) => ({
       isOpen: !state.isOpen,
     }));
@@ -76,8 +78,10 @@ export default function ShopBtn({
         cartTotal: state.cartTotal + price,
       }));
     }
-    setIsAdded(true);
   };
+  useEffect(() => {
+    setIsAdded(bag.some((item) => item.id === id) ? true : false);
+  }, [bag, id]);
 
   return (
     <>
