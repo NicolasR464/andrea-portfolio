@@ -4,7 +4,7 @@ import ShopBtn from "./ShopBtn";
 
 export default function ShopCard({ item }: { item: any }) {
   return (
-    <div className="card  transition duration-1000 md:hover:scale-105 m-5 md:card-side md:max-w-2xl bg-base-100 shadow-lg md:hover:shadow-xl min-w-[250px]">
+    <div className="card  transition duration-1000 tablet:hover:scale-105 m-5 tablet:card-side tablet:max-w-2xl bg-base-100 shadow-lg tablet:hover:shadow-xl min-w-[250px]">
       <figure>
         {item.image.url && (
           <Image

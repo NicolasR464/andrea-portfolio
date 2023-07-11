@@ -11,11 +11,14 @@ export default function CheckOutBtn() {
   const handleStripeCheckSession = async () => {
     const stripe: any = await stripePromise;
 
-    // const bodyObj = {
-    //   drawingStripeId: id,
-    // };
+    const stripeBag = bag.map((item) => {
+      return { price: item.stripeId, quantity: item.amount_selected };
+    });
+
+    console.log(stripeBag);
+
     const cartObj = {
-      bag,
+      stripeBag,
       cartTotal,
     };
 
@@ -31,12 +34,6 @@ export default function CheckOutBtn() {
     const result = await stripe.redirectToCheckout({
       sessionId: stripeRes.id,
     });
-
-    console.log(result);
-
-    if (result.error) {
-      alert(result.error.message);
-    }
   };
 
   return (

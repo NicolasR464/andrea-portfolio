@@ -155,7 +155,7 @@ const Vignette: React.FC<Props> = ({ item }) => {
   };
 
   return (
-    <article className=" md:min-w-[400px] mt-2 p-2 md:m-4 flex flex-col  border-solid border-2 rounded-xl  md:max-w-2-3 items-center  transition duration-500 md:hover:scale-105 ">
+    <article className=" tablet:min-w-[400px] mt-2 p-2 tablet:m-4 flex flex-col  border-solid border-2 rounded-xl  tablet:max-w-2-3 items-center  transition duration-500 tablet:hover:scale-105 ">
       {imageUrl && (
         <Image
           src={imageUrl}
@@ -245,7 +245,9 @@ const Vignette: React.FC<Props> = ({ item }) => {
 
         <div className="form-control">
           <label className="label">
-            <span className="label-text-alt">number of prints</span>
+            <span className="label-text-alt">
+              {sale_number > 0 ? "number of prints left" : "number of prints "}
+            </span>
           </label>
           <input
             className="input input-bordered w-full max-w-xs"

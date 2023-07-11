@@ -19,6 +19,7 @@
 .DS_Store
 *.pem
 text.js
+sandbox.html
 
 # debug
 npm-debug.log*

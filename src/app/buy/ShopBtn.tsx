@@ -88,8 +88,15 @@ export default function ShopBtn({
       <button
         onClick={() => handlePurchaseClick()}
         className="btn btn-outline btn-success cart-in"
+        disabled={printLeft < 1}
       >
-        {isAdded ? <FontAwesomeIcon icon={faHeart} /> : "buy"}
+        {isAdded ? (
+          <FontAwesomeIcon icon={faHeart} />
+        ) : printLeft < 1 ? (
+          "sold out"
+        ) : (
+          "buy"
+        )}
       </button>
     </>
   );

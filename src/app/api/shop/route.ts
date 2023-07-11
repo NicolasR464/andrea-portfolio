@@ -28,28 +28,18 @@ export async function GET(req: NextRequest, res: NextResponse) {
 }
 
 export async function POST(req: NextRequest, res: NextResponse) {
-  //   const stripe = require('stripe')('sk_test_51NKdbrAInrsLeQjRgaAsBnlZZ9tE7PhUjMidorCx24Ow6TLTny64VAEbG51YwCMK2JEYXaBjXFzPlUZOdQwigyfp00OOx7YRoW');
-
-  // const shippingRate = await stripe.shippingRates.create({
-  //   display_name: 'Ground shipping',
-  //   type: 'fixed_amount',
-  //   fixed_amount: {amount: 500, currency: 'usd'},
-  // });
-
   console.log("SHOP POST 🚀");
 
   const body = await req.json();
 
-  console.log(body);
-
-  console.log(body.drawingStripeId);
+  console.log(body.stripeBag);
 
   // return NextResponse.json({ msg: "STRIPE BUY TEST" });
 
   const session = await stripe.checkout.sessions.create({
     success_url: e.DOMAIN! + "/buy?success=true",
     cancel_url: e.DOMAIN! + "/buy?cancel=true",
-    line_items: [{ price: body.drawingStripeId, quantity: 1 }],
+    line_items: body.stripeBag,
     mode: "payment",
     shipping_address_collection: { allowed_countries: allowed_countriesArr },
   });

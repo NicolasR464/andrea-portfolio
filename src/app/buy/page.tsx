@@ -18,14 +18,14 @@ const fetchItems = async () => {
 export default async function Buy() {
   const items = await fetchItems();
 
-  console.log(items);
+  // console.log(items);
 
   // useStore.setState({ isOpen: true, price: 400 });
 
   return (
     <div>
       {/* <StoreInitializer price={400} isOpen={true} /> */}
-      <h2 className="text-center text-5xl">shop</h2>
+      <h2 className="text-center text-5xl tracking-widest">shop</h2>
       <section className="flex flex-wrap justify-center">
         {items.map((item: any, index: number) => (
           <ShopCard item={item} key={index} />

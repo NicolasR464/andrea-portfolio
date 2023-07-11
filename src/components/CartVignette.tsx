@@ -70,7 +70,7 @@ export default function CartVignette({ item }: { item: any }) {
     });
   };
 
-  console.log(bag);
+  //   console.log(bag);
 
   return (
     <article className="flex p-2 m-2 rounded-xl justify-center   border-solid border-2  md:flex-row">
@@ -97,30 +97,20 @@ export default function CartVignette({ item }: { item: any }) {
         </div>
       </section>
       <section className="m-2 flex justify-center   items-center">
-        <Image
-          style={{
-            boxShadow:
-              "12px 12px 24px 0 rgba(0, 0, 0, 0.2), -12px -12px 24px 0 rgba(255, 255, 255, 0.5)",
-          }}
-          className="m-1 rounded-lg"
-          src={img}
-          width={150}
-          height={150}
-          alt="Drawing image in cart section"
-        />
+        {img && (
+          <Image
+            style={{
+              boxShadow:
+                "12px 12px 24px 0 rgba(0, 0, 0, 0.2), -12px -12px 24px 0 rgba(255, 255, 255, 0.5)",
+            }}
+            className="m-1 rounded-lg"
+            src={img}
+            width={150}
+            height={150}
+            alt="Drawing image in cart section"
+          />
+        )}
       </section>
     </article>
   );
 }
-
-// const updatedObj = {
-//     id,
-//     collection,
-//     price,
-//     prints_left: printLeft,
-//     amount_selected: n,
-//   };
-
-//   // useStore.setState((state) => (
-//   //   bag: state.bag.map((obj:any) => (obj.id === id ? updatedObj : obj)),
-//   // ));
