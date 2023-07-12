@@ -30,6 +30,7 @@ const orderSchema = new Schema({
     },
   ],
   amountTotal: { type: Number },
+  customerId: { type: String },
   createdAt: { type: String },
   paymentStatus: { type: String },
 });

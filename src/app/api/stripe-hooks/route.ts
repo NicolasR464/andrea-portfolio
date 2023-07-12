@@ -4,6 +4,9 @@ import Order from "../../../models/order";
 import Drawing from "../../../models/drawing";
 import { revalidateTag } from "next/cache";
 import Stripe from "stripe";
+import mail from "@sendgrid/mail";
+
+mail.setApiKey(process.env.SENDGRID_KEY!);
 
 const stripe = new Stripe(process.env.STRIPE_KEY as string, {
   apiVersion: "2022-11-15",
@@ -51,9 +54,11 @@ export async function POST(req: NextRequest) {
   });
 
   console.log("checkoutSession ↴");
+  console.log(checkoutSession.line_items);
 
   // FOR PRODUCTS INFO
   let ordersArr: Array<{}> | undefined;
+  let items_bought = 0;
 
   if (checkoutSession.line_items && checkoutSession.line_items.data) {
     console.log(checkoutSession.line_items.data);
@@ -72,33 +77,17 @@ export async function POST(req: NextRequest) {
 
     for (let lineItem of checkoutSession.line_items.data) {
       console.log(`Purchased product: ${lineItem.description}`);
+      items_bought += lineItem?.quantity!;
     }
   }
 
-  //   console.log("customer_details ↴");
+  // UPDATE STRIPE PRODUCT _ AMOUNT LEFT
 
-  //   console.log(session.customer_details);
-  //   // FOR CUSTOMER INFO
+  // CREATE ORDER | MONGO
+  console.log("SESSION ⭐️");
 
-  //   console.log(session?.customer_details?.address);
-  //   console.log(session?.customer_details?.email);
-  //   console.log(session?.customer_details?.name);
-  //   console.log(session?.customer_details?.phone);
-
-  //   console.log("payment_status ↴");
-  //   console.log(session.payment_status);
-
-  //   console.log("amount total ↴");
-  //   console.log(session.amount_total);
-
-  //   console.log("shipping_details ↴");
-  //   console.log(session.shipping_details);
-
-  //   console.log("invoice_creation ↴");
-  //   console.log(session.invoice_creation);
-
-  //   console.log("custom_text ↴");
-  //   console.log(session.custom_text);
+  console.log(session);
+  console.log(session.amount_total);
 
   const orderObj = {
     customerDetails: {
@@ -108,9 +97,11 @@ export async function POST(req: NextRequest) {
       phone: session?.customer_details?.phone,
     },
     orderItems: ordersArr,
+    amountTotal: session.amount_total,
+    customerId: session.customer,
+    createdAt: session.created,
   };
 
-  // CREATE ORDER | MONGO
   try {
     const orderMongoRes = await Order.create(orderObj);
     console.log(orderMongoRes);
@@ -146,9 +137,7 @@ export async function POST(req: NextRequest) {
 
   try {
     ordersArr?.forEach((order) => {
-      console.log("💥💥💥");
-      const updateFnRes = updateDrawingModel(order);
-      console.log(updateFnRes);
+      updateDrawingModel(order);
     });
 
     revalidateTag("drawings");
@@ -160,4 +149,47 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
+
+  // SEND EMAIL TO ANDREA
+  console.log("🍕");
+  console.log(items_bought);
+
+  const msg = {
+    to: session?.customer_details?.email,
+    from: process.env.HOST_EMAIL!,
+
+    templateId: "d-81ff00f6727149ea99c707166127dd16",
+    dynamicTemplateData: {
+      message_proprietaire:
+        items_bought < 2
+          ? "d'un de tes dessins"
+          : "de quelques-uns de tes dessins",
+      total_price: session.amount_total,
+    },
+  };
+  console.log("email sending");
+
+  mail.send(msg).then(
+    () => {
+      console.log("email sent! 🚀");
+      return NextResponse.json({ data: "POST EMAIL", status: 200 });
+    },
+    (error) => {
+      console.error(error);
+
+      if (error.response) {
+        console.error(error.response.body);
+        return NextResponse.json({ data: "Email couldn't go through...." });
+      }
+    }
+  );
 }
+
+// attachments: [
+//     {
+//       content: "pdfBase64Content",
+//       filename: "your_file_name.pdf", // Replace with your actual file name
+//       type: "application/pdf",
+//       disposition: "attachment",
+//     },
+//   ],

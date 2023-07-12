@@ -32,15 +32,16 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
   const body = await req.json();
 
-  console.log(body.stripeBag);
-
   // return NextResponse.json({ msg: "STRIPE BUY TEST" });
 
   const session = await stripe.checkout.sessions.create({
-    success_url: e.DOMAIN! + "/buy?success=true",
+    success_url: e.DOMAIN! + "/success",
     cancel_url: e.DOMAIN! + "/buy?cancel=true",
-    line_items: body.stripeBag,
+    line_items: body,
     mode: "payment",
+    invoice_creation: {
+      enabled: true,
+    },
     shipping_address_collection: { allowed_countries: allowed_countriesArr },
   });
 

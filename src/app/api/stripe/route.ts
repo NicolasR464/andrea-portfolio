@@ -10,8 +10,6 @@ export async function POST(req: NextRequest) {
 
   const body = await req.json();
 
-  console.log("BODY 👀");
-
   console.log(body);
 
   const { name, active, description, metadata, price_amount } = body;

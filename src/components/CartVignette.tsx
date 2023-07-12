@@ -11,7 +11,7 @@ export default function CartVignette({ item }: { item: any }) {
   const [price, setPrice] = useState(0);
   const [collection, setCollection] = useState("");
   const [printLeft, setPrintLeft] = useState(0);
-  const [printSelecNum, setPrintSelecNum] = useState(0);
+  const [amountSelected, setAmountSelected] = useState(1);
 
   const { bag } = useStore();
 
@@ -38,6 +38,10 @@ export default function CartVignette({ item }: { item: any }) {
   useEffect(() => {
     setPrintLeft(item.prints_left);
   }, [item.prints_left]);
+
+  useEffect(() => {
+    setAmountSelected(item.amount_selected);
+  }, [item.amount_selected]);
 
   const removeItem = () => {
     useStore.setState((state) => ({
@@ -88,7 +92,9 @@ export default function CartVignette({ item }: { item: any }) {
             {Array(printLeft)
               .fill(null)
               .map((_, x) => (
-                <option key={x}>{x + 1}</option>
+                <option selected={x + 1 === amountSelected} key={x}>
+                  {x + 1}
+                </option>
               ))}
           </select>
           <button onClick={removeItem} className="link">
