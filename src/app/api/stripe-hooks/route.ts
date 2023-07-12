@@ -81,8 +81,6 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // UPDATE STRIPE PRODUCT _ AMOUNT LEFT
-
   // CREATE ORDER | MONGO
   console.log("SESSION ⭐️");
 
