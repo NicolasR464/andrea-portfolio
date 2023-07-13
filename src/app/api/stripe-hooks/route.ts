@@ -149,8 +149,6 @@ export async function POST(req: NextRequest) {
   }
 
   // SEND EMAIL TO ANDREA
-  console.log("🍕");
-  console.log(items_bought);
 
   const msg = {
     to: session?.customer_details?.email,

@@ -1,6 +1,9 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { UserButton } from "@clerk/nextjs";
+import { SignedIn, useSession } from "@clerk/clerk-react";
+import { useEffect } from "react";
 
 // import { useEffect } from 'react';
 // import { useRouter } from 'next/router';
@@ -30,6 +33,16 @@ import { usePathname } from "next/navigation";
 
 export default function NavBarLinks() {
   const pathname = usePathname();
+  const { isLoaded, session } = useSession();
+
+  useEffect(() => {
+    if (isLoaded) {
+      console.log(session);
+    }
+
+    console.log(session);
+  }, [session]);
+
   return (
     <div className="navbar-end">
       <div className="tabs mr-3">
@@ -42,6 +55,7 @@ export default function NavBarLinks() {
         <Link className={pathname == "/a" ? "tab tab-active" : "tab"} href="/a">
           Admin
         </Link>
+        <UserButton afterSignOutUrl="/" />
       </div>
     </div>
   );

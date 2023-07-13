@@ -6,6 +6,9 @@ import CartDrawer from "../components/CartDrawer";
 import DrawerOverlay from "../components/DrawerOverlay";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { ClerkProvider } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -36,33 +39,46 @@ export const metadata = {
   description: "Discover and purchase Andréa Rocagel's art",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // const user = await currentUser();
+  // console.log(user);
+  // console.log(user?.emailAddresses[0].emailAddress);
+
+  // if (user?.emailAddresses[0].emailAddress !== process.env.HOST_EMAIL)
+  //   redirect("/");
+
   return (
-    <html
-      data-theme="bumblebee"
-      className={`${tenor_sans.variable} ${tilt_prism.variable}`}
-      lang="en"
-    >
-      <head></head>
-      <body className={inter.className}>
-        <NavBar />
-        <CartDrawer />
-        <DrawerOverlay />
-        <ToastContainer position="top-center" hideProgressBar theme="colored" />
+    <ClerkProvider>
+      <html
+        data-theme="bumblebee"
+        className={`${tenor_sans.variable} ${tilt_prism.variable}`}
+        lang="en"
+      >
+        <head></head>
+        <body className={inter.className}>
+          <NavBar />
+          <CartDrawer />
+          <DrawerOverlay />
+          <ToastContainer
+            position="top-center"
+            hideProgressBar
+            theme="colored"
+          />
 
-        <div className="translate-y-24">{children}</div>
+          <div className="translate-y-24">{children}</div>
 
-        <Script src="./main.js" />
-        <Script
-          defer
-          src="https://kit.fontawesome.com/766e633129.js"
-          crossOrigin="anonymous"
-        ></Script>
-      </body>
-    </html>
+          <Script src="./main.js" />
+          <Script
+            defer
+            src="https://kit.fontawesome.com/766e633129.js"
+            crossOrigin="anonymous"
+          ></Script>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

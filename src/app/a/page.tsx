@@ -3,6 +3,8 @@ import Image from "next/image";
 import Vignette from "./vignette";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAnglesDown } from "@fortawesome/free-solid-svg-icons";
+import { currentUser } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
 const fetchItems = async () => {
   //will fetch all items - with a set revalidate tags to update the UI
@@ -19,7 +21,13 @@ const fetchItems = async () => {
 
 export default async function Dashboard() {
   const items = await fetchItems();
-  // console.log(items);
+  const user = await currentUser();
+  console.log("💥");
+
+  console.log(user?.emailAddresses[0].emailAddress);
+
+  if (user?.emailAddresses[0].emailAddress !== process.env.HOST_EMAIL)
+    redirect("/");
 
   return (
     <>
