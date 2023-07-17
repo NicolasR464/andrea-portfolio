@@ -7,12 +7,12 @@ import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
 const fetchItems = async () => {
-  //will fetch all items - with a set revalidate tags to update the UI
   try {
     const drawings = await fetch("http://localhost:3000/api/art", {
       next: { tags: ["drawings"] },
     });
     const drawingsRes = await drawings.json();
+
     return drawingsRes.data;
   } catch (err) {
     console.log(err);
@@ -22,9 +22,6 @@ const fetchItems = async () => {
 export default async function Dashboard() {
   const items = await fetchItems();
   const user = await currentUser();
-  console.log("💥");
-
-  console.log(user?.emailAddresses[0].emailAddress);
 
   if (user?.emailAddresses[0].emailAddress !== process.env.HOST_EMAIL)
     redirect("/");

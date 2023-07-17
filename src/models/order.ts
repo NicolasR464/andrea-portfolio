@@ -33,6 +33,8 @@ const orderSchema = new Schema({
   customerId: { type: String },
   createdAt: { type: String },
   paymentStatus: { type: String },
+  invoiceId: { type: String },
+  shippingStatus: { type: String },
 });
 
 const Order = models.Order || model("Order", orderSchema);

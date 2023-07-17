@@ -7,7 +7,6 @@ import DrawerOverlay from "../components/DrawerOverlay";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ClerkProvider } from "@clerk/nextjs";
-import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
 const inter = Inter({

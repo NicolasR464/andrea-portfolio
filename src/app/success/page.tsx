@@ -10,11 +10,12 @@ export default function Success() {
     <div className="w-full flex flex-col justify-center items-center min-h-[60vh]">
       <p className="text-center  text-xl">Thank you for your purchase!</p>
       <p className="text-center  text-lg">
-        Your choosen art will soon be on its way to bring a touch of wonder to
+        Your chosen art will soon be on its way to bring a touch of wonder to
         its new space.
       </p>
-      <span>
-        We sent you a confirmation email, if you didn't receive anything, please
+      <span className="text-center">
+        We sent you a confirmation email, if you didn&apos;t receive anything in
+        the next 5 minutes, please
         <Link className="link" href="/contact">
           {" "}
           contact us.

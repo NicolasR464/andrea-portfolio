@@ -27,9 +27,10 @@ export default async function Buy() {
       {/* <StoreInitializer price={400} isOpen={true} /> */}
       <h2 className="text-center text-5xl tracking-widest">shop</h2>
       <section className="flex flex-wrap justify-center">
-        {items.map((item: any, index: number) => (
-          <ShopCard item={item} key={index} />
-        ))}
+        {items &&
+          items.map((item: any, index: number) => (
+            <ShopCard item={item} key={index} />
+          ))}
       </section>
     </div>
   );

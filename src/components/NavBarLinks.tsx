@@ -2,46 +2,16 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
-import { SignedIn, useSession } from "@clerk/clerk-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-// import { useEffect } from 'react';
-// import { useRouter } from 'next/router';
-
-// const MyComponent = () => {
-//   const router = useRouter();
-
-//   useEffect(() => {
-//     const handleRouteChange = () => {
-//       const script = document.createElement('script');
-//       script.src = "/path/to/your/script.js";
-//       script.async = true;
-//       document.body.appendChild(script);
-//     };
-
-//     router.events.on('routeChangeComplete', handleRouteChange);
-
-//     return () => {
-//       router.events.off('routeChangeComplete', handleRouteChange);
-//     };
-//   }, [router.events]);
-
-//   return <div>My Component</div>;
-// };
-
-// export default MyComponent;
-
-export default function NavBarLinks() {
+export default function NavBarLinks({ isAdmin }: { isAdmin: boolean }) {
   const pathname = usePathname();
-  const { isLoaded, session } = useSession();
+  const [isAdminSet, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    if (isLoaded) {
-      console.log(session);
-    }
-
-    console.log(session);
-  }, [session]);
+    setIsAdmin(isAdmin);
+    console.log(isAdmin);
+  }, [isAdmin]);
 
   return (
     <div className="navbar-end">
@@ -52,9 +22,15 @@ export default function NavBarLinks() {
         >
           Buy
         </Link>
-        <Link className={pathname == "/a" ? "tab tab-active" : "tab"} href="/a">
-          Admin
-        </Link>
+        {isAdminSet && (
+          <Link
+            className={pathname == "/a" ? "tab tab-active" : "tab"}
+            href="/a"
+          >
+            Admin
+          </Link>
+        )}
+
         <UserButton afterSignOutUrl="/" />
       </div>
     </div>

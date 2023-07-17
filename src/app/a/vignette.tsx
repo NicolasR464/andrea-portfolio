@@ -146,7 +146,7 @@ const Vignette: React.FC<Props> = ({ item }) => {
       setDeleteModal(false);
       router.refresh();
 
-      if (fetchRes.ok) toast.success("drawing deleted!");
+      if (fetchRes.ok) toast.info("drawing deleted 🗑");
     } catch (err) {
       console.log(err);
       toast.error("something went wrong, try again...");

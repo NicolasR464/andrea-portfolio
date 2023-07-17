@@ -87,6 +87,8 @@ export async function POST(req: NextRequest) {
   console.log(session);
   console.log(session.amount_total);
 
+  const createdAt = new Date(session.created * 1000);
+
   const orderObj = {
     customerDetails: {
       address: session?.customer_details?.address,
@@ -95,9 +97,10 @@ export async function POST(req: NextRequest) {
       phone: session?.customer_details?.phone,
     },
     orderItems: ordersArr,
-    amountTotal: session.amount_total,
+    amountTotal: session.amount_total! / 100,
     customerId: session.customer,
-    createdAt: session.created,
+    createdAt: createdAt.toString(),
+    invoiceId: session.invoice,
   };
 
   try {
@@ -160,7 +163,7 @@ export async function POST(req: NextRequest) {
         items_bought < 2
           ? "d'un de tes dessins"
           : "de quelques-uns de tes dessins",
-      total_price: session.amount_total,
+      total_price: session.amount_total! / 100,
     },
   };
   console.log("email sending");

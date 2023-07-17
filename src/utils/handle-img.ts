@@ -67,8 +67,18 @@ export const uploadImage = async (
         body: cloudinaryForm,
       }
     );
+
+    console.log(response);
+    // TEST LOG
+    console.log("CLOUDINARY RESPONSE 🧐");
+    // const serverHeader = response[Symbol.headers].get("server");
+
+    console.log(response["headers"]);
+
+    //
     if (response.ok) {
       const cloudiRes = await response.json();
+      console.log(cloudiRes);
 
       return cloudiRes;
     }
