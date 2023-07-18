@@ -26,9 +26,15 @@
     "cloudinary": "^1.37.2",
     "country-list": "^2.3.0",
     "eslint": "8.42.0",
+<<<<<<< .merge_file_7bgr8y
     "eslint-config-next": "13.4.5",
     "formidable": "^3.4.0",
     "JSONStream": "^1.3.5",
+=======
+    "eslint-config-next": "13.4.9",
+    "flowbite": "^1.6.6",
+    "flowbite-react": "^0.4.7",
+>>>>>>> .merge_file_aGS858
     "mongodb": "^5.6.0",
     "mongoose": "^7.3.1",
     "multer": "^1.4.5-lts.1",
