@@ -31,9 +31,12 @@ const orderSchema = new Schema({
   ],
   amountTotal: { type: Number },
   customerId: { type: String },
-  createdAt: { type: String },
+  createdAt: { type: Date },
   paymentStatus: { type: String },
-  invoiceId: { type: String },
+  invoice: {
+    id: { type: String },
+    url: { type: String },
+  },
   shippingStatus: { type: String },
 });
 

@@ -34,7 +34,7 @@ export default function CartDrawer() {
     <div ref={inputRef} className="sticky top-0 z-40">
       <div
         style={drawerAnimation}
-        className="overflow-x-hidden drawer cart-drawer transition-all duration-1000  translate-x-full border-2  h-screen z-50 max-w-sm absolute top-0 right-0 backdrop-blur-sm"
+        className="overflow-x-hidden drawer cart-drawer transition-all duration-1000  translate-x-full border-2  h-screen z-50 max-w-sm absolute top-0 right-0 backdrop-blur-lg"
       >
         <div className="mt-14 flex w-full flex-col justify-between min-w-[384px] ">
           <button

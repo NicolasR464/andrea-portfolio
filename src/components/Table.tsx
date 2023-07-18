@@ -1,12 +1,13 @@
 import Link from "next/link";
+import AddressBtn from "@/components/AddressBtn";
+import { getCode, getName } from "country-list";
+import { count } from "console";
 
 export default function Table({ orders }: { orders: any }) {
-  console.log("🍕🍕");
-
-  console.log(orders);
-
+  // const country =
+  //             getName(order.customerDetails?.address.country) || undefined;
   return (
-    <div className="overflow-x-auto max-h-screen">
+    <div className="overflow-x-auto max-h-[80vh]">
       <table className="table table-xs table-pin-rows table-pin-cols">
         <thead>
           <tr>
@@ -24,13 +25,48 @@ export default function Table({ orders }: { orders: any }) {
         </thead>
         <tbody>
           {orders.data.map((order: any, i: number) => {
+            let country;
+
+            try {
+              country = getName(order.customerDetails?.address.country);
+            } catch (err) {
+              country = order.customerDetails?.address.country;
+            }
+
+            const address =
+              order.customerDetails?.address.line1 +
+              ", " +
+              (order.customerDetails?.address.line2 != null
+                ? order.customerDetails?.address.line2 + ","
+                : "") +
+              order.customerDetails?.address.postal_code +
+              ", " +
+              order.customerDetails?.address.city +
+              ", " +
+              (order.customerDetails?.address.state != null
+                ? order.customerDetails?.address.state + ", "
+                : "") +
+              country;
+
+            // date
+            const dateObj = new Date(order.createdAt);
+            const localDateStr = dateObj.toLocaleString("en-GB");
+
             return (
               <tr key={i}>
                 <th>{i}</th>
                 <td>
-                  <Link className="cursor-pointer" href="/a">
-                    {order.invoiceId}
-                  </Link>{" "}
+                  {order?.invoice?.url !== undefined ? (
+                    <Link
+                      target="_blank"
+                      className="cursor-pointer link"
+                      href={order?.invoice?.url}
+                    >
+                      Stripe invoice
+                    </Link>
+                  ) : (
+                    "-"
+                  )}
                 </td>
                 <td>{order.customerDetails?.name}</td>
                 <td>{order.customerDetails?.email}</td>
@@ -43,29 +79,10 @@ export default function Table({ orders }: { orders: any }) {
                   </span>
                 </td>
                 <td>
-                  <div
-                    className="tooltip"
-                    data-tip={
-                      order.customerDetails?.address.line1 +
-                      ", " +
-                      (order.customerDetails?.address.line2 != null
-                        ? order.customerDetails?.address.line2 + ","
-                        : "") +
-                      order.customerDetails?.address.postal_code +
-                      ", " +
-                      order.customerDetails?.address.city +
-                      ", " +
-                      (order.customerDetails?.address.state != null
-                        ? order.customerDetails?.address.state + ", "
-                        : "") +
-                      order.customerDetails?.address.country
-                    }
-                  >
-                    <button className="btn btn-outline btn-xs">show</button>
-                  </div>
+                  <AddressBtn address={address} />
                 </td>
                 <td>{order?.amountTotal}€</td>
-                <td>{order?.createdAt?.split("GMT")[0]}</td>
+                <td>{localDateStr}</td>
                 <td>{order?.shipping_status}</td>
 
                 <th>{i}</th>

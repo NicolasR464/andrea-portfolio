@@ -1,7 +1,9 @@
 import Table from "@/components/Table";
 
 const getOrders = async () => {
-  const ordersRes = await fetch("http://localhost:3000/api/orders");
+  const ordersRes = await fetch("http://localhost:3000/api/orders", {
+    next: { tags: ["orders"] },
+  });
 
   //   const resParsed = await ordersRes;
   return ordersRes;

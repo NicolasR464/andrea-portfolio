@@ -24,7 +24,13 @@ export default function NavBarLinks({ isAdmin }: { isAdmin: boolean }) {
         </Link>
         {isAdminSet && (
           <Link
-            className={pathname == "/a" ? "tab tab-active" : "tab"}
+            className={
+              pathname == "/a" ||
+              pathname == "/a/orders" ||
+              pathname == "/a/bio"
+                ? "tab tab-active"
+                : "tab"
+            }
             href="/a"
           >
             Admin

@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import connectMongoose from "../../../utils/mongoose";
 import Order from "../../../models/order";
 import Drawing from "../../../models/drawing";
-import { revalidateTag } from "next/cache";
+import { revalidateTag, revalidatePath } from "next/cache";
 import Stripe from "stripe";
 import mail from "@sendgrid/mail";
+import getInvoiceUrl from "../../../utils/getInvoice";
 
 mail.setApiKey(process.env.SENDGRID_KEY!);
 
@@ -89,6 +90,8 @@ export async function POST(req: NextRequest) {
 
   const createdAt = new Date(session.created * 1000);
 
+  const invoiceUrl = await getInvoiceUrl(session.invoice);
+
   const orderObj = {
     customerDetails: {
       address: session?.customer_details?.address,
@@ -100,7 +103,7 @@ export async function POST(req: NextRequest) {
     amountTotal: session.amount_total! / 100,
     customerId: session.customer,
     createdAt: createdAt.toString(),
-    invoiceId: session.invoice,
+    invoice: { id: session.invoice, url: invoiceUrl },
   };
 
   try {
@@ -113,6 +116,8 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
+  revalidateTag("orders");
+  revalidatePath("/a/orders");
 
   // UPDATE DRAWING MODEL| MONGO
 
@@ -140,8 +145,6 @@ export async function POST(req: NextRequest) {
     ordersArr?.forEach((order) => {
       updateDrawingModel(order);
     });
-
-    revalidateTag("drawings");
   } catch (err) {
     console.log("❌ mongo err");
     console.log(err);
@@ -150,11 +153,13 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
+  revalidateTag("drawings");
+  // session?.customer_details?.email
 
   // SEND EMAIL TO ANDREA
 
   const msg = {
-    to: session?.customer_details?.email,
+    to: process.env.HOST_EMAIL!,
     from: process.env.HOST_EMAIL!,
 
     templateId: "d-81ff00f6727149ea99c707166127dd16",
