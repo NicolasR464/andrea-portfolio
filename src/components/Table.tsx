@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import AddressBtn from "@/components/AddressBtn";
 import { getCode, getName } from "country-list";
@@ -7,7 +8,7 @@ export default function Table({ orders }: { orders: any }) {
   // const country =
   //             getName(order.customerDetails?.address.country) || undefined;
   return (
-    <div className="overflow-x-auto max-h-[80vh]">
+    <div className="overflow-x-auto max-h-[70vh]">
       <table className="table table-xs table-pin-rows table-pin-cols">
         <thead>
           <tr>

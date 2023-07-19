@@ -13,6 +13,9 @@ const stripe = new Stripe(process.env.STRIPE_KEY as string, {
   apiVersion: "2022-11-15",
 });
 
+// ADD CONDITIONS ON STATUS TO DO THE CRUD
+// + MAIL ON ORDER
+// + UPDATE ORDERS TABLE ON PAYMENT STATUS CHANGED
 export async function POST(req: NextRequest) {
   connectMongoose();
   console.log("STRIPE EVENT 🚀");
@@ -42,7 +45,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Successfully constructed event.
-  console.log("✅ STRIPE WEBHOOK Success:", event.id);
+  console.log("✅ STRIPE WEBHOOK Successss:", event.id);
 
   interface MySession extends Stripe.Checkout.Session {
     customer_details: any;
