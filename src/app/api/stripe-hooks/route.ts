@@ -43,7 +43,6 @@ export async function POST(req: NextRequest) {
       { status: 400 }
     );
   }
-
   // Successfully constructed event.
   console.log("✅ STRIPE WEBHOOK Successss:", event.id);
 
@@ -105,7 +104,7 @@ export async function POST(req: NextRequest) {
     orderItems: ordersArr,
     amountTotal: session.amount_total! / 100,
     customerId: session.customer,
-    createdAt: createdAt.toString(),
+    // createdAt: createdAt.toString(),
     invoice: { id: session.invoice, url: invoiceUrl },
   };
 
@@ -179,7 +178,6 @@ export async function POST(req: NextRequest) {
   mail.send(msg).then(
     () => {
       console.log("email sent! 🚀");
-      return NextResponse.json({ data: "POST EMAIL", status: 200 });
     },
     (error) => {
       console.error(error);
@@ -190,6 +188,7 @@ export async function POST(req: NextRequest) {
       }
     }
   );
+  return NextResponse.json({ finished: true }, { status: 201 });
 }
 
 // attachments: [

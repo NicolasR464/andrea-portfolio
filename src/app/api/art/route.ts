@@ -103,7 +103,6 @@ const stripe = new Stripe(e.STRIPE_KEY as string, {
 });
 
 export async function POST(req: NextRequest, res: NextResponse) {
-  console.log("🔥POST");
   connectMongoose();
 
   const formData = await req.formData();

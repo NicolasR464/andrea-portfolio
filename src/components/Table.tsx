@@ -50,6 +50,7 @@ export default function Table({ orders }: { orders: any }) {
               country;
 
             // date
+
             const dateObj = new Date(order.createdAt);
             const localDateStr = dateObj.toLocaleString("en-GB");
 

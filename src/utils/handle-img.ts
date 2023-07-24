@@ -59,6 +59,10 @@ export const uploadImage = async (
   cloudinaryForm.append("folder", e.CLOUDINARY_UPLOAD_IMG_DRAWING_FOLDER!);
   cloudinaryForm.append("context", cloudiMeta);
 
+  console.log("cloudinary form ↴");
+
+  console.log(cloudinaryForm);
+
   try {
     const response = await fetch(
       `https://api.cloudinary.com/v1_1/${e.CLOUDINARY_CLOUD_NAME}/image/upload`,
@@ -70,8 +74,6 @@ export const uploadImage = async (
 
     console.log(response);
     // TEST LOG
-    console.log("CLOUDINARY RESPONSE 🧐");
-    // const serverHeader = response[Symbol.headers].get("server");
 
     console.log(response["headers"]);
 

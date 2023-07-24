@@ -4,14 +4,15 @@ import Filters from "./filters";
 const getOrders = async (searchParams: any) => {
   // console.log(searchParams);
 
-  const { input } = searchParams;
+  const { input, date } = searchParams;
   console.log(typeof searchParams);
   console.log(searchParams);
   console.log(searchParams.hasOwnProperty("input"));
+  // console.log(searchParams.hasOwnProperty("date"));
 
   const ordersRes = await fetch(
     searchParams.hasOwnProperty("input")
-      ? `http://localhost:3000/api/orders?input=${input}`
+      ? `http://localhost:3000/api/orders?input=${input}&date=${date}`
       : "http://localhost:3000/api/orders",
     {
       cache: "no-store",
