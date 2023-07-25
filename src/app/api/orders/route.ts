@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  if (inputDate) {
+  if (inputDate && !inputDate.includes("-")) {
     const startDate = moment(inputDate, "ddd DD MMM YYYY")
       .startOf("day")
       .toDate();

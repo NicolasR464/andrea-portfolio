@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { DatePickerInput } from "@mantine/dates";
 import moment from "moment";
+import Link from "next/link";
 
 export default function Filters() {
   const searchParams = useSearchParams();
@@ -13,38 +14,56 @@ export default function Filters() {
   const [value, setValue] = useState<any>(null);
   const [debouncedInput] = useDebouncedValue(value, 800);
 
-  const [dateRangeValue, setDateRangeValue] = useState<
-    [Date | null, Date | null]
-  >([null, null]);
+  const [dateRangeValue, setDateRangeValue] = useState<any>([null, null]);
   const [debouncedDateRange] = useDebouncedValue(dateRangeValue, 800);
 
   const [dateValue, setDateValue] = useState<any>(null);
   const [debouncedDate] = useDebouncedValue(dateValue, 800);
 
-  useEffect(() => {
-    console.log("date 💥");
-  }, [debouncedDate]);
+  const [isOnMain, setOnMain] = useState(true);
+
+  // useEffect(() => {
+  //   console.log("date 💥");
+  // }, [debouncedDate]);
+
+  // useEffect(() => {
+  //   console.log({ dateRangeValue });
+  // }, [dateRangeValue]);
 
   useEffect(() => {
     console.log({ dateValue });
     if (searchParams.has("input") && searchParams.get("input") != "null") {
+      setOnMain(false);
       setValue(searchParams.get("input"));
       console.log("NOT on main");
+    } else {
+      console.log("ON main");
+      setValue("");
+      setDateValue(null);
+      setDateRangeValue([null, null]);
     }
 
     if (searchParams.has("date") && searchParams.get("date") != "null") {
       console.log("HAVE DATE");
       console.log(searchParams.get("date"));
 
-      const date = new Date(searchParams.get("date")!);
-      setDateValue(date);
+      if (searchParams.get("date")?.includes("-")) {
+        const dateStart = new Date(searchParams.get("date")?.split("-")[0]!);
+        const dateEnd = new Date(searchParams.get("date")?.split("-")[1]!);
+
+        setDateRangeValue([dateStart, dateEnd]);
+      } else {
+        const date = new Date(searchParams.get("date")!);
+        setDateValue(date);
+      }
     } else {
       console.log("DONT HAVE DATE");
-      setDateValue(null);
+      // setDateValue(null);
     }
     setHasParams(searchParams.has("input"));
 
     // setDateValue(searchParams.get("date"));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
   //   useEffect(() => {
@@ -72,33 +91,75 @@ export default function Filters() {
   //     }
   //   }, [searchParams, setValue]);
 
-  //   useEffect(() => {
-  //     if (dateValue) setDateRangeValue([null, null]);
-  //   }, [dateValue]);
+  useEffect(() => {
+    if (dateValue) setDateRangeValue([null, null]);
+  }, [dateValue]);
 
-  //   useEffect(() => {
-  //     if (dateRangeValue[0] !== null && dateRangeValue[1] !== null)
-  //       setDateValue(null);
-  //   }, [dateRangeValue]);
+  useEffect(() => {
+    if (dateRangeValue[0] !== null && dateRangeValue[1] !== null) {
+      // console.log("😬");
+
+      setDateValue(null);
+    }
+  }, [dateRangeValue]);
 
   useEffect(() => {
     let formattedDate = null;
+    let formattedDateRangeStart = null;
+    let formattedDateRangeEnd = null;
+
+    console.log({ debouncedDateRange });
+    console.log({ debouncedDate });
+    console.log({ debouncedInput });
+
     if (debouncedDate) {
       const date = moment(debouncedDate);
       formattedDate = date.format("ddd DD MMM YYYY");
+    } else if (
+      debouncedDateRange[0] !== null &&
+      debouncedDateRange[1] !== null
+    ) {
+      const dateStart = moment(dateRangeValue[0]);
+      const dateEnd = moment(dateRangeValue[1]);
+      formattedDateRangeStart = dateStart.format("ddd DD MMM YYYY");
+      formattedDateRangeEnd = dateEnd.format("ddd DD MMM YYYY");
     }
 
-    if (debouncedInput || debouncedDate) {
+    // (dateRangeValue[0] !== null && dateRangeValue[1] !== null)
+
+    // (formattedDateRangeStart &&
+    //   formattedDateRangeStart + "-" + formattedDateRangeEnd)
+
+    if ((debouncedInput !== "" && debouncedInput !== null) || debouncedDate) {
       router.push(`/a/orders?input=${debouncedInput}&date=${formattedDate}`);
+    } else if (
+      debouncedInput !== "" &&
+      debouncedInput !== null &&
+      dateRangeValue[0] !== null &&
+      dateRangeValue[1] !== null
+    ) {
+      router.push(
+        `/a/orders?input=${debouncedInput}&date=${
+          formattedDateRangeStart + "-" + formattedDateRangeEnd
+        }`
+      );
     }
-  }, [debouncedInput, debouncedDate, router]);
+  }, [
+    debouncedInput,
+    debouncedDate,
+    router,
+    debouncedDateRange,
+    dateRangeValue,
+  ]);
 
   const handleReset = () => {
     setDateRangeValue([null, null]);
     setDateValue(null);
     setValue("");
     router.push("/a/orders");
-    setTimeout(() => setValue(""), 0);
+    // setTimeout(() => {}, 880);
+    // setTimeout(() => setValue(""), 0);
+    setValue("");
     setDateRangeValue([null, null]);
     setDateValue(null);
   };
@@ -148,6 +209,7 @@ export default function Filters() {
           reset filter
         </button>
       )}
+      <Link href="/a/orders">RESET </Link>
     </section>
   );
 }

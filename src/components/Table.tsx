@@ -25,72 +25,73 @@ export default function Table({ orders }: { orders: any }) {
           </tr>
         </thead>
         <tbody>
-          {orders.data.map((order: any, i: number) => {
-            let country;
+          {orders &&
+            orders.data.map((order: any, i: number) => {
+              let country;
 
-            try {
-              country = getName(order.customerDetails?.address.country);
-            } catch (err) {
-              country = order.customerDetails?.address.country;
-            }
+              try {
+                country = getName(order.customerDetails?.address.country);
+              } catch (err) {
+                country = order.customerDetails?.address.country;
+              }
 
-            const address =
-              order.customerDetails?.address.line1 +
-              ", " +
-              (order.customerDetails?.address.line2 != null
-                ? order.customerDetails?.address.line2 + ","
-                : "") +
-              order.customerDetails?.address.postal_code +
-              ", " +
-              order.customerDetails?.address.city +
-              ", " +
-              (order.customerDetails?.address.state != null
-                ? order.customerDetails?.address.state + ", "
-                : "") +
-              country;
+              const address =
+                order.customerDetails?.address.line1 +
+                ", " +
+                (order.customerDetails?.address.line2 != null
+                  ? order.customerDetails?.address.line2 + ","
+                  : "") +
+                order.customerDetails?.address.postal_code +
+                ", " +
+                order.customerDetails?.address.city +
+                ", " +
+                (order.customerDetails?.address.state != null
+                  ? order.customerDetails?.address.state + ", "
+                  : "") +
+                country;
 
-            // date
+              // date
 
-            const dateObj = new Date(order.createdAt);
-            const localDateStr = dateObj.toLocaleString("en-GB");
+              const dateObj = new Date(order.createdAt);
+              const localDateStr = dateObj.toLocaleString("en-GB");
 
-            return (
-              <tr key={i}>
-                <th>{i}</th>
-                <td>
-                  {order?.invoice?.url !== undefined ? (
-                    <Link
-                      target="_blank"
-                      className="cursor-pointer link"
-                      href={order?.invoice?.url}
-                    >
-                      Stripe invoice
-                    </Link>
-                  ) : (
-                    "-"
-                  )}
-                </td>
-                <td>{order.customerDetails?.name}</td>
-                <td>{order.customerDetails?.email}</td>
-                <td>
-                  {" "}
-                  <span className="text-center">
-                    {order.customerDetails?.phone
-                      ? order.customerDetails?.phone
-                      : "-"}
-                  </span>
-                </td>
-                <td>
-                  <AddressBtn address={address} />
-                </td>
-                <td>{order?.amountTotal}€</td>
-                <td>{localDateStr}</td>
-                <td>{order?.shipping_status}</td>
+              return (
+                <tr key={i}>
+                  <th>{i}</th>
+                  <td>
+                    {order?.invoice?.url !== undefined ? (
+                      <Link
+                        target="_blank"
+                        className="cursor-pointer link"
+                        href={order?.invoice?.url}
+                      >
+                        Stripe invoice
+                      </Link>
+                    ) : (
+                      "-"
+                    )}
+                  </td>
+                  <td>{order.customerDetails?.name}</td>
+                  <td>{order.customerDetails?.email}</td>
+                  <td>
+                    {" "}
+                    <span className="text-center">
+                      {order.customerDetails?.phone
+                        ? order.customerDetails?.phone
+                        : "-"}
+                    </span>
+                  </td>
+                  <td>
+                    <AddressBtn address={address} />
+                  </td>
+                  <td>{order?.amountTotal}€</td>
+                  <td>{localDateStr}</td>
+                  <td>{order?.shipping_status}</td>
 
-                <th>{i}</th>
-              </tr>
-            );
-          })}
+                  <th>{i}</th>
+                </tr>
+              );
+            })}
         </tbody>
         <tfoot>
           <tr>
