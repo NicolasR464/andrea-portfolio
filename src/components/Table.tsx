@@ -26,7 +26,7 @@ export default function Table({ orders }: { orders: any }) {
         </thead>
         <tbody>
           {orders &&
-            orders.data.map((order: any, i: number) => {
+            orders.map((order: any, i: number) => {
               let country;
 
               try {

@@ -130,27 +130,22 @@ export default function Filters() {
     // (formattedDateRangeStart &&
     //   formattedDateRangeStart + "-" + formattedDateRangeEnd)
 
-    if ((debouncedInput !== "" && debouncedInput !== null) || debouncedDate) {
+    if (debouncedDate) {
       router.push(`/a/orders?input=${debouncedInput}&date=${formattedDate}`);
-    } else if (
-      debouncedInput !== "" &&
-      debouncedInput !== null &&
-      dateRangeValue[0] !== null &&
-      dateRangeValue[1] !== null
-    ) {
+    } else if (dateRangeValue[0] !== null && dateRangeValue[1] !== null) {
       router.push(
         `/a/orders?input=${debouncedInput}&date=${
           formattedDateRangeStart + "-" + formattedDateRangeEnd
         }`
       );
+    } else if (debouncedInput) {
+      router.push(
+        `/a/orders?input=${debouncedInput}
+        `
+      );
     }
-  }, [
-    debouncedInput,
-    debouncedDate,
-    router,
-    debouncedDateRange,
-    dateRangeValue,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedInput, debouncedDate, router, debouncedDateRange]);
 
   const handleReset = () => {
     setDateRangeValue([null, null]);
@@ -203,13 +198,12 @@ export default function Filters() {
 
       {hasParams && (
         <button
-          className="btn tablet:btn-ghost mb-1"
+          className="btn btn-outline btn-warning mb-1"
           onClick={() => handleReset()}
         >
           reset filter
         </button>
       )}
-      <Link href="/a/orders">RESET </Link>
     </section>
   );
 }

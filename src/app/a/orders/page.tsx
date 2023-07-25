@@ -18,21 +18,34 @@ const getOrders = async (searchParams: any) => {
       cache: "no-store",
     }
   );
+  // console.log("🚀🚀");
+  // console.log(ordersRes);
+  const resParsed = await ordersRes.json();
 
   //  next: { tags: ["orders"] }
-  return ordersRes;
+  return resParsed.data;
 };
 
 export default async function Orders({ searchParams }: any) {
-  const order = await getOrders(searchParams);
+  const orders = await getOrders(searchParams);
 
-  const data = await order.json();
+  // const data = await order.json();
+
+  // console.log(orders);
 
   return (
     <section>
       <h1 className="text-center text-5xl">orders</h1>
       <Filters />
-      <Table orders={data} />
+      {orders && orders.length > 0 ? (
+        <>
+          <Table orders={orders} />
+        </>
+      ) : (
+        <div className="flex justify-center">
+          <span className="text-center">No result found</span>
+        </div>
+      )}
     </section>
   );
 }
