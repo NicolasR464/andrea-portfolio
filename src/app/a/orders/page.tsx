@@ -35,7 +35,7 @@ export default async function Orders({ searchParams }: any) {
 
   return (
     <section>
-      <h1 className="text-center text-5xl">orders</h1>
+      <h1 className="text-center text-5xl">Orders</h1>
       <Filters />
       {orders && orders.length > 0 ? (
         <>

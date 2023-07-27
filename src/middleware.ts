@@ -17,8 +17,7 @@ export default authMiddleware({
     "/api/stripe-hooks",
     "/api/orders",
     "/api/order",
-    "/api/orders/[id]",
-    "/a/orders/[id]",
+    "/api/about",
   ],
 
   // ignoredRoutes: ["/((?!api|trpc))(_next|.+..+)(.*)", "/api/shop", "/api/art"],
