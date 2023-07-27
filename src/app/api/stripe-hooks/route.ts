@@ -5,7 +5,9 @@ import Drawing from "../../../models/drawing";
 import { revalidateTag, revalidatePath } from "next/cache";
 import Stripe from "stripe";
 import mail from "@sendgrid/mail";
-import getInvoiceUrl from "../../../utils/getInvoice";
+import { getInvoiceUrl, getProductInfo } from "../../../utils/getInvoice";
+
+// ALT - https://codeshare.io/EBOdlp
 
 mail.setApiKey(process.env.SENDGRID_KEY!);
 
@@ -63,27 +65,62 @@ export async function POST(req: NextRequest) {
   let ordersArr: Array<{}> | undefined;
   let items_bought = 0;
 
+  // const retrieveImg = async (prodId: any) => {
+  //   const product = await stripe.products.retrieve(prodId);
+
+  //   return product.images[0];
+  // };
+
   if (checkoutSession.line_items && checkoutSession.line_items.data) {
     console.log(checkoutSession.line_items.data);
 
-    ordersArr = checkoutSession.line_items.data.map((order) => {
-      return {
-        id: order.id,
-        amount_total: order.amount_total / 100,
-        price: {
-          id: order.price?.id,
-          product: order.price?.product,
-        },
-        quantity: order.quantity,
-      };
-    });
-
     for (let lineItem of checkoutSession.line_items.data) {
-      console.log(`Purchased product: ${lineItem.description}`);
       items_bought += lineItem?.quantity!;
     }
   }
 
+  async function getOrders() {
+    try {
+      const ordersPromises: any = checkoutSession?.line_items?.data.map(
+        async (order) => {
+          console.log({ order });
+
+          const productInfo = await getProductInfo(order?.price?.product);
+          console.log("❤️");
+
+          console.log(productInfo);
+
+          return {
+            id: order.id,
+            name: productInfo?.name,
+            amount_total: order.amount_total / 100,
+            price: {
+              id: order.price?.id,
+              product: order.price?.product,
+            },
+            quantity: order.quantity,
+            imageUrl: productInfo?.images[0],
+          };
+        }
+      );
+      ordersArr = await Promise.all(ordersPromises);
+
+      return ordersArr;
+    } catch (err) {
+      console.log(err);
+      return NextResponse.json(
+        { message: "STRIPE CHECKOUT LINE ITEMS ERR", data: err },
+        { status: 500 }
+      );
+    }
+  }
+
+  const orders = await getOrders();
+  console.log("🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥");
+
+  console.log(orders);
+
+  // return;
   // CREATE ORDER | MONGO
   console.log("SESSION ⭐️");
 

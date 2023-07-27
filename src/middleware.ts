@@ -16,6 +16,9 @@ export default authMiddleware({
     "/api/stripe",
     "/api/stripe-hooks",
     "/api/orders",
+    "/api/order",
+    "/api/orders/[id]",
+    "/a/orders/[id]",
   ],
 
   // ignoredRoutes: ["/((?!api|trpc))(_next|.+..+)(.*)", "/api/shop", "/api/art"],
@@ -30,5 +33,3 @@ export default authMiddleware({
 export const config = {
   matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
 };
-
-// export default function mi() {}

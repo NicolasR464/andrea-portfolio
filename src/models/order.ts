@@ -20,6 +20,7 @@ const orderSchema = new Schema(
     orderItems: [
       {
         id: { type: String },
+        name: { type: String },
         amount_total: { type: Number },
         price: {
           id: {
@@ -28,6 +29,7 @@ const orderSchema = new Schema(
           product: { type: String },
         },
         quantity: { type: Number },
+        imageUrl: { type: String },
       },
     ],
     amountTotal: { type: Number },

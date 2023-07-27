@@ -17,7 +17,7 @@ export default async function NavBar({ params }: any) {
         <div className="navbar-start">
           <Link href="/">
             <Image
-              src="https://res.cloudinary.com/niikkoo/image/upload/v1687358552/andrea-drawing-portfolio/assets-misc/logo_nmaq4a.png"
+              src={process.env.LOGO_IMG!}
               width={100}
               height={100}
               alt="website logo"

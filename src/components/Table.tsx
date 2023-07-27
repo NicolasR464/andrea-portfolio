@@ -13,7 +13,8 @@ export default function Table({ orders }: { orders: any }) {
         <thead>
           <tr>
             <th></th>
-            <td>invoice detail</td>
+            <td>order details</td>
+            <td>invoice</td>
             <td>customer name</td>
             <td>email</td>
             <td>phone</td>
@@ -57,7 +58,12 @@ export default function Table({ orders }: { orders: any }) {
 
               return (
                 <tr key={i}>
-                  <th>{i}</th>
+                  <th>{i + 1}</th>
+                  <td>
+                    <Link href={`/a/order?id=${order._id}`} className="link">
+                      Details
+                    </Link>
+                  </td>
                   <td>
                     {order?.invoice?.url !== undefined ? (
                       <Link
@@ -88,7 +94,7 @@ export default function Table({ orders }: { orders: any }) {
                   <td>{localDateStr}</td>
                   <td>{order?.shipping_status}</td>
 
-                  <th>{i}</th>
+                  <th>{i + 1}</th>
                 </tr>
               );
             })}
@@ -96,7 +102,8 @@ export default function Table({ orders }: { orders: any }) {
         <tfoot>
           <tr>
             <th></th>
-            <td>invoice detail</td>
+            <td>order details</td>
+            <td>invoice</td>
             <td>customer name</td>
             <td>email</td>
             <td>phone</td>
