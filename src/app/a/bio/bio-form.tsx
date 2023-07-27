@@ -14,6 +14,7 @@ export default function FormBio({
 }) {
   const [text, setText] = useState<string>("");
   const [image, setImage] = useState<any>();
+  const [imageUrl, setImageUrl] = useState<any>();
   const [isPosting, setPosting] = useState<boolean>(false);
 
   const router = useRouter();
@@ -22,10 +23,23 @@ export default function FormBio({
     setText(bioText);
     console.log(bioText);
   }, [bioText]);
-  //   useEffect(() => {
-  //     setImage(bioImgUrl);
-  //     console.log(bioImgUrl);
-  //   }, [bioImgUrl]);
+
+  useEffect(() => {
+    setImageUrl(bioImgUrl);
+    console.log(bioImgUrl);
+  }, [bioImgUrl]);
+
+  // UPDATE IMAGE
+
+  const updateImg = (file: any) => {
+    if (file) {
+      const url = window.URL.createObjectURL(
+        new Blob([file], { type: "image/jpg" })
+      );
+      setImageUrl(url);
+      setImage(file);
+    }
+  };
 
   const handleNewBio = async (event: any) => {
     event.preventDefault();
@@ -83,14 +97,19 @@ export default function FormBio({
           <label className="input-group mt-2">
             <span>upload an image</span>
             <input
-              value={image}
-              onChange={(e: any) => setImage(e.target.value)}
+              onChange={(e: any) => updateImg(e.target.files[0])}
               type="file"
               name="image"
               className="file-input file-input-ghost w-full max-w-xs"
             />
           </label>
-
+          <Image
+            className="m-2 rounded-sm"
+            src={imageUrl}
+            alt="Picture of the author"
+            width={200}
+            height={200}
+          />
           <button
             className="btn mt-2 max-w-xs z-10"
             type="submit"
