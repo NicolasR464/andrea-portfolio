@@ -42,7 +42,8 @@ export async function POST(req: NextRequest) {
   const mongoObj: any = {};
 
   mongoObj.text = text;
-  if (img) mongoObj.image = { public_id: public_img_id, url: img_url };
+  if (img !== "undefined")
+    mongoObj.image = { public_id: public_img_id, url: img_url };
 
   try {
     const bio = await Bio.findOneAndUpdate(mongoObj);

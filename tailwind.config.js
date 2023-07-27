@@ -17,6 +17,7 @@ module.exports = {
       maxWidth: {
         "1-2": "50%",
         "2-3": "66%",
+        80: "80vw",
         logo: "20px",
       },
     },

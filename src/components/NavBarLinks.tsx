@@ -18,6 +18,18 @@ export default function NavBarLinks({ isAdmin }: { isAdmin: boolean }) {
       <div className="tabs mr-3">
         <Link
           className={pathname == "/buy" ? "tab tab-active" : "tab"}
+          href="/about"
+        >
+          About
+        </Link>
+        <Link
+          className={pathname == "/buy" ? "tab tab-active" : "tab"}
+          href="/contact"
+        >
+          Contact
+        </Link>
+        <Link
+          className={pathname == "/buy" ? "tab tab-active" : "tab"}
           href="/buy"
         >
           Buy
