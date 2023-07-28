@@ -33,7 +33,7 @@ export default function NavBarLinks({ isAdmin }: { isAdmin: boolean }) {
           <Image src="/mail-icon.png" width={40} height={40} alt="Contact" />
         </Link>
         <Link
-          className="ml-3"
+          className="ml-3 translate-y-[2px]"
           target="blank"
           href="https://www.instagram.com/andreagracerocagel"
         >
