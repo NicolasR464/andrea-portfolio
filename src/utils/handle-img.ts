@@ -52,12 +52,16 @@ export const uploadImage = async (
   const cloudiMeta = `name=${name}|collection=${collection}`;
 
   cloudinaryForm.append("file", img);
-  cloudinaryForm.append("api_key", e.CLOUDINARY_API_KEY!);
-  cloudinaryForm.append("api_secret", e.CLOUDINARY_API_SECRET!);
+  // cloudinaryForm.append("api_key", e.CLOUDINARY_API_KEY!);
+  // cloudinaryForm.append("api_secret", e.CLOUDINARY_API_SECRET!);
   cloudinaryForm.append("upload_preset", e.CLOUDINARY_UPLOAD_PRESET!);
-  cloudinaryForm.append("timestamp", Date.now().toString());
+  // cloudinaryForm.append("timestamp", Date.now().toString());
   cloudinaryForm.append("folder", e.CLOUDINARY_UPLOAD_IMG_DRAWING_FOLDER!);
   cloudinaryForm.append("context", cloudiMeta);
+
+  console.log("cloudinary form ↴");
+
+  console.log(cloudinaryForm);
 
   try {
     const response = await fetch(
@@ -70,8 +74,6 @@ export const uploadImage = async (
 
     console.log(response);
     // TEST LOG
-    console.log("CLOUDINARY RESPONSE 🧐");
-    // const serverHeader = response[Symbol.headers].get("server");
 
     console.log(response["headers"]);
 

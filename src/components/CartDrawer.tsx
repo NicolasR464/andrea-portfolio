@@ -28,7 +28,7 @@ export default function CartDrawer() {
         borderLeft: "1px solid rgba(118, 118, 118, 0.471)",
         transform: "translateX(0px)",
       }
-    : {};
+    : { transform: "translate(100%)" };
 
   return (
     <div ref={inputRef} className="sticky top-0 z-40">
