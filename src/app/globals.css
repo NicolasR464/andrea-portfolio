@@ -4,7 +4,7 @@
 
 h1,
 h2 {
-  font-family: var(--font-tilt_prism);
+  font-family: var(--font-tilt_prism), fallback, sans-serif;
 }
 
 input[type="number"] {

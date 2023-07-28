@@ -47,9 +47,9 @@ export default function Contact() {
   };
 
   return (
-    <div className="flex w-screen justify-center flex-col items-center text-5xl">
+    <div className="flex w-screen justify-center flex-col items-center text-5xl ">
       <h1 className="">contact</h1>
-      <div className="flex flex-col justify-center items-center">
+      <div className="flex  justify-center items-center card  transition duration-1000 tablet:hover:scale-105 m-5  tablet:max-w-2xl bg-base-100 shadow-lg min-w-[350px] tablet:hover:shadow-xl tablet:w-[480px]">
         <input
           type="email"
           value={email}
@@ -59,7 +59,7 @@ export default function Contact() {
           required
         />
         <input
-          className="input input-bordered w-full max-w-[95vw] m-2 w-96"
+          className="input input-bordered w-96 max-w-[95vw] max-w-md m-2"
           value={subject}
           onChange={(e) => setSubject(e.target.value)}
           type="text"

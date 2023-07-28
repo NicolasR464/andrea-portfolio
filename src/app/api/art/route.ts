@@ -127,6 +127,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
     metadataY,
   };
 
+  console.log(img);
+
   const uploadResp = await uploadImage(img, name, collection);
 
   console.log(uploadResp);
