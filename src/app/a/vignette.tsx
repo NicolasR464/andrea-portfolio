@@ -204,7 +204,7 @@ const Vignette: React.FC<Props> = ({ item }) => {
         </label>
         <textarea
           className="textarea textarea-bordered text-base"
-          placeholder="what's it story?"
+          placeholder="what's its story?"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
@@ -317,7 +317,8 @@ const Vignette: React.FC<Props> = ({ item }) => {
               </div>
               <div className="collapse-content">
                 <p className="text-center">
-                  Its data will be archived if it was on sale at least once.
+                  Its data will be archived if you put it
+                  <br /> for sale at least once.
                 </p>
               </div>
             </div>
