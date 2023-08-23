@@ -22,7 +22,21 @@ module.exports = {
       },
     },
   },
-  plugins: [require("daisyui")],
+  plugins: [
+    require("daisyui"),
+    // function ({ addBase }) {
+    //   addBase({
+    //     body: {
+    //       // You can change this to any selector of your choice
+    //       scrollbarWidth: "none" /* For Firefox */,
+    //       "-ms-overflow-style": "none" /* For Internet Explorer and Edge */,
+    //       "&::-webkit-scrollbar": {
+    //         display: "none" /* For Chrome, Safari and Opera */,
+    //       },
+    //     },
+    //   });
+    // },
+  ],
   daisyui: {
     themes: [
       "light",

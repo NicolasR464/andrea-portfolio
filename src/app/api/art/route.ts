@@ -215,8 +215,20 @@ export async function POST(req: NextRequest, res: NextResponse) {
 export async function GET(req: NextRequest, res: NextResponse) {
   console.log("GET API ART");
   connectMongoose();
+
+  const { searchParams } = new URL(req.url);
+  console.log(searchParams);
+
+  const home = searchParams?.has("p");
+  console.log(home);
+
   try {
-    const drawings = await Drawing.find();
+    let drawings;
+    if (home) {
+      drawings = await Drawing.find().select("drawing_collection image.url");
+    } else {
+      drawings = await Drawing.find();
+    }
     return NextResponse.json({ data: drawings, status: 200 });
   } catch (err) {
     console.log(err);

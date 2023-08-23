@@ -31,7 +31,7 @@ export default function CartDrawer() {
     : { transform: "translate(100%)" };
 
   return (
-    <div ref={inputRef} className="sticky top-0 z-40">
+    <div ref={inputRef} className="sticky cart top-0 z-40">
       <div
         style={drawerAnimation}
         className="overflow-x-hidden drawer cart-drawer transition-all duration-1000  translate-x-full border-2  h-screen z-50 max-w-sm absolute top-0 right-0 backdrop-blur-lg"

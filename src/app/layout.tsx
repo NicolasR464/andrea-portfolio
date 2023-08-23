@@ -68,7 +68,8 @@ export default async function RootLayout({
             theme="colored"
           />
 
-          <div className="translate-y-24">{children}</div>
+          {/* <div className="translate-y-24">{children}</div> */}
+          <div>{children}</div>
 
           <Script src="./main.js" />
           <Script

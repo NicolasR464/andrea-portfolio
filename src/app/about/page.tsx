@@ -15,7 +15,7 @@ export default async function About() {
   console.log(data);
 
   return (
-    <article className="w-screen  flex justify-center flex-col items-center bg-base-100 shadow-lg">
+    <article className="w-screen  flex justify-center flex-col items-center ">
       <Image
         className="rounded-sm max-w-80"
         src={

@@ -17,8 +17,10 @@ input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
 }
 
-html {
+.cart,
+.drawer-overlay {
   overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 ::placeholder {
@@ -44,3 +46,24 @@ html {
 :-ms-input-placeholder {
   text-align: center;
 }
+/* 
+.scrollable-container::before,
+.scrollable-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.scrollable-container::before {
+  left: 0;
+  background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+}
+
+.scrollable-container::after {
+  right: 0;
+  background: linear-gradient(to left, #fff, rgba(255, 255, 255, 0));
+} */
