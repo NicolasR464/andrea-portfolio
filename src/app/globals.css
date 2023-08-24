@@ -17,10 +17,14 @@ input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
 }
 
-.cart,
+/* .cart,
 .drawer-overlay {
   overflow-x: hidden;
   overflow-y: hidden;
+} */
+
+html {
+  overflow-x: hidden;
 }
 
 ::placeholder {

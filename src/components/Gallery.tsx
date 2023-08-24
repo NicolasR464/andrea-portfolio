@@ -15,10 +15,33 @@ export default function Gallery({ collections }: { collections: any }) {
   const [imgsProp, setImgsProp] = useState<any>();
   const containerRef = useRef<any>();
   const [objectKeys, setObjectKeys] = useState<any>();
+  const [viewportSize, setViewportSize] = useState({
+    width: typeof window !== "undefined" ? window.innerWidth : 0,
+    height: typeof window !== "undefined" ? window.innerHeight : 0,
+  });
 
   gsap.registerPlugin(ScrollTrigger);
 
-  console.log(collections);
+  useEffect(() => {
+    // Function to update viewport size
+    const updateViewportSize = () => {
+      setViewportSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    // Add event listener for resizing
+    window.addEventListener("resize", updateViewportSize);
+
+    // Initial call to set the initial viewport size
+    updateViewportSize();
+
+    // Cleanup: Remove event listener on unmount
+    return () => {
+      window.removeEventListener("resize", updateViewportSize);
+    };
+  }, []);
 
   useEffect(() => {
     const horizontalAnim = () => {
@@ -28,6 +51,7 @@ export default function Gallery({ collections }: { collections: any }) {
         xPercent: -100 * (sections.length - 1),
         // x: -containerRef?.current?.offsetWidth,
         ease: "none",
+        duration: 40,
 
         scrollTrigger: {
           pin: true,
@@ -37,11 +61,13 @@ export default function Gallery({ collections }: { collections: any }) {
           pinnedContainer: ".gallery",
 
           start: "top top",
-          scrub: 1,
+          scrub: 1.2,
           markers: true,
           trigger: ".gallery",
           toggleActions: "play resume resume resume",
-          // invalidateOnRefresh: true,
+          invalidateOnRefresh: true,
+          refreshPriority: 1, // influence refresh order
+
           // start: "top top",
           // end: () => "+=" + 100,
           // end: "center center",
@@ -51,25 +77,30 @@ export default function Gallery({ collections }: { collections: any }) {
       });
     };
 
-    if (containerRef?.current?.offsetWidth && objectKeys) horizontalAnim();
-  }, [containerRef?.current?.offsetWidth, objectKeys]);
+    if (
+      containerRef?.current?.offsetWidth &&
+      objectKeys &&
+      viewportSize.width !== 0
+    )
+      horizontalAnim();
+  }, [containerRef?.current?.offsetWidth, objectKeys, viewportSize]);
 
   useEffect(() => {
     setImgsProp(collections);
     setObjectKeys(Object.keys(collections));
   }, [collections]);
 
-  useEffect(() => {
-    if (objectKeys) {
-      objectKeys.forEach((key: any) => {
-        console.log(collections[key]);
-        collections[key].map((url: any) => console.log(url));
-      });
-    }
-  }, [collections, objectKeys]);
+  // useEffect(() => {
+  //   if (objectKeys) {
+  //     objectKeys.forEach((key: any) => {
+  //       console.log(collections[key]);
+  //       collections[key].map((url: any) => console.log(url));
+  //     });
+  //   }
+  // }, [collections, objectKeys]);
 
   return (
-    <div ref={containerRef} className="flex gallery flex-row overflow-scroll">
+    <div ref={containerRef} className="flex gallery flex-row overflow-hidden">
       {/* {Object.values(collections).map((collection: any, index: number) => {
         return collections[collection].map((url: any, index: number) => {
           return <h1 key={index}>{url}</h1>;
@@ -81,15 +112,13 @@ export default function Gallery({ collections }: { collections: any }) {
           return (
             <article key={key} className="category">
               <div
-                className={`flex w-screen h-screen justify-around  items-center bg-indigo-${
-                  index + 1
-                }00`}
+                className={`flex w-screen h-screen justify-around  items-center `}
               >
                 {collections[key].map((url: any, index: number) => {
                   return (
                     <Image
                       key={index}
-                      className="w-[400px] h-[400px]"
+                      className="w-[auto] h-[70%]"
                       src={url}
                       width={500}
                       height={500}
@@ -101,58 +130,6 @@ export default function Gallery({ collections }: { collections: any }) {
             </article>
           );
         })}
-      {/* 
-      <article className="category">
-        <div className="flex w-screen h-screen justify-around  items-center bg-fuchsia-900 ">
-          <Image
-            className="w-[400px] h-[400px]"
-            src="https://res.cloudinary.com/niikkoo/image/upload/v1689322126/andrea-drawing-portfolio-dev/drawing-pics/cgrvgmrrvwvc9fndgdeo.jpg"
-            width={500}
-            height={500}
-            alt="pic1"
-          />{" "}
-          <Image
-            className="w-[400px] h-[400px]"
-            src="https://res.cloudinary.com/niikkoo/image/upload/v1689322456/andrea-drawing-portfolio-dev/drawing-pics/tbtty8kgeqczlyvwa7bt.jpg"
-            width={500}
-            height={500}
-            alt="pic2"
-          />
-        </div>
-      </article>
-      <article className="category">
-        <div className="bg-teal-600	flex justify-around items-center w-screen h-screen">
-          <Image
-            className="w-[400px] h-[400px]"
-            src="https://res.cloudinary.com/niikkoo/image/upload/v1689276719/andrea-drawing-portfolio-dev/drawing-pics/dvjxiq1avkytrz3hsl0e.jpg"
-            width={500}
-            height={500}
-            alt="pic3"
-          />
-        </div>
-      </article>
-      <article className="category">
-        <div className=" w-screen flex justify-around items-center h-screen bg-rose-400	">
-          <Image
-            className="w-[400px] h-[400px]  "
-            src="https://res.cloudinary.com/niikkoo/image/upload/v1689322003/andrea-drawing-portfolio-dev/drawing-pics/obiqoa2rndxmr3dcwnp5.jpg"
-            width={500}
-            height={500}
-            alt="pic4"
-          />
-        </div>
-      </article>
-      <article className="category">
-        <div className=" w-screen bg-indigo-800 justify-around	 flex items-center h-screen">
-          <Image
-            className="w-[400px] h-[400px]  "
-            src="https://res.cloudinary.com/niikkoo/image/upload/v1689276719/andrea-drawing-portfolio-dev/drawing-pics/dvjxiq1avkytrz3hsl0e.jpg"
-            width={500}
-            height={500}
-            alt="pic5"
-          />
-        </div>
-      </article> */}
     </div>
   );
 }

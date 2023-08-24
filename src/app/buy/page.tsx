@@ -23,7 +23,7 @@ export default async function Buy() {
   // useStore.setState({ isOpen: true, price: 400 });
 
   return (
-    <div>
+    <div className="translate-y-24">
       {/* <StoreInitializer price={400} isOpen={true} /> */}
       <h2 className="text-center text-5xl tracking-widest">shop</h2>
       <section className="flex flex-wrap justify-center">

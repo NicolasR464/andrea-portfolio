@@ -61,7 +61,7 @@ export default async function RootLayout({
         <body className={inter.className}>
           <NavBar />
           <CartDrawer />
-          <DrawerOverlay />
+          {/* <DrawerOverlay /> */}
           <ToastContainer
             position="top-center"
             hideProgressBar
