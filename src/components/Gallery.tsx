@@ -15,12 +15,17 @@ export default function Gallery({ collections }: { collections: any }) {
   const [imgsProp, setImgsProp] = useState<any>();
   const containerRef = useRef<any>();
   const [objectKeys, setObjectKeys] = useState<any>();
+  const [collectionName, setCollectionName] = useState<string>();
   const [viewportSize, setViewportSize] = useState({
     width: typeof window !== "undefined" ? window.innerWidth : 0,
     height: typeof window !== "undefined" ? window.innerHeight : 0,
   });
 
   gsap.registerPlugin(ScrollTrigger);
+
+  useEffect(() => {
+    setCollectionName(Object.keys(collections)[0]);
+  }, [collections]);
 
   useEffect(() => {
     // Function to update viewport size
@@ -45,35 +50,56 @@ export default function Gallery({ collections }: { collections: any }) {
 
   useEffect(() => {
     const horizontalAnim = () => {
-      let sections = gsap.utils.toArray(".category");
+      let imgs = gsap.utils.toArray(".img");
 
-      gsap.to(sections, {
-        xPercent: -100 * (sections.length - 1),
+      const horizontalScroll = gsap.to(imgs, {
+        xPercent: -110 * (imgs.length - 1),
         // x: -containerRef?.current?.offsetWidth,
         ease: "none",
         duration: 40,
 
         scrollTrigger: {
           pin: true,
-          // scroller: ".scroller",
-          // anticipatePin: 1,
-          // pinSpacing: false,
           pinnedContainer: ".gallery",
-
           start: "top top",
-          scrub: 1.2,
+          scrub: 1,
           markers: true,
+          // markers: false,
           trigger: ".gallery",
           toggleActions: "play resume resume resume",
           invalidateOnRefresh: true,
-          refreshPriority: 1, // influence refresh order
-
-          // start: "top top",
-          // end: () => "+=" + 100,
-          // end: "center center",
-          end: () => "+=" + containerRef?.current?.offsetWidth,
-          // end: "20px 80%",
+          refreshPriority: 1,
+          end: () => "+=" + containerRef?.current?.offsetWidth * 5,
         },
+      });
+
+      // image zoom in/out
+
+      const images = gsap.utils.toArray(".img");
+
+      images.forEach((img: any) => {
+        gsap.to(img, {
+          keyframes: {
+            "0%": { scale: 1 },
+            "50%": { scale: 1.1 },
+            "100%": { scale: 1 },
+          },
+          duration: 2,
+          scrollTrigger: {
+            id: "image",
+            trigger: img,
+
+            start: "left center",
+            toggleActions: "play none none reset",
+            end: "right center", // When the bottom of the image goes past the top of the viewport
+            scrub: 2,
+            // markers: true,
+            markers: false,
+            containerAnimation: horizontalScroll,
+            onEnter: () => setCollectionName(img.dataset.collection),
+            onEnterBack: () => setCollectionName(img.dataset.collection),
+          },
+        });
       });
     };
 
@@ -90,46 +116,34 @@ export default function Gallery({ collections }: { collections: any }) {
     setObjectKeys(Object.keys(collections));
   }, [collections]);
 
-  // useEffect(() => {
-  //   if (objectKeys) {
-  //     objectKeys.forEach((key: any) => {
-  //       console.log(collections[key]);
-  //       collections[key].map((url: any) => console.log(url));
-  //     });
-  //   }
-  // }, [collections, objectKeys]);
-
   return (
-    <div ref={containerRef} className="flex gallery flex-row overflow-hidden">
-      {/* {Object.values(collections).map((collection: any, index: number) => {
-        return collections[collection].map((url: any, index: number) => {
-          return <h1 key={index}>{url}</h1>;
-        });
-      })} */}
+    <div>
+      <div className="fixed bottom-4 w-screen justify-center z-[200] flex">
+        <h1 className="text-lg tablet:text-xl laptop:text-2xl ">
+          {collectionName}
+        </h1>
+      </div>
 
-      {objectKeys &&
-        objectKeys.map((key: any, index: number) => {
-          return (
-            <article key={key} className="category">
-              <div
-                className={`flex w-screen h-screen justify-around  items-center `}
-              >
-                {collections[key].map((url: any, index: number) => {
-                  return (
-                    <Image
-                      key={index}
-                      className="w-[auto] h-[70%]"
-                      src={url}
-                      width={500}
-                      height={500}
-                      alt={`picture#${index}`}
-                    />
-                  );
-                })}
-              </div>
-            </article>
-          );
-        })}
+      <div className="gallery scrollable-container">
+        <article ref={containerRef} className="imgs flex items-end">
+          {objectKeys &&
+            objectKeys.map((key: any) => {
+              return collections[key].map((url: any, index: number) => {
+                return (
+                  <Image
+                    key={index}
+                    data-collection={key}
+                    className="img h-[auto] tablet:translate-y-28 min-w-[95vw]  tablet:min-w-[40vw] m-10"
+                    src={url}
+                    width={500}
+                    height={500}
+                    alt={`picture#${index}`}
+                  />
+                );
+              });
+            })}
+        </article>
+      </div>
     </div>
   );
 }

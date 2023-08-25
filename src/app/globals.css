@@ -50,7 +50,7 @@ html {
 :-ms-input-placeholder {
   text-align: center;
 }
-/* 
+
 .scrollable-container::before,
 .scrollable-container::after {
   content: "";
@@ -70,4 +70,4 @@ html {
 .scrollable-container::after {
   right: 0;
   background: linear-gradient(to left, #fff, rgba(255, 255, 255, 0));
-} */
+}

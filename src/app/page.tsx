@@ -33,17 +33,17 @@ export default async function Home() {
   // console.log(imgs.data);
 
   return (
-    // <div>
-    //   {/* <h1 className="text-3xl text-center tracking-[.20em]">
-    //     <span className=" tracking-[.18em]">ANDREA</span>
-    //     <br />
-    //     <span className=" tracking-[.40em]">ROCAGEL</span>
-    //     <br />
-    //     <span className=" tracking-[.60em]">PORTFOLIO</span>
-    //   </h1> */}
+    <div>
+      <h1 className="text-xl tablet:text-2xl laptop:text-3xl fixed top-[30px] translate-x-[-50%] left-[50%] z-[100] text-center tracking-[.20em]">
+        <span className=" tracking-[.18em] ">ANDREA</span>
+        <br />
+        <span className=" tracking-[.40em] -translate-y-3">ROCAGEL</span>
+        <br />
+        <span className=" tracking-[.60em]">PORTFOLIO</span>
+      </h1>
 
-    // </div>
-    <Gallery collections={collections} />
+      <Gallery collections={collections} />
+    </div>
   );
 }
 
