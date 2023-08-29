@@ -1,15 +1,25 @@
 import Image from "next/image";
 import Link from "next/link";
 import NavBarLinks from "./NavBarLinks";
+import NavBurger from "./NavBurger";
 import { currentUser } from "@clerk/nextjs";
+import { headers } from "next/headers";
 
 export default async function NavBar({ params }: any) {
   const user = await currentUser();
   const isAdmin =
-    user?.emailAddresses[0].emailAddress === process.env.HOST_EMAIL;
+    user?.emailAddresses[0]?.emailAddress === process.env.HOST_EMAIL;
 
+  const headersList = headers();
+  const userAgent = headersList.get("user-agent");
+  let isMobileView = userAgent!.match(
+    /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i
+  );
   // const user = undefined;
   // const isAdmin = false;
+
+  // console.log(userAgent);
+  // console.log({ isMobileView });
 
   return (
     <div className="fixed w-full z-40">
@@ -24,7 +34,7 @@ export default async function NavBar({ params }: any) {
             />
           </Link>
         </div>
-        <NavBarLinks isAdmin={isAdmin} />
+        {isMobileView ? <NavBurger /> : <NavBarLinks isAdmin={isAdmin} />}
       </div>
     </div>
   );

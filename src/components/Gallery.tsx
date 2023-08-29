@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 
 // interface ImageData {
 //   collection: string[];
@@ -10,6 +11,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 // interface MyProps {
 //   data: ImageData[];
 // }
+
+let horizontalAnim: any;
 
 export default function Gallery({ collections }: { collections: any }) {
   const [imgsProp, setImgsProp] = useState<any>();
@@ -22,6 +25,7 @@ export default function Gallery({ collections }: { collections: any }) {
   });
 
   gsap.registerPlugin(ScrollTrigger);
+  gsap.registerPlugin(ScrollToPlugin);
 
   useEffect(() => {
     setCollectionName(Object.keys(collections)[0]);
@@ -49,14 +53,13 @@ export default function Gallery({ collections }: { collections: any }) {
   }, []);
 
   useEffect(() => {
-    const horizontalAnim = () => {
+    horizontalAnim = () => {
       let imgs = gsap.utils.toArray(".img");
 
       const horizontalScroll = gsap.to(imgs, {
-        xPercent: -110 * (imgs.length - 1),
-        // x: -containerRef?.current?.offsetWidth,
+        // xPercent: -110 * (imgs.length - 1),
+        x: -containerRef?.current?.offsetWidth,
         ease: "none",
-        duration: 40,
 
         scrollTrigger: {
           pin: true,
@@ -67,9 +70,9 @@ export default function Gallery({ collections }: { collections: any }) {
           // markers: false,
           trigger: ".gallery",
           toggleActions: "play resume resume resume",
-          invalidateOnRefresh: true,
+          // invalidateOnRefresh: true,
           refreshPriority: 1,
-          end: () => "+=" + containerRef?.current?.offsetWidth * 5,
+          end: () => "+=" + containerRef?.current?.offsetWidth,
         },
       });
 
@@ -103,6 +106,8 @@ export default function Gallery({ collections }: { collections: any }) {
       });
     };
 
+    console.log(containerRef.current.offsetWidth);
+
     if (
       containerRef?.current?.offsetWidth &&
       objectKeys &&
@@ -116,59 +121,79 @@ export default function Gallery({ collections }: { collections: any }) {
     setObjectKeys(Object.keys(collections));
   }, [collections]);
 
+  const goTo = (name: string | undefined) => {
+    console.log(name);
+
+    setCollectionName(name);
+
+    const element = document.getElementById(name!);
+    const rect = element?.getBoundingClientRect();
+    const distanceFromTop = rect?.x!;
+    console.log(element);
+    console.log(rect);
+
+    console.log(distanceFromTop);
+
+    // window.scrollTo({
+    //   top: distanceFromTop!,
+    //   behavior: "smooth",
+    // });
+
+    gsap.to(window, { scrollTo: distanceFromTop });
+  };
+
   return (
     <div>
-      <div className="fixed bottom-4 w-screen justify-center z-[200] flex">
-        <h1 className="text-lg tablet:text-xl laptop:text-2xl ">
-          {collectionName}
-        </h1>
-      </div>
+      {collectionName && (
+        <div className="fixed bottom-4  justify-center z-[200] flex w-screen ">
+          <div className="dropdown dropdown-hover dropdown-top">
+            <label tabIndex={0} className="btn m-1 z-[200]">
+              {collectionName}
+            </label>
+            <ul
+              tabIndex={0}
+              className="z-[200] dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+            >
+              {objectKeys &&
+                objectKeys.map((key: any, index: number) => (
+                  <li className="flex justify-center" key={index}>
+                    <a className="flex justify-center">
+                      {" "}
+                      <span onClick={() => goTo(key)} className="text-center">
+                        {key}
+                      </span>
+                    </a>
+                  </li>
+                ))}
+            </ul>
+          </div>
+        </div>
+      )}
 
       <div className="gallery scrollable-container">
-        <article ref={containerRef} className="imgs flex items-end">
+        <article ref={containerRef} className="imgs flex items-end w-min">
           {objectKeys &&
-            objectKeys.map((key: any) => {
-              return collections[key].map((url: any, index: number) => {
-                return (
-                  <Image
-                    key={index}
-                    data-collection={key}
-                    className="img h-[auto] tablet:translate-y-28 min-w-[95vw]  tablet:min-w-[40vw] m-10"
-                    src={url}
-                    width={500}
-                    height={500}
-                    alt={`picture#${index}`}
-                  />
-                );
-              });
+            objectKeys.map((key: any, index: number) => {
+              return (
+                <div className="flex items-end" id={key} key={index}>
+                  {collections[key].map((url: any, index: number) => {
+                    return (
+                      <Image
+                        key={index}
+                        data-collection={key}
+                        className="img h-[auto] tablet:translate-y-28 min-w-[95vw]  tablet:min-w-[40vw] m-10"
+                        src={url}
+                        width={500}
+                        height={500}
+                        alt={`picture#${index}`}
+                      />
+                    );
+                  })}
+                </div>
+              );
             })}
         </article>
       </div>
     </div>
   );
-}
-
-// return (
-//   <div ref={containerRef} className="flex flex-row imgs-container">
-//     {imgsProp &&
-//       imgsProp.data.map((img: any, index: number) => (
-//         <section key={index}>
-//           <div className="w-[50vw] p-2">
-//             <Image
-//               src={img.image.url}
-//               alt="Picture of the author"
-//               width={500}
-//               height={500}
-//               className="m-5 tablet:m-width-[50vw]"
-//             />
-//           </div>
-//         </section>
-//       ))}
-//   </div>
-// );
-
-{
-  /* {Object.keys(collections).map((collection: any, index: number) => {
-        return collection;
-      })} */
 }
