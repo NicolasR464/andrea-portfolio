@@ -74,8 +74,8 @@ export default function Gallery({ collections }: { collections: any }) {
             pinnedContainer: ".gallery",
             start: "top top",
             scrub: 1,
-            markers: true,
-            // markers: false,
+            // markers: true,
+            markers: false,
             trigger: ".gallery",
             toggleActions: "play resume resume resume",
             invalidateOnRefresh: false,
@@ -164,7 +164,7 @@ export default function Gallery({ collections }: { collections: any }) {
   return (
     <div>
       {collectionName && (
-        <div className="fixed bottom-4  justify-center z-[200] flex w-screen ">
+        <div className="fixed bottom-4  justify-center flex w-screen ">
           <div className="dropdown dropdown-hover dropdown-top">
             <label tabIndex={0} className="btn m-1 z-[200] w-40">
               {collectionName}
@@ -197,11 +197,7 @@ export default function Gallery({ collections }: { collections: any }) {
           {objectKeys &&
             objectKeys.map((collection: any, index: number) => {
               return (
-                <div
-                  className="flex items-end translate-y-14 tablet:translate-y-0"
-                  id={collection}
-                  key={index}
-                >
+                <div className="flex items-end" id={collection} key={index}>
                   {collections[collection].map((url: any, index: number) => {
                     // setImageNumber((prevNum) => prevNum + 1);
 
@@ -209,7 +205,7 @@ export default function Gallery({ collections }: { collections: any }) {
                       <Image
                         key={index}
                         data-collection={collection}
-                        className="img h-[auto] tablet:translate-y-34 max-w-[90vw]  tablet:min-w-[40vw] m-10"
+                        className="img h-[auto] max-w-[90vw] max-h-[70vh] tablet:max-w-[60vw]   tablet:min-w-[40vw] m-10 translate-y-28  "
                         src={url}
                         width={500}
                         height={500}

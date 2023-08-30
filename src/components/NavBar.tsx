@@ -24,7 +24,7 @@ export default async function NavBar({ params }: any) {
   return (
     <div className="fixed w-full z-40">
       <div className="navbar backdrop-blur-md  flex justify-between">
-        <div className="navbar-start">
+        <div className="navbar-start z-40">
           <Link href="/">
             <Image
               src={process.env.LOGO_IMG!}

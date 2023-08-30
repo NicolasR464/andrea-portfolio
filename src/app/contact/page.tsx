@@ -68,6 +68,7 @@ export default function Contact() {
         <textarea
           className="textarea w-full max-w-md max-w-[95vw] textarea-bordered w-96"
           required
+          rows={3}
           value={mailBody}
           onChange={(e) => setMailBody(e.target.value)}
           placeholder="write to me here ✨"
