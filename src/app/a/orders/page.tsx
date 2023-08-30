@@ -34,7 +34,7 @@ export default async function Orders({ searchParams }: any) {
   // console.log(orders);
 
   return (
-    <section>
+    <section className="overflow-y-hidden">
       <h1 className="text-center text-5xl">Orders</h1>
       <Filters />
       {orders && orders.length > 0 ? (

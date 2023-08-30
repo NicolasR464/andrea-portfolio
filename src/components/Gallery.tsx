@@ -24,6 +24,8 @@ export default function Gallery({ collections }: { collections: any }) {
     height: typeof window !== "undefined" ? window.innerHeight : 0,
   });
 
+  const hasBeenCalled = useRef(false);
+
   gsap.registerPlugin(ScrollTrigger);
   gsap.registerPlugin(ScrollToPlugin);
 
@@ -41,7 +43,12 @@ export default function Gallery({ collections }: { collections: any }) {
     };
 
     // Add event listener for resizing
-    window.addEventListener("resize", updateViewportSize);
+    window.addEventListener("resize", () => {
+      if (ScrollTrigger) {
+        ScrollTrigger?.refresh(true);
+      }
+      updateViewportSize();
+    });
 
     // Initial call to set the initial viewport size
     updateViewportSize();
@@ -53,67 +60,79 @@ export default function Gallery({ collections }: { collections: any }) {
   }, []);
 
   useEffect(() => {
-    horizontalAnim = () => {
-      let imgs = gsap.utils.toArray(".img");
+    const ctx = gsap.context(() => {
+      horizontalAnim = () => {
+        let imgs = gsap.utils.toArray(".img");
 
-      const horizontalScroll = gsap.to(imgs, {
-        // xPercent: -110 * (imgs.length - 1),
-        x: -containerRef?.current?.offsetWidth,
-        ease: "none",
+        const horizontalScroll = gsap.to(imgs, {
+          // xPercent: -110 * (imgs.length - 1),
+          x: -containerRef?.current?.offsetWidth,
+          ease: "none",
 
-        scrollTrigger: {
-          pin: true,
-          pinnedContainer: ".gallery",
-          start: "top top",
-          scrub: 1,
-          markers: true,
-          // markers: false,
-          trigger: ".gallery",
-          toggleActions: "play resume resume resume",
-          // invalidateOnRefresh: true,
-          refreshPriority: 1,
-          end: () => "+=" + containerRef?.current?.offsetWidth,
-        },
-      });
-
-      // image zoom in/out
-
-      const images = gsap.utils.toArray(".img");
-
-      images.forEach((img: any) => {
-        gsap.to(img, {
-          keyframes: {
-            "0%": { scale: 1 },
-            "50%": { scale: 1.1 },
-            "100%": { scale: 1 },
-          },
-          duration: 2,
           scrollTrigger: {
-            id: "image",
-            trigger: img,
-
-            start: "left center",
-            toggleActions: "play none none reset",
-            end: "right center", // When the bottom of the image goes past the top of the viewport
-            scrub: 2,
-            // markers: true,
-            markers: false,
-            containerAnimation: horizontalScroll,
-            onEnter: () => setCollectionName(img.dataset.collection),
-            onEnterBack: () => setCollectionName(img.dataset.collection),
+            pin: true,
+            pinnedContainer: ".gallery",
+            start: "top top",
+            scrub: 1,
+            markers: true,
+            // markers: false,
+            trigger: ".gallery",
+            toggleActions: "play resume resume resume",
+            invalidateOnRefresh: false,
+            // refreshPriority: 1,
+            end: () => "+=" + containerRef?.current?.offsetWidth,
           },
         });
-      });
-    };
+
+        // image zoom in/out
+
+        const images = gsap.utils.toArray(".img");
+
+        images.forEach((img: any) => {
+          gsap.to(img, {
+            keyframes: {
+              "0%": { scale: 1 },
+              "50%": { scale: 1.1 },
+              "100%": { scale: 1 },
+            },
+            duration: 2,
+            scrollTrigger: {
+              id: "image",
+              trigger: img,
+              start: "left center",
+              toggleActions: "play none none reset",
+              end: "right center", // When the bottom of the image goes past the top of the viewport
+              scrub: 2,
+              // markers: true,
+              markers: false,
+              containerAnimation: horizontalScroll,
+              onEnter: () => setCollectionName(img.dataset.collection),
+              onEnterBack: () => setCollectionName(img.dataset.collection),
+            },
+          });
+        });
+      };
+    });
 
     console.log(containerRef.current.offsetWidth);
 
     if (
       containerRef?.current?.offsetWidth &&
       objectKeys &&
-      viewportSize.width !== 0
-    )
+      viewportSize.width !== 0 &&
+      !hasBeenCalled.current
+    ) {
       horizontalAnim();
+      hasBeenCalled.current = true;
+    }
+
+    window.addEventListener("resize", () => {
+      ScrollTrigger?.refresh();
+    });
+
+    return () => {
+      ctx.revert();
+    };
   }, [containerRef?.current?.offsetWidth, objectKeys, viewportSize]);
 
   useEffect(() => {
@@ -147,20 +166,23 @@ export default function Gallery({ collections }: { collections: any }) {
       {collectionName && (
         <div className="fixed bottom-4  justify-center z-[200] flex w-screen ">
           <div className="dropdown dropdown-hover dropdown-top">
-            <label tabIndex={0} className="btn m-1 z-[200]">
+            <label tabIndex={0} className="btn m-1 z-[200] w-40">
               {collectionName}
             </label>
             <ul
               tabIndex={0}
-              className="z-[200] dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+              className="z-[200] -translate-x-[22.5px] dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
             >
               {objectKeys &&
-                objectKeys.map((key: any, index: number) => (
+                objectKeys.map((collection: any, index: number) => (
                   <li className="flex justify-center" key={index}>
                     <a className="flex justify-center">
                       {" "}
-                      <span onClick={() => goTo(key)} className="text-center">
-                        {key}
+                      <span
+                        onClick={() => goTo(collection)}
+                        className="text-center"
+                      >
+                        {collection}
                       </span>
                     </a>
                   </li>
@@ -173,19 +195,26 @@ export default function Gallery({ collections }: { collections: any }) {
       <div className="gallery scrollable-container">
         <article ref={containerRef} className="imgs flex items-end w-min">
           {objectKeys &&
-            objectKeys.map((key: any, index: number) => {
+            objectKeys.map((collection: any, index: number) => {
               return (
-                <div className="flex items-end" id={key} key={index}>
-                  {collections[key].map((url: any, index: number) => {
+                <div
+                  className="flex items-end translate-y-14 tablet:translate-y-0"
+                  id={collection}
+                  key={index}
+                >
+                  {collections[collection].map((url: any, index: number) => {
+                    // setImageNumber((prevNum) => prevNum + 1);
+
                     return (
                       <Image
                         key={index}
-                        data-collection={key}
-                        className="img h-[auto] tablet:translate-y-28 min-w-[95vw]  tablet:min-w-[40vw] m-10"
+                        data-collection={collection}
+                        className="img h-[auto] tablet:translate-y-34 max-w-[90vw]  tablet:min-w-[40vw] m-10"
                         src={url}
                         width={500}
                         height={500}
                         alt={`picture#${index}`}
+                        loading="lazy"
                       />
                     );
                   })}

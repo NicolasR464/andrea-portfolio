@@ -23,7 +23,7 @@ export default async function NavBar({ params }: any) {
 
   return (
     <div className="fixed w-full z-40">
-      <div className="navbar backdrop-blur-md">
+      <div className="navbar backdrop-blur-md  flex justify-between">
         <div className="navbar-start">
           <Link href="/">
             <Image
