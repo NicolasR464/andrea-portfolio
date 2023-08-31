@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { publicImgUpload } from "../../utils/handle-img";
 
 import { useRouter } from "next/navigation";
 import formData from "./form-template";
@@ -25,11 +26,18 @@ export default function Form() {
     event.preventDefault();
     setPosting(true);
 
+    const img: any = await publicImgUpload(event.target.image.files[0]);
+    console.log("🙏");
+
+    console.log(img);
+    // setPosting(false);
+    // return;
+
     const form = formData(
       event.target.name.value,
       event.target.collection.value,
       event.target.description.value,
-      event.target.image.files[0],
+      img,
       event.target.for_sale.checked,
       event.target.price.value,
       event.target.print_number.value,

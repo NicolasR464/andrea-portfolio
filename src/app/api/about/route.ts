@@ -24,26 +24,27 @@ export async function POST(req: NextRequest) {
   const img = formData.get("image") as any;
   const text = formData.get("text") as string;
 
-  console.log(text);
-  console.log(img);
-  console.log(typeof img);
-  let public_img_id;
-  let img_url;
+  const imgParsed = JSON.parse(img);
 
-  if (img !== "undefined") {
-    const uploadResp = await uploadImage(img, "pic", "bio");
+  // console.log(text);
+  // console.log(img);
+  // console.log(typeof img);
+  // let public_img_id;
+  // let img_url;
 
-    console.log(uploadResp.public_id);
-    console.log(uploadResp.secure_url);
-    public_img_id = uploadResp.public_id;
-    img_url = uploadResp.secure_url;
-  }
+  // if (img !== "undefined") {
+  //   const uploadResp = await uploadImage(img, "pic", "bio");
+
+  //   console.log(uploadResp.public_id);
+  //   console.log(uploadResp.secure_url);
+  //   public_img_id = uploadResp.public_id;
+  //   img_url = uploadResp.secure_url;
+  // }
 
   const mongoObj: any = {};
 
   mongoObj.text = text;
-  if (img !== "undefined")
-    mongoObj.image = { public_id: public_img_id, url: img_url };
+  if (img !== "undefined") mongoObj.image = imgParsed;
 
   try {
     const bio = await Bio.findOneAndUpdate(mongoObj);

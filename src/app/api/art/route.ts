@@ -106,7 +106,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
   connectMongoose();
 
   const formData = await req.formData();
-  const img = formData.get("image") as File;
+  const imgRaw = formData.get("image") as string;
   const name = formData.get("name") as string;
   const collection = formData.get("collection") as string;
   const description = formData.get("description") as string;
@@ -115,6 +115,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
   const print_number = formData.get("print_number") as string;
   const metadataX = formData.get("metadataX") as string;
   const metadataY = formData.get("metadataY") as string;
+  const img: any = JSON.parse(imgRaw);
 
   const isForSale = active === "true";
 
@@ -126,12 +127,14 @@ export async function POST(req: NextRequest, res: NextResponse) {
     metadataX,
     metadataY,
   };
+  console.log("🚀🚀");
 
   console.log(img);
+  // console.log(JSON.parse(img));
 
-  const uploadResp = await uploadImage(img, name, collection);
+  // const uploadResp: any = await uploadImage(img, name, collection);
 
-  console.log(uploadResp);
+  // console.log(uploadResp);
 
   ////////// *** STRIPE 💸 ***
 
@@ -142,7 +145,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       const product = await stripe.products.create({
         name: name || `${collection}_${Date.now()}`,
         active: isForSale,
-        images: [uploadResp.secure_url],
+        images: [img.secure_url],
         metadata: stripeMeta,
         default_price_data: {
           unit_amount: +price * 100,
@@ -171,8 +174,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
   ///////////// TO MONGO
   console.log("TO MONGO ⭐️");
-  console.log(uploadResp.public_id);
-  console.log(uploadResp.secure_url);
 
   console.log(print_number);
 
@@ -183,7 +184,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     description: description || undefined,
 
     isForSale,
-    image: { public_id: uploadResp.public_id, url: uploadResp.secure_url },
+    image: img,
     price: price || undefined,
     print_number_set: print_number || undefined,
     print_number_sold: isForSale ? 0 : undefined,

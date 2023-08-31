@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import Image from "next/image";
+import { publicImgUpload } from "../../../utils/handle-img";
 
 import { useRouter } from "next/navigation";
 
@@ -45,10 +46,12 @@ export default function FormBio({
     event.preventDefault();
     setPosting(true);
 
+    const img = await publicImgUpload(event.target.image.files[0]);
+
     const form = new FormData();
 
     form.append("text", text);
-    form.append("image", event.target.image.files[0]);
+    form.append("image", JSON.stringify(img));
 
     const options = {
       method: "POST",
@@ -63,7 +66,7 @@ export default function FormBio({
 
         //EMPTY form values
 
-        setText("");
+        // setText("");
         setImage("");
 
         router.refresh();
@@ -91,6 +94,7 @@ export default function FormBio({
               onChange={(e: any) => setText(e.target.value)}
               className="textarea textarea-bordered w-full"
               name="bio"
+              rows={5}
               placeholder="What's your story?"
             />
           </label>
