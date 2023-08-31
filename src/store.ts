@@ -19,3 +19,9 @@ export const useStore = create<{
   bag: [],
   cartTotal: 0,
 }));
+
+export const useBurger = create<{
+  isOpen: Boolean;
+}>(() => ({
+  isOpen: false,
+}));

@@ -6,7 +6,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <section>
+    <section className="translate-y-24">
       <AdminTab />
       {children}
     </section>

@@ -77,7 +77,7 @@ export default function CartVignette({ item }: { item: any }) {
   //   console.log(bag);
 
   return (
-    <article className="flex p-2 m-2 rounded-xl justify-center   border-solid border-2  md:flex-row">
+    <article className="flex p-2 m-2 rounded-xl justify-center   border-solid border-2  tablet:flex-row">
       <section className="flex justify-center flex-col   items-center">
         <span>{collection}</span>
         <span>{price}€ / print</span>

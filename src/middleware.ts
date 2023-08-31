@@ -19,6 +19,7 @@ export default authMiddleware({
     "/api/order",
     "/api/about",
     "/api/mail",
+    "try",
   ],
 
   // ignoredRoutes: ["/((?!api|trpc))(_next|.+..+)(.*)", "/api/shop", "/api/art"],

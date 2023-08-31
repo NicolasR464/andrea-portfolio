@@ -27,7 +27,7 @@ export default async function Dashboard() {
     redirect("/");
 
   return (
-    <>
+    <div>
       <h1 className="text-center text-5xl">Drawings</h1>
       <Form />
       {!items ? (
@@ -65,7 +65,7 @@ export default async function Dashboard() {
           </div>
         </>
       )}
-    </>
+    </div>
   );
 }
 

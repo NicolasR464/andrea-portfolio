@@ -61,14 +61,15 @@ export default async function RootLayout({
         <body className={inter.className}>
           <NavBar />
           <CartDrawer />
-          <DrawerOverlay />
+          {/* <DrawerOverlay /> */}
           <ToastContainer
             position="top-center"
             hideProgressBar
             theme="colored"
           />
 
-          <div className="translate-y-24">{children}</div>
+          {/* <div className="translate-y-24">{children}</div> */}
+          <div>{children}</div>
 
           <Script src="./main.js" />
           <Script
