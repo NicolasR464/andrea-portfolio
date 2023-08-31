@@ -75,6 +75,7 @@ export default function Gallery({ collections }: { collections: any }) {
             start: "top top",
             scrub: 1,
             // markers: true,
+            // pinSpacing: false,
             markers: false,
             trigger: ".gallery",
             toggleActions: "play resume resume resume",
@@ -164,9 +165,9 @@ export default function Gallery({ collections }: { collections: any }) {
   return (
     <div>
       {collectionName && (
-        <div className="fixed bottom-4  justify-center flex w-screen ">
-          <div className="dropdown dropdown-hover dropdown-top">
-            <label tabIndex={0} className="btn m-1 z-[200] w-40">
+        <div className="z-[10] fixed bottom-4  justify-center flex w-screen ">
+          <div className=" dropdown dropdown-hover dropdown-top">
+            <label tabIndex={0} className="btn m-1 w-40">
               {collectionName}
             </label>
             <ul
