@@ -17,14 +17,15 @@ export default async function Details({
 }) {
   console.log("💥");
   console.log(searchParams);
-  const orderDetail = await getOrderDetail(searchParams.id);
+  const orderDetail: any = await getOrderDetail(searchParams.id);
 
-  console.log(orderDetail);
-  console.log(orderDetail.order.orderItems);
+  // console.log(orderDetail);
+  // console.log(orderDetail?.order.orderItems);
 
   return (
     <article>
       <BackBtn />
+
       <div className="flex w-screen justify-center">
         <h1 className="text-3xl">Order details</h1>
       </div>
@@ -41,26 +42,28 @@ export default async function Details({
           <span>{orderDetail.order.customerDetails.address.state}</span>
           <span>{orderDetail.order.customerDetails.address.country}</span>
         </div>
-        {orderDetail &&
-          orderDetail.order.orderItems.map((order: any, i: number) => (
-            <div
-              className="mt-6 p-3 justify-center items-center flex flex-col b-2 border-solid border-2 rounded-xl"
-              key={i}
-            >
-              <h3 className="font-medium underline">order#{i + 1}</h3>
-              <span>quantity: {order.quantity} prints</span>
-              {order.imageUrl && (
-                <Image
-                  width={200}
-                  height={200}
-                  src={order.imageUrl}
-                  alt="Drawing picture"
-                />
-              )}
+        <section className="flex flex-wrap justify-center">
+          {orderDetail &&
+            orderDetail.order.orderItems.map((order: any, i: number) => (
+              <div
+                className="m-2 mt-6 p-3 justify-center items-center flex flex-col b-2 border-solid border-2 rounded-xl"
+                key={i}
+              >
+                <h3 className="font-medium underline">order#{i + 1}</h3>
+                <span>quantity: {order.quantity} prints</span>
+                {order.imageUrl && (
+                  <Image
+                    width={200}
+                    height={200}
+                    src={order.imageUrl}
+                    alt="Drawing picture"
+                  />
+                )}
 
-              <span>{order.name}</span>
-            </div>
-          ))}
+                <span>{order.name}</span>
+              </div>
+            ))}
+        </section>
       </div>
     </article>
   );

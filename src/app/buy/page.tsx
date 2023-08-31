@@ -25,7 +25,9 @@ export default async function Buy() {
   return (
     <div className="translate-y-24">
       {/* <StoreInitializer price={400} isOpen={true} /> */}
-      <h2 className="text-center text-5xl tracking-widest">shop</h2>
+      <div className="z-[100">
+        <h2 className="text-center text-5xl tracking-widest">shop</h2>
+      </div>
       <section className="flex flex-wrap justify-center">
         {items &&
           items.map((item: any, index: number) => (

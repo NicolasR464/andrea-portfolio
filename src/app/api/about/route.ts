@@ -24,8 +24,6 @@ export async function POST(req: NextRequest) {
   const img = formData.get("image") as any;
   const text = formData.get("text") as string;
 
-  const imgParsed = JSON.parse(img);
-
   // console.log(text);
   // console.log(img);
   // console.log(typeof img);
@@ -42,9 +40,12 @@ export async function POST(req: NextRequest) {
   // }
 
   const mongoObj: any = {};
-
   mongoObj.text = text;
-  if (img !== "undefined") mongoObj.image = imgParsed;
+
+  if (img !== "undefined") {
+    const imgParsed = JSON.parse(img);
+    mongoObj.image = imgParsed;
+  }
 
   try {
     const bio = await Bio.findOneAndUpdate(mongoObj);
