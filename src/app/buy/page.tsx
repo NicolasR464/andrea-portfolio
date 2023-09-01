@@ -18,6 +18,25 @@ const fetchItems = async () => {
 export default async function Buy() {
   const items = await fetchItems();
 
+  const collections: any = new Object();
+
+  console.log(items);
+
+  // items.forEach((item: object) => {
+  //   console.log(item.drawing_collection);
+  // });
+
+  // items.data.forEach((img: any) => {
+  //   console.log(img.drawing_collection);
+  //   const coll = img.drawing_collection;
+  //   if (!collections.hasOwnProperty(img.drawing_collection)) {
+  //     collections[coll] = new Array();
+  //     collections[coll].push(img.image.url);
+  //   } else {
+  //     collections[coll].push(img.image.url);
+  //   }
+  // });
+
   // console.log(items);
 
   // useStore.setState({ isOpen: true, price: 400 });

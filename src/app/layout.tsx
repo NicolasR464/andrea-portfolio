@@ -8,6 +8,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -70,7 +71,7 @@ export default async function RootLayout({
 
           {/* <div className="translate-y-24">{children}</div> */}
           <div>{children}</div>
-
+          <Analytics />
           <Script src="./main.js" />
           <Script
             defer
