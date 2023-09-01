@@ -1,6 +1,7 @@
 import ShopCard from "./ShopCard";
 import { useStore } from "@/store";
 import StoreInitializer from "@/components/StoreInitializer";
+import CollectionMenu from "@/components/CollectionMenu";
 
 const fetchItems = async () => {
   //will fetch all items - with a set revalidate tags to update the UI
@@ -53,39 +54,36 @@ export default async function Buy() {
 
   console.log(collections);
 
-  return (
-    <div className="translate-y-24">
-      {/* <StoreInitializer price={400} isOpen={true} /> */}
-      <div className="z-[100">
-        <h2 className="text-center text-5xl tracking-widest">shop</h2>
-      </div>
+  // const goTo = (collection: string) => {
+  //   console.log(collection);
+  // };
 
-      {collectionKeys.map((collection: any, index: number) => {
-        return (
-          <div
-            className="flex items-center justify-center flex-col"
-            key={index}
-          >
-            <h3 className="text-xl">{collection}</h3>
-            <section className="flex flex-wrap justify-center">
-              {collections[collection].map((item: any, i: number) => {
-                return <ShopCard item={item} key={i} />;
-              })}
-            </section>
-          </div>
-        );
-      })}
-      {/* 
-      {collections &&
-        collections.map((collection: any, index: number) => {
-          return <h1 key={index}>{collection}</h1>;
-        })} */}
-      {/* <section className="flex flex-wrap justify-center">
-        {items &&
-          items.map((item: any, index: number) => (
-            <ShopCard item={item} key={index} />
-          ))}
-      </section> */}
+  return (
+    <div className="relative" id="shop">
+      <div className="translate-y-24">
+        <div className="z-[100]">
+          <h2 className="text-center text-5xl tracking-widest">shop</h2>
+        </div>
+
+        {collectionKeys.map((collection: any, index: number) => {
+          return (
+            <div
+              className="flex items-center justify-center flex-col"
+              key={index}
+            >
+              <h3 id={collection.replace(/ /g, "-")} className="text-xl">
+                {collection}
+              </h3>
+              <section className="flex flex-wrap justify-center">
+                {collections[collection].map((item: any, i: number) => {
+                  return <ShopCard item={item} key={i} />;
+                })}
+              </section>
+            </div>
+          );
+        })}
+      </div>
+      <CollectionMenu collectionKeys={collectionKeys} />
     </div>
   );
 }

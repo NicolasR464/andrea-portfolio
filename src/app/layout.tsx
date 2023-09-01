@@ -55,7 +55,7 @@ export default async function RootLayout({
     <ClerkProvider>
       <html
         data-theme="bumblebee"
-        className={`${tenor_sans.variable} ${tilt_prism.variable}`}
+        className={`${tenor_sans.variable} ${tilt_prism.variable} `}
         lang="en"
       >
         <head></head>

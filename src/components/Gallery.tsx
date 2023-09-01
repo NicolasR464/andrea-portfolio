@@ -115,8 +115,6 @@ export default function Gallery({ collections }: { collections: any }) {
       };
     });
 
-    console.log(containerRef.current.offsetWidth);
-
     if (
       containerRef?.current?.offsetWidth &&
       objectKeys &&
@@ -142,24 +140,15 @@ export default function Gallery({ collections }: { collections: any }) {
   }, [collections]);
 
   const goTo = (name: string | undefined) => {
-    console.log(name);
-
     setCollectionName(name);
 
     const element = document.getElementById(name!);
     const rect = element?.getBoundingClientRect();
     const distanceFromTop = rect?.x!;
-    console.log(element);
-    console.log(rect);
 
-    console.log(distanceFromTop);
+    // window.scrollTo(0, distanceFromTop);
 
-    // window.scrollTo({
-    //   top: distanceFromTop!,
-    //   behavior: "smooth",
-    // });
-
-    gsap.to(window, { scrollTo: distanceFromTop });
+    gsap.to(window, { duration: 1, scrollTo: distanceFromTop });
   };
 
   return (
