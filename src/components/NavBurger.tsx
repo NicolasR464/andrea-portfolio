@@ -2,12 +2,15 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useBurger } from "@/store";
+import Image from "next/image";
+import { useStore } from "@/store";
 
 export default function NavBurger() {
   // const [isBurgerOpen, setIsBurgerOpen] = useState(true);
   const { isOpen } = useBurger();
+  const { bag } = useStore();
 
-  const burgerLineOne: React.CSSProperties = isOpen
+  const burgerLineOne: React.CSSProperties = !isOpen
     ? {
         width: "40px",
         height: "5px",
@@ -25,7 +28,7 @@ export default function NavBurger() {
         transition: "transform 0.5s, backgroundColor 1s",
       };
 
-  const burgerLineTwo: React.CSSProperties = isOpen
+  const burgerLineTwo: React.CSSProperties = !isOpen
     ? {
         width: "40px",
         height: "5px",
@@ -43,7 +46,7 @@ export default function NavBurger() {
         transition: "transform 0.5s, backgroundColor 1s",
       };
 
-  const blurLayoutAnimation: React.CSSProperties = isOpen
+  const blurLayoutAnimation: React.CSSProperties = !isOpen
     ? {
         transform: "translateY(-100%)",
       }
@@ -83,6 +86,23 @@ export default function NavBurger() {
           >
             shop
           </Link>
+          {bag.length > 0 && (
+            <button
+              onClick={() => {
+                useStore.setState({ isOpen: true });
+              }}
+              className="-translate-y-[4px] ml-1"
+            >
+              {" "}
+              {/* <FontAwesomeIcon width="24" icon={faBagShopping} /> */}
+              <Image
+                src="/shop.png"
+                width={50}
+                height={50}
+                alt="Shopping bag"
+              ></Image>
+            </button>
+          )}
           <Link
             onClick={() =>
               useBurger.setState((state) => ({ isOpen: !state.isOpen }))
