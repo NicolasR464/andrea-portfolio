@@ -21,11 +21,11 @@ const Vignette: React.FC<Props> = ({ item }) => {
   const [description, setDescription] = useState<string>("");
   const [imageUrl, setImageUrl] = useState<any>();
   const [imageFile, setImageFile] = useState<File>();
-  const [price, setPrice] = useState<any>();
-  const [print_number, setPrint_number] = useState<any>();
-  const [sale_number, setSale_number] = useState<any>();
-  const [width, setWidth] = useState<any>();
-  const [height, setHeight] = useState<any>();
+  const [price, setPrice] = useState<any>(null);
+  const [print_number, setPrint_number] = useState<any>(null);
+  const [sale_number, setSale_number] = useState<any>(null);
+  const [width, setWidth] = useState<any>(null);
+  const [height, setHeight] = useState<any>(null);
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
 
   const router = useRouter();
@@ -102,6 +102,20 @@ const Vignette: React.FC<Props> = ({ item }) => {
 
   const editVignette = async (id: string) => {
     setIsEditing(true);
+
+    if (forSale === true) {
+      if (
+        price === null ||
+        print_number == null ||
+        width === null ||
+        height === null
+      ) {
+        // toaster
+        toast.error(
+          "👋 A drawing for sale needs info like price, number of prints, etc."
+        );
+      }
+    }
 
     const form = formData(
       name,
