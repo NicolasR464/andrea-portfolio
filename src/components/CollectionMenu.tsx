@@ -16,7 +16,6 @@ export default function CollectionMenu({
 
   const goTo = (collection: string) => {
     setCollectionName(collection);
-    console.log(collection);
 
     gsap.to(window, {
       duration: 1,

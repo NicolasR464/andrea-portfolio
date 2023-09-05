@@ -12,7 +12,6 @@ const bioFetch = async () => {
 
 export default async function About() {
   const data: any = await bioFetch();
-  console.log(data);
 
   return (
     <article className="w-screen  flex justify-center flex-col items-center translate-y-24">

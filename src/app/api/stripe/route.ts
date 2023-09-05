@@ -6,11 +6,7 @@ const stripe = new Stripe(process.env.STRIPE_KEY as string, {
 });
 
 export async function POST(req: NextRequest) {
-  console.log("🔥POST");
-
   const body: any = await req.json();
-
-  console.log(body);
 
   const { name, active, description, metadata, price_amount } = body;
 

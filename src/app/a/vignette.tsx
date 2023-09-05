@@ -95,9 +95,8 @@ const Vignette: React.FC<Props> = ({ item }) => {
         new Blob([file], { type: "image/jpg" })
       );
       setImageUrl(url);
-      // setImage(file);
+
       const img: any = await publicImgUpload(file);
-      console.log(img);
 
       setNewImg(img);
     }
@@ -157,8 +156,6 @@ const Vignette: React.FC<Props> = ({ item }) => {
 
   const handleDelete = async (id: string) => {
     setDeleteModal(true);
-    console.log(id);
-    // fetch delete
 
     const options = {
       method: "DELETE",

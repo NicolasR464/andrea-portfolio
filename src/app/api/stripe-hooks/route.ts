@@ -20,7 +20,6 @@ const stripe = new Stripe(process.env.STRIPE_KEY as string, {
 // + UPDATE ORDERS TABLE ON PAYMENT STATUS CHANGED
 export async function POST(req: NextRequest) {
   connectMongoose();
-  console.log("STRIPE EVENT 🚀");
   const reqParsed = await req.text();
 
   const signingSecret = process.env.STRIPE_WHSEC!;
@@ -45,8 +44,6 @@ export async function POST(req: NextRequest) {
       { status: 400 }
     );
   }
-  // Successfully constructed event.
-  console.log("✅ STRIPE WEBHOOK Successss:", event.id);
 
   interface MySession extends Stripe.Checkout.Session {
     customer_details: any;
@@ -58,22 +55,11 @@ export async function POST(req: NextRequest) {
     expand: ["line_items"],
   });
 
-  console.log("checkoutSession ↴");
-  console.log(checkoutSession.line_items);
-
   // FOR PRODUCTS INFO
   let ordersArr: Array<{}> | undefined;
   let items_bought = 0;
 
-  // const retrieveImg = async (prodId: any) => {
-  //   const product = await stripe.products.retrieve(prodId);
-
-  //   return product.images[0];
-  // };
-
   if (checkoutSession.line_items && checkoutSession.line_items.data) {
-    console.log(checkoutSession.line_items.data);
-
     for (let lineItem of checkoutSession.line_items.data) {
       items_bought += lineItem?.quantity!;
     }
@@ -83,12 +69,7 @@ export async function POST(req: NextRequest) {
     try {
       const ordersPromises: any = checkoutSession?.line_items?.data.map(
         async (order) => {
-          console.log({ order });
-
           const productInfo = await getProductInfo(order?.price?.product);
-          console.log("❤️");
-
-          console.log(productInfo);
 
           return {
             id: order.id,
@@ -116,16 +97,6 @@ export async function POST(req: NextRequest) {
   }
 
   const orders = await getOrders();
-  console.log("🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥");
-
-  console.log(orders);
-
-  // return;
-  // CREATE ORDER | MONGO
-  console.log("SESSION ⭐️");
-
-  console.log(session);
-  console.log(session.amount_total);
 
   const createdAt = new Date(session.created * 1000);
 
@@ -147,7 +118,6 @@ export async function POST(req: NextRequest) {
 
   try {
     const orderMongoRes = await Order.create(orderObj);
-    console.log(orderMongoRes);
   } catch (err) {
     console.log(err);
     return NextResponse.json(
@@ -193,9 +163,6 @@ export async function POST(req: NextRequest) {
     );
   }
   revalidateTag("drawings");
-  // session?.customer_details?.email
-
-  // SEND EMAIL TO ANDREA
 
   const msg = {
     to: process.env.HOST_EMAIL!,
@@ -227,12 +194,3 @@ export async function POST(req: NextRequest) {
   );
   return NextResponse.json({ finished: true }, { status: 201 });
 }
-
-// attachments: [
-//     {
-//       content: "pdfBase64Content",
-//       filename: "your_file_name.pdf", // Replace with your actual file name
-//       type: "application/pdf",
-//       disposition: "attachment",
-//     },
-//   ],

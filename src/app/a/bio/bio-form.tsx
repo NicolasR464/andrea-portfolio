@@ -22,12 +22,10 @@ export default function FormBio({
 
   useEffect(() => {
     setText(bioText);
-    console.log(bioText);
   }, [bioText]);
 
   useEffect(() => {
     setImageUrl(bioImgUrl);
-    console.log(bioImgUrl);
   }, [bioImgUrl]);
 
   // UPDATE IMAGE

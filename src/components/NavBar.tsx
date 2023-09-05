@@ -15,11 +15,6 @@ export default async function NavBar({ params }: any) {
   let isMobileView = userAgent!.match(
     /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i
   );
-  // const user = undefined;
-  // const isAdmin = false;
-
-  // console.log(userAgent);
-  // console.log({ isMobileView });
 
   return (
     <div className="fixed w-full z-40">

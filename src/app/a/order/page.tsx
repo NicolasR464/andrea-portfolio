@@ -15,12 +15,7 @@ export default async function Details({
 }: {
   searchParams: { id: string };
 }) {
-  console.log("💥");
-  console.log(searchParams);
   const orderDetail: any = await getOrderDetail(searchParams.id);
-
-  // console.log(orderDetail);
-  // console.log(orderDetail?.order.orderItems);
 
   return (
     <article>

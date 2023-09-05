@@ -26,9 +26,6 @@ export default function Contact() {
       const mail = await fetch("/api/mail", config);
 
       const mailParsed = await mail.json();
-      console.log(mailParsed);
-
-      // if mail ok - toaster
 
       if (mail.ok) {
         setMail("");
@@ -38,8 +35,6 @@ export default function Contact() {
         toast.success("email sent! 📮");
       }
     } catch (err) {
-      console.log("❌");
-
       console.log(err);
     }
 

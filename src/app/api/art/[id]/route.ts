@@ -138,12 +138,9 @@ export async function PUT(
             currency: "EUR",
           },
         });
-        // console.log(product);
 
         stripeId = product.id;
         priceId = product.default_price;
-
-        // return NextResponse.json(product, { status: 201 });
       } catch (error: unknown) {
         if (typeof error === "object" && error !== null && "message" in error) {
           const message = (error as { message: string }).message;
@@ -176,7 +173,6 @@ export async function PUT(
 
   try {
     const mongoRes = await Drawing.findByIdAndUpdate(mongoData._id, mongObj);
-    console.log(mongoRes);
     revalidateTag("drawings");
     return NextResponse.json(mongoRes, { status: 200 });
   } catch (err) {
@@ -218,7 +214,6 @@ export async function DELETE(
 
   try {
     const mongoData = await Drawing.findByIdAndDelete(params.id);
-    console.log(mongoData);
     revalidateTag("drawings");
     return NextResponse.json({ mongoData }, { status: 200 });
   } catch (err) {

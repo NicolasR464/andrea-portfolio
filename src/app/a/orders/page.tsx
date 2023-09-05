@@ -2,13 +2,7 @@ import Table from "@/components/Table";
 import Filters from "./filters";
 
 const getOrders = async (searchParams: any) => {
-  // console.log(searchParams);
-
   const { input, date } = searchParams;
-  console.log(typeof searchParams);
-  console.log(searchParams);
-  console.log(searchParams.hasOwnProperty("input"));
-  // console.log(searchParams.hasOwnProperty("date"));
 
   const ordersRes = await fetch(
     searchParams.hasOwnProperty("input")
@@ -18,20 +12,14 @@ const getOrders = async (searchParams: any) => {
       cache: "no-store",
     }
   );
-  // console.log("🚀🚀");
-  // console.log(ordersRes);
+
   const resParsed: any = await ordersRes.json();
 
-  //  next: { tags: ["orders"] }
   return resParsed.data;
 };
 
 export default async function Orders({ searchParams }: any) {
   const orders = await getOrders(searchParams);
-
-  // const data = await order.json();
-
-  // console.log(orders);
 
   return (
     <section className="overflow-y-hidden">

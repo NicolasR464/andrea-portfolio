@@ -27,11 +27,6 @@ export default function Form() {
     setPosting(true);
 
     const img: any = await publicImgUpload(event.target.image.files[0]);
-    console.log("🙏");
-
-    console.log(img);
-    // setPosting(false);
-    // return;
 
     const form = formData(
       event.target.name.value,
@@ -69,7 +64,6 @@ export default function Form() {
 
         router.refresh();
         const scrollPosition = window.scrollY;
-        console.log(scrollPosition);
       } else {
         toast.error("something went wrong, try again.");
       }

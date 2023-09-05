@@ -7,9 +7,6 @@ const stripe = new Stripe(process.env.STRIPE_KEY as string, {
 export async function getInvoiceUrl(invoiceId: any) {
   try {
     const invoice = await stripe.invoices.retrieve(invoiceId);
-    console.log("🍕");
-    console.log(invoice);
-    console.log(typeof invoice.hosted_invoice_url);
 
     return invoice.hosted_invoice_url;
   } catch (err) {
@@ -20,7 +17,6 @@ export async function getInvoiceUrl(invoiceId: any) {
 export async function getProductInfo(prodId: any) {
   try {
     const product = await stripe.products.retrieve(prodId);
-    console.log({ product });
     return product;
   } catch (err) {
     console.log(err);

@@ -22,31 +22,17 @@ export default function Filters() {
 
   const [isOnMain, setOnMain] = useState(true);
 
-  // useEffect(() => {
-  //   console.log("date 💥");
-  // }, [debouncedDate]);
-
-  // useEffect(() => {
-  //   console.log({ dateRangeValue });
-  // }, [dateRangeValue]);
-
   useEffect(() => {
-    console.log({ dateValue });
     if (searchParams.has("input") && searchParams.get("input") != "null") {
       setOnMain(false);
       setValue(searchParams.get("input"));
-      console.log("NOT on main");
     } else {
-      console.log("ON main");
       setValue("");
       setDateValue(null);
       setDateRangeValue([null, null]);
     }
 
     if (searchParams.has("date") && searchParams.get("date") != "null") {
-      console.log("HAVE DATE");
-      console.log(searchParams.get("date"));
-
       if (searchParams.get("date")?.includes("-")) {
         const dateStart = new Date(searchParams.get("date")?.split("-")[0]!);
         const dateEnd = new Date(searchParams.get("date")?.split("-")[1]!);
@@ -56,40 +42,9 @@ export default function Filters() {
         const date = new Date(searchParams.get("date")!);
         setDateValue(date);
       }
-    } else {
-      console.log("DONT HAVE DATE");
-      // setDateValue(null);
     }
     setHasParams(searchParams.has("input"));
-
-    // setDateValue(searchParams.get("date"));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
-
-  //   useEffect(() => {
-  //     if (
-  //       searchParams.has("date") &&
-  //       searchParams.get("date") !== "null" &&
-  //       !dateValue
-  //     ) {
-  //       console.log(typeof searchParams.get("date"));
-  //       console.log(searchParams.get("date"));
-
-  //       const dateParsed = new Date(searchParams.get("date")!);
-  //       console.log(typeof dateParsed);
-  //       console.log(dateParsed);
-
-  //       setDateValue(dateParsed);
-  //     }
-  //   }, [searchParams, dateValue]);
-
-  //   useEffect(() => {
-  //     console.log(searchParams.has("input"));
-  //     if (searchParams.has("input")) {
-  //       setHasParams(true);
-  //       //   setValue(searchParams.get("input"));
-  //     }
-  //   }, [searchParams, setValue]);
 
   useEffect(() => {
     if (dateValue) setDateRangeValue([null, null]);
@@ -97,8 +52,6 @@ export default function Filters() {
 
   useEffect(() => {
     if (dateRangeValue[0] !== null && dateRangeValue[1] !== null) {
-      // console.log("😬");
-
       setDateValue(null);
     }
   }, [dateRangeValue]);
@@ -107,10 +60,6 @@ export default function Filters() {
     let formattedDate = null;
     let formattedDateRangeStart = null;
     let formattedDateRangeEnd = null;
-
-    console.log({ debouncedDateRange });
-    console.log({ debouncedDate });
-    console.log({ debouncedInput });
 
     if (debouncedDate) {
       const date = moment(debouncedDate);
@@ -124,11 +73,6 @@ export default function Filters() {
       formattedDateRangeStart = dateStart.format("ddd DD MMM YYYY");
       formattedDateRangeEnd = dateEnd.format("ddd DD MMM YYYY");
     }
-
-    // (dateRangeValue[0] !== null && dateRangeValue[1] !== null)
-
-    // (formattedDateRangeStart &&
-    //   formattedDateRangeStart + "-" + formattedDateRangeEnd)
 
     if (debouncedDate) {
       router.push(`/a/orders?input=${debouncedInput}&date=${formattedDate}`);
@@ -152,8 +96,7 @@ export default function Filters() {
     setDateValue(null);
     setValue("");
     router.push("/a/orders");
-    // setTimeout(() => {}, 880);
-    // setTimeout(() => setValue(""), 0);
+
     setValue("");
     setDateRangeValue([null, null]);
     setDateValue(null);

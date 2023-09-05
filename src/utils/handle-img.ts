@@ -60,11 +60,6 @@ export const uploadImage = async (
     "folder",
     process.env.CLOUDINARY_UPLOAD_IMG_DRAWING_FOLDER!
   );
-  // cloudinaryForm.append("context", cloudiMeta);
-
-  console.log("cloudinary form ↴");
-
-  console.log(cloudinaryForm);
 
   try {
     const response = await fetch(
@@ -75,15 +70,9 @@ export const uploadImage = async (
       }
     );
 
-    console.log(response);
-    // TEST LOG
-
-    console.log(response["headers"]);
-
     //
     if (response.ok) {
       const cloudiRes = await response.json();
-      console.log(cloudiRes);
 
       return cloudiRes;
     }
@@ -97,8 +86,7 @@ export const publicImgUpload = async (img: any) => {
   const cloudinaryForm = new FormData();
 
   cloudinaryForm.append("file", img);
-  // cloudinaryForm.append("api_key", e.CLOUDINARY_API_KEY!);
-  // cloudinaryForm.append("api_secret", e.CLOUDINARY_API_SECRET!);
+
   cloudinaryForm.append(
     "upload_preset",
     process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!
@@ -113,15 +101,9 @@ export const publicImgUpload = async (img: any) => {
       }
     );
 
-    // console.log(response);
-    // TEST LOG
-
-    // console.log(response["headers"]);
-
     //
     if (response.ok) {
       const cloudiRes: any = await response.json();
-      // console.log(cloudiRes);
 
       return {
         public_id: cloudiRes.public_id,

@@ -15,7 +15,6 @@ export default function NavBarLinks({ isAdmin }: { isAdmin: boolean }) {
 
   useEffect(() => {
     setIsAdmin(isAdmin);
-    console.log(isAdmin);
   }, [isAdmin]);
 
   return (

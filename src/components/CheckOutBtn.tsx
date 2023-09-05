@@ -33,15 +33,11 @@ export default function CheckOutBtn() {
   const handleStripeCheckSession = async () => {
     const stripe: any = await stripePromise;
     let stripeBag: Array<object>;
-    console.log(isErrPage);
-    // IF from error page
-    //// THEN const stripeBag from local storage
+
     if (isErrPage) {
       const localBag = localStorage.getItem("bag")!;
-      console.log(localBag);
 
       const bagParsed: any = JSON.parse(localBag);
-      console.log(bagParsed);
 
       stripeBag = bagParsed[0].map((item: any) => {
         return { price: item.stripeId, quantity: item.amount_selected };
@@ -60,7 +56,6 @@ export default function CheckOutBtn() {
     });
 
     const stripeRes: any = await stripeApi.json();
-    console.log(stripeRes);
 
     const result = await stripe.redirectToCheckout({
       sessionId: stripeRes.id,

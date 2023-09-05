@@ -12,7 +12,6 @@ const stripe = new Stripe(process.env.STRIPE_KEY as string, {
 });
 
 export async function GET(req: NextRequest, res: NextResponse) {
-  console.log("GET API SHOP");
   connectMongoose();
   try {
     const drawingsForSale = await Drawing.find({ isForSale: true });
@@ -28,8 +27,6 @@ export async function GET(req: NextRequest, res: NextResponse) {
 }
 
 export async function POST(req: NextRequest, res: NextResponse) {
-  console.log("SHOP POST 🚀");
-
   const body: any = await req.json();
 
   // return NextResponse.json({ msg: "STRIPE BUY TEST" });

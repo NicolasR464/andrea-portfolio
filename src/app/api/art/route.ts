@@ -39,16 +39,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
     metadataX,
     metadataY,
   };
-  console.log("🚀🚀");
 
-  console.log(img);
-  // console.log(JSON.parse(img));
-
-  // const uploadResp: any = await uploadImage(img, name, collection);
-
-  // console.log(uploadResp);
-
-  ////////// *** STRIPE 💸 ***
+  ////////// *** STRIPE  ***
 
   let productId: string | undefined = undefined;
   let priceId: any = undefined;
@@ -64,7 +56,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
           currency: "EUR",
         },
       });
-      console.log(product);
 
       productId = product.id;
       priceId = product.default_price;
@@ -85,9 +76,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
   // return NextResponse.json({ message: "DONE FOR NOW" });
 
   ///////////// TO MONGO
-  console.log("TO MONGO ⭐️");
-
-  console.log(print_number);
 
   const drawingObj = {
     name:
@@ -107,7 +95,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
   try {
     const drawing = await Drawing.create(drawingObj);
-    console.log(drawing);
   } catch (err) {
     console.log(err);
     return NextResponse.json(
@@ -126,14 +113,11 @@ export async function POST(req: NextRequest, res: NextResponse) {
 }
 
 export async function GET(req: NextRequest, res: NextResponse) {
-  console.log("GET API ART");
   connectMongoose();
 
   const { searchParams } = new URL(req.url);
-  console.log(searchParams);
 
   const home = searchParams?.has("p");
-  console.log(home);
 
   try {
     let drawings;

@@ -7,11 +7,7 @@ const getOrderDetail = async (id: string) => {
 };
 
 export default async function Details({ params }: { params: { id: string } }) {
-  console.log("💥");
-  console.log(params.id);
   const orderDetail = await getOrderDetail(params.id);
-
-  console.log(orderDetail);
 
   return (
     <article>

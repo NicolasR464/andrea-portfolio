@@ -21,12 +21,8 @@ export default async function Buy() {
 
   const collections: any = new Object();
 
-  console.log(items);
-
   if (items) {
     items.forEach((item: any) => {
-      console.log(item.drawing_collection);
-
       const coll = item.drawing_collection;
       if (!collections.hasOwnProperty(item.drawing_collection)) {
         collections[coll] = new Array();
@@ -38,27 +34,6 @@ export default async function Buy() {
   }
 
   const collectionKeys = Object.keys(collections);
-
-  // items.data.forEach((img: any) => {
-  //   console.log(img.drawing_collection);
-  //   const coll = img.drawing_collection;
-  //   if (!collections.hasOwnProperty(img.drawing_collection)) {
-  //     collections[coll] = new Array();
-  //     collections[coll].push(img.image.url);
-  //   } else {
-  //     collections[coll].push(img.image.url);
-  //   }
-  // });
-
-  // console.log(items);
-
-  // useStore.setState({ isOpen: true, price: 400 });
-
-  console.log(collections);
-
-  // const goTo = (collection: string) => {
-  //   console.log(collection);
-  // };
 
   return (
     <div className="relative" id="shop">

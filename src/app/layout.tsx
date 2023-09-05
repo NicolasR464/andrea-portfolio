@@ -44,13 +44,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // const user = await currentUser();
-  // console.log(user);
-  // console.log(user?.emailAddresses[0].emailAddress);
-
-  // if (user?.emailAddresses[0].emailAddress !== process.env.HOST_EMAIL)
-  //   redirect("/");
-
   return (
     <ClerkProvider>
       <html
