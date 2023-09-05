@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 
 const fetchItems = async () => {
   try {
-    const drawings = await fetch("http://localhost:3000/api/art", {
+    const drawings: any = await fetch("http://localhost:3000/api/art", {
       next: { tags: ["drawings"] },
     });
     const drawingsRes = await drawings.json();
@@ -21,7 +21,7 @@ const fetchItems = async () => {
 
 export default async function Dashboard() {
   const items = await fetchItems();
-  const user = await currentUser();
+  const user: any = await currentUser();
 
   if (user?.emailAddresses[0].emailAddress !== process.env.HOST_EMAIL)
     redirect("/");

@@ -30,7 +30,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
 export async function POST(req: NextRequest, res: NextResponse) {
   console.log("SHOP POST 🚀");
 
-  const body = await req.json();
+  const body: any = await req.json();
 
   // return NextResponse.json({ msg: "STRIPE BUY TEST" });
 

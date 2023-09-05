@@ -9,7 +9,7 @@ const fetchItems = async () => {
     const data = await fetch("http://localhost:3000/api/shop", {
       next: { tags: ["drawings"] },
     });
-    const res = await data.json();
+    const res: any = await data.json();
     return res.data;
   } catch (err) {
     console.log(err);
@@ -23,17 +23,19 @@ export default async function Buy() {
 
   console.log(items);
 
-  items.forEach((item: any) => {
-    console.log(item.drawing_collection);
+  if (items) {
+    items.forEach((item: any) => {
+      console.log(item.drawing_collection);
 
-    const coll = item.drawing_collection;
-    if (!collections.hasOwnProperty(item.drawing_collection)) {
-      collections[coll] = new Array();
-      collections[coll].push(item);
-    } else {
-      collections[coll].push(item);
-    }
-  });
+      const coll = item.drawing_collection;
+      if (!collections.hasOwnProperty(item.drawing_collection)) {
+        collections[coll] = new Array();
+        collections[coll].push(item);
+      } else {
+        collections[coll].push(item);
+      }
+    });
+  }
 
   const collectionKeys = Object.keys(collections);
 

@@ -5,7 +5,7 @@ mail.setApiKey(process.env.SENDGRID_KEY!);
 export async function POST(req: NextRequest) {
   console.log("📪 POST");
 
-  const body = await req.json();
+  const body: any = await req.json();
 
   const { email, subject, mailBody } = body;
 

@@ -17,7 +17,7 @@ export default function CheckOutBtn() {
   useEffect(() => {
     if (searchParams.has("cancel")) {
       const localBag = localStorage.getItem("bag")!;
-      const bagParsed = JSON.parse(localBag);
+      const bagParsed: any = JSON.parse(localBag);
       useStore.setState({
         bag: bagParsed[0],
         cartTotal: bagParsed[1],
@@ -40,7 +40,7 @@ export default function CheckOutBtn() {
       const localBag = localStorage.getItem("bag")!;
       console.log(localBag);
 
-      const bagParsed = JSON.parse(localBag);
+      const bagParsed: any = JSON.parse(localBag);
       console.log(bagParsed);
 
       stripeBag = bagParsed[0].map((item: any) => {
@@ -59,7 +59,7 @@ export default function CheckOutBtn() {
       mode: "no-cors",
     });
 
-    const stripeRes = await stripeApi.json();
+    const stripeRes: any = await stripeApi.json();
     console.log(stripeRes);
 
     const result = await stripe.redirectToCheckout({

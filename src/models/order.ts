@@ -45,6 +45,6 @@ const orderSchema = new Schema(
   { timestamps: true }
 );
 
-const Order = models.Order || model("Order", orderSchema);
+const Order: any = models.Order || model("Order", orderSchema);
 
 export default Order;

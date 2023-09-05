@@ -20,7 +20,7 @@ const getOrders = async (searchParams: any) => {
   );
   // console.log("🚀🚀");
   // console.log(ordersRes);
-  const resParsed = await ordersRes.json();
+  const resParsed: any = await ordersRes.json();
 
   //  next: { tags: ["orders"] }
   return resParsed.data;

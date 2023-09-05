@@ -11,7 +11,7 @@ const bioFetch = async () => {
 };
 
 export default async function Bio() {
-  const data = await bioFetch();
+  const data: any = await bioFetch();
   console.log(data);
 
   return (

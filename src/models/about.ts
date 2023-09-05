@@ -10,6 +10,6 @@ const aboutSchema = new Schema({
   },
 });
 
-const About = models.About || model("About", aboutSchema);
+const About: any = models.About || model("About", aboutSchema);
 
 export default About;

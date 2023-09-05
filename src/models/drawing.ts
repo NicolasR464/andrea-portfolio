@@ -1,8 +1,36 @@
 import mongoose from "mongoose";
 
-const { Schema, model, models } = mongoose;
+const { Schema, model, models, Model } = mongoose;
 
-const drawingSchema = new Schema({
+interface imageObj {
+  public_id: string;
+  url: string;
+}
+
+interface stripeObj {
+  productId: string;
+  priceId: string;
+}
+
+interface DrawingAttributes {
+  name: string;
+  drawing_collection: object;
+  description: string;
+  image: imageObj;
+  isForSale: boolean;
+  price: number;
+  print_number_set: number;
+  print_number_sold: number;
+  width: number;
+  height: number;
+  stripe: stripeObj;
+}
+
+// interface DrawingDocument extends DrawingAttributes, Document {}
+
+// interface DrawingModel extends Model<DrawingDocument>{}
+
+const drawingSchema = new Schema<DrawingAttributes>({
   name: String,
   drawing_collection: { type: String, required: true },
   description: String,
@@ -19,6 +47,8 @@ const drawingSchema = new Schema({
   stripe: { productId: { type: String }, priceId: { type: String } },
 });
 
-const Drawing = models.Drawing || model("Drawing", drawingSchema);
+const Drawing: any =
+  models.Drawing<DrawingAttributes> ||
+  model<DrawingAttributes>("Drawing", drawingSchema);
 
 export default Drawing;
