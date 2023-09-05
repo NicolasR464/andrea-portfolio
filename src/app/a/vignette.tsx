@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { publicImgUpload } from "../../utils/handle-img";
 
 interface Props {
   item?: any;
@@ -17,10 +18,10 @@ const Vignette: React.FC<Props> = ({ item }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [name, setName] = useState<any>("");
   const [drawingCollection, setDrawingCollection] = useState<string>("");
-  const [newImg, setNewImg] = useState<File>();
+  const [newImg, setNewImg] = useState<Object | undefined>(undefined);
   const [description, setDescription] = useState<string>("");
   const [imageUrl, setImageUrl] = useState<any>();
-  const [imageFile, setImageFile] = useState<File>();
+  const [image, setImage] = useState<any>(undefined);
   const [price, setPrice] = useState<any>(undefined);
   const [print_number, setPrint_number] = useState<any>(undefined);
   const [sale_number, setSale_number] = useState<any>(undefined);
@@ -59,7 +60,7 @@ const Vignette: React.FC<Props> = ({ item }) => {
   }, [item.description]);
 
   useEffect(() => {
-    setImageUrl(item.image.url);
+    setImageUrl(item.image?.url);
   }, [item.image]);
 
   useEffect(() => {
@@ -88,13 +89,17 @@ const Vignette: React.FC<Props> = ({ item }) => {
 
   // UPDATE IMAGE
 
-  const updateImg = (file: any) => {
+  const updateImg = async (file: any) => {
     if (file) {
       const url = window.URL.createObjectURL(
         new Blob([file], { type: "image/jpg" })
       );
       setImageUrl(url);
-      setImageFile(file);
+      // setImage(file);
+      const img: any = await publicImgUpload(file);
+      console.log(img);
+
+      setNewImg(img);
     }
   };
 
@@ -124,7 +129,7 @@ const Vignette: React.FC<Props> = ({ item }) => {
       name,
       drawingCollection,
       description,
-      imageFile ? imageFile : undefined,
+      newImg ? newImg : undefined,
       forSale,
       price,
       print_number,

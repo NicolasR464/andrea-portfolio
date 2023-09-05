@@ -31,13 +31,6 @@ export default async function Home() {
     }
   });
 
-  // console.log("🔥");
-
-  // console.log(collections);
-
-  // console.log(imgs.image);
-  // console.log(imgs.data);
-
   return (
     <div>
       {!isMobileView && (

@@ -5,13 +5,6 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 
-// interface ImageData {
-//   collection: string[];
-// }
-// interface MyProps {
-//   data: ImageData[];
-// }
-
 let horizontalAnim: any;
 
 export default function Gallery({ collections }: { collections: any }) {
@@ -25,6 +18,8 @@ export default function Gallery({ collections }: { collections: any }) {
   });
 
   const hasBeenCalled = useRef(false);
+
+  const [isMouseOut, setIsMouseOut] = useState(true);
 
   gsap.registerPlugin(ScrollTrigger);
   gsap.registerPlugin(ScrollToPlugin);
@@ -151,15 +146,27 @@ export default function Gallery({ collections }: { collections: any }) {
     gsap.to(window, { duration: 1, scrollTo: distanceFromTop });
   };
 
+  const menuStyle: React.CSSProperties = isMouseOut
+    ? {
+        opacity: 0,
+        visibility: "hidden",
+      }
+    : { opacity: 1, visibility: "visible" };
+
   return (
     <div>
       {collectionName && (
         <div className="z-[10] fixed bottom-4  justify-center flex w-screen ">
-          <div className=" dropdown dropdown-hover dropdown-top">
+          <div
+            onMouseEnter={() => setIsMouseOut(false)}
+            className=" dropdown dropdown-hover dropdown-top"
+          >
             <label tabIndex={0} className="btn m-1 w-40">
               {collectionName}
             </label>
             <ul
+              style={menuStyle}
+              onMouseLeave={() => setIsMouseOut(true)}
               tabIndex={0}
               className="z-[200] -translate-x-[22.5px] dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
             >

@@ -10,6 +10,7 @@ export default function CollectionMenu({
   collectionKeys: any;
 }) {
   const [collectionName, setCollectionName] = useState<string>();
+  const [isMouseOut, setIsMouseOut] = useState(true);
 
   gsap.registerPlugin(ScrollToPlugin);
 
@@ -27,15 +28,27 @@ export default function CollectionMenu({
     setCollectionName(collectionKeys[0]);
   }, [collectionKeys]);
 
+  const menuStyle: React.CSSProperties = isMouseOut
+    ? {
+        opacity: 0,
+        visibility: "hidden",
+      }
+    : { opacity: 1, visibility: "visible" };
+
   return (
     <div className="z-[10] justify-center flex w-screen fixed bottom-4 left-0 right-0">
       {collectionKeys && collectionName && (
         <div>
-          <div className=" dropdown dropdown-hover dropdown-top">
+          <div
+            onMouseEnter={() => setIsMouseOut(false)}
+            className=" dropdown dropdown-hover dropdown-top"
+          >
             <label tabIndex={0} className="btn m-1 w-40">
               {collectionName}
             </label>
             <ul
+              style={menuStyle}
+              onMouseLeave={() => setIsMouseOut(true)}
               tabIndex={0}
               className="z-[200] -translate-x-[22.5px] dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
             >

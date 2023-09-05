@@ -21,7 +21,7 @@ export async function PUT(
 
   // PARSE REQ DATA
   const formData = await req.formData();
-  const img = (formData.get("image") as File) || undefined;
+  const imgRaw = (formData.get("image") as string) || undefined;
   const name = formData.get("name") as string;
   const collection = formData.get("collection") as string;
   const description = formData.get("description") as string;
@@ -31,7 +31,12 @@ export async function PUT(
   const metadataX = formData.get("metadataX") as string;
   const metadataY = formData.get("metadataY") as string;
 
-  const changeImg = typeof img !== "string";
+  // let changeImg;
+  let img: any;
+  if (imgRaw) {
+    img = JSON.parse(imgRaw);
+    // changeImg = typeof img !== "string";
+  }
 
   let cloudinaryUrl;
   let cloudinaryPublic_id;
@@ -41,20 +46,20 @@ export async function PUT(
 
   const isForSale = active === "true";
 
-  if (changeImg) {
+  if (img) {
     try {
       const res = await deleteImage(mongoData.image.public_id);
     } catch (err) {
       return NextResponse.json({ message: err }, { status: 500 });
     }
 
-    try {
-      const imageRes = await uploadImage(img, name, collection);
-      cloudinaryUrl = imageRes.secure_url;
-      cloudinaryPublic_id = imageRes.public_id;
-    } catch (err) {
-      console.log(err);
-    }
+    // try {
+    //   const imageRes = await uploadImage(img, name, collection);
+    //   cloudinaryUrl = imageRes.secure_url;
+    //   cloudinaryPublic_id = imageRes.public_id;
+    // } catch (err) {
+    //   console.log(err);
+    // }
   }
 
   // STRIPE UPDATE
@@ -62,7 +67,7 @@ export async function PUT(
   if (
     name != mongoData.name ||
     isForSale != mongoData.isForSale ||
-    changeImg ||
+    img ||
     +price != mongoData.price ||
     +print_number != mongoData.print_number_set ||
     +metadataX != mongoData.width ||
@@ -110,7 +115,7 @@ export async function PUT(
         stripe.products.update(mongoData.stripe.productId, {
           name,
           active: isForSale,
-          images: changeImg ? [cloudinaryUrl] : [mongoData.image.url],
+          images: imgRaw ? [img.url] : [mongoData.image.url],
           metadata: stripeMeta,
           default_price: priceId,
         });
@@ -126,7 +131,7 @@ export async function PUT(
         const product = await stripe.products.create({
           name: name,
           active: isForSale,
-          images: changeImg ? [cloudinaryUrl] : [mongoData.image.url],
+          images: imgRaw ? [img.url] : [mongoData.image.url],
           metadata: stripeMeta,
           default_price_data: {
             unit_amount: +price * 100,
@@ -159,12 +164,7 @@ export async function PUT(
     name,
     drawing_collection: collection,
     description: description == "undefined" ? undefined : description,
-    image: changeImg
-      ? {
-          public_id: cloudinaryPublic_id,
-          url: cloudinaryUrl,
-        }
-      : undefined,
+    image: imgRaw ? img : undefined,
     isForSale,
     price: +price || undefined,
     print_number_set: +print_number || undefined,
