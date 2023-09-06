@@ -57,7 +57,7 @@ export default function FormBio({
     };
 
     try {
-      const fetchRes = await fetch(process.env.DOMAIN + "/api/about", options);
+      const fetchRes = await fetch("/api/about", options);
 
       if (fetchRes.ok) {
         toast.success("bio updated! ⭐️");
