@@ -25,18 +25,20 @@ export default async function Details({
         <h1 className="text-3xl">Order details</h1>
       </div>
       <div className="flex items-center flex-col">
-        <div className="mt-6 p-3 justify-center items-center flex flex-col b-2 border-solid border-2 rounded-xl">
-          <h4 className="font-medium underline">user details</h4>
-          <span>name: {orderDetail.order.customerDetails.name}</span>
-          <span>email: {orderDetail.order.customerDetails.email}</span>
-          <h4 className="font-medium underline">user address</h4>
-          <span>{orderDetail.order.customerDetails.address.line1}</span>
-          <span>{orderDetail.order.customerDetails.address.line2}</span>
-          <span>{orderDetail.order.customerDetails.address.postal_code}</span>
-          <span>{orderDetail.order.customerDetails.address.city}</span>
-          <span>{orderDetail.order.customerDetails.address.state}</span>
-          <span>{orderDetail.order.customerDetails.address.country}</span>
-        </div>
+        {orderDetail && (
+          <div className="mt-6 p-3 justify-center items-center flex flex-col b-2 border-solid border-2 rounded-xl">
+            <h4 className="font-medium underline">user details</h4>
+            <span>name: {orderDetail.order.customerDetails.name}</span>
+            <span>email: {orderDetail.order.customerDetails.email}</span>
+            <h4 className="font-medium underline">user address</h4>
+            <span>{orderDetail.order.customerDetails.address.line1}</span>
+            <span>{orderDetail.order.customerDetails.address.line2}</span>
+            <span>{orderDetail.order.customerDetails.address.postal_code}</span>
+            <span>{orderDetail.order.customerDetails.address.city}</span>
+            <span>{orderDetail.order.customerDetails.address.state}</span>
+            <span>{orderDetail.order.customerDetails.address.country}</span>
+          </div>
+        )}
         <section className="flex flex-wrap justify-center">
           {orderDetail &&
             orderDetail.order.orderItems.map((order: any, i: number) => (

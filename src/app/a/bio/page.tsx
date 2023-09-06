@@ -16,7 +16,10 @@ export default async function Bio() {
   return (
     <div>
       <h1 className="text-center text-5xl">BIO</h1>
-      <BioForm bioText={data.bio.text} bioImgUrl={data?.bio?.image?.url} />
+      <BioForm
+        bioText={data ? data?.bio?.text : ""}
+        bioImgUrl={data ? data?.bio?.image?.url : ""}
+      />
     </div>
   );
 }
