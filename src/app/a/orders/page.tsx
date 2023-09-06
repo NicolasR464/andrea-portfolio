@@ -6,8 +6,8 @@ const getOrders = async (searchParams: any) => {
 
   const ordersRes = await fetch(
     searchParams.hasOwnProperty("input")
-      ? `http://localhost:3000/api/orders?input=${input}&date=${date}`
-      : "http://localhost:3000/api/orders",
+      ? `${process.env.DOMAIN}/api/orders?input=${input}&date=${date}`
+      : `${process.env.DOMAIN}/api/orders`,
     {
       cache: "no-store",
     }

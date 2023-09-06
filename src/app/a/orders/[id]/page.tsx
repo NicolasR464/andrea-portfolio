@@ -1,5 +1,5 @@
 const getOrderDetail = async (id: string) => {
-  const orderDetail = await fetch(`http://localhost:3000/api/orders/${id}`);
+  const orderDetail = await fetch(`${process.env.DOMAIN}/api/orders/${id}`);
 
   const orderParsed = await orderDetail.json();
 

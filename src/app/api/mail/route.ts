@@ -8,10 +8,12 @@ export async function POST(req: NextRequest) {
   const { email, subject, mailBody } = body;
 
   const msg: any = {
-    to: email,
-    from: "nicolas.rocagel@gmail.com",
+    to: process.env.HOST_EMAIL,
+    from: process.env.WEBSITE_EMAIL,
     subject,
-    content: [{ type: "text/html", value: mailBody }],
+    content: [
+      { type: "text/html", value: mailBody + "<br>my email: " + email },
+    ],
   };
 
   mail.send(msg).then(

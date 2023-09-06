@@ -6,7 +6,7 @@ import CollectionMenu from "@/components/CollectionMenu";
 const fetchItems = async () => {
   //will fetch all items - with a set revalidate tags to update the UI
   try {
-    const data = await fetch("http://localhost:3000/api/shop", {
+    const data = await fetch(process.env.DOMAIN + "/api/shop", {
       next: { tags: ["drawings"] },
     });
     const res: any = await data.json();

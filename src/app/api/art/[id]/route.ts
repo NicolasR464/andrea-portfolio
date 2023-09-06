@@ -21,7 +21,7 @@ export async function PUT(
 
   // PARSE REQ DATA
   const formData = await req.formData();
-  const imgRaw = (formData.get("image") as string) || undefined;
+  const imgRaw = formData.get("image") as any;
   const name = formData.get("name") as string;
   const collection = formData.get("collection") as string;
   const description = formData.get("description") as string;
@@ -32,34 +32,33 @@ export async function PUT(
   const metadataY = formData.get("metadataY") as string;
 
   // let changeImg;
-  let img: any;
-  if (imgRaw) {
-    img = JSON.parse(imgRaw);
-    // changeImg = typeof img !== "string";
+  interface imgObject {
+    public_id?: string;
+    url?: string;
   }
 
-  let cloudinaryUrl;
-  let cloudinaryPublic_id;
+  let img: imgObject = JSON.parse(imgRaw)!;
+  let newImg = false;
+
+  if (Object.keys(img).length > 0) {
+    console.log(img);
+
+    newImg = true;
+    console.log(newImg);
+    console.log(img);
+  }
 
   let stripeId = mongoData.stripe.productId || undefined;
   let priceId = mongoData.stripe.priceId || undefined;
 
   const isForSale = active === "true";
 
-  if (img) {
+  if (newImg) {
     try {
       const res = await deleteImage(mongoData.image.public_id);
     } catch (err) {
       return NextResponse.json({ message: err }, { status: 500 });
     }
-
-    // try {
-    //   const imageRes = await uploadImage(img, name, collection);
-    //   cloudinaryUrl = imageRes.secure_url;
-    //   cloudinaryPublic_id = imageRes.public_id;
-    // } catch (err) {
-    //   console.log(err);
-    // }
   }
 
   // STRIPE UPDATE
@@ -115,7 +114,7 @@ export async function PUT(
         stripe.products.update(mongoData.stripe.productId, {
           name,
           active: isForSale,
-          images: imgRaw ? [img.url] : [mongoData.image.url],
+          images: newImg ? [img.url] : [mongoData.image.url],
           metadata: stripeMeta,
           default_price: priceId,
         });
@@ -131,7 +130,7 @@ export async function PUT(
         const product = await stripe.products.create({
           name: name,
           active: isForSale,
-          images: imgRaw ? [img.url] : [mongoData.image.url],
+          images: newImg ? [img.url] : [mongoData.image.url],
           metadata: stripeMeta,
           default_price_data: {
             unit_amount: +price * 100,
@@ -161,7 +160,7 @@ export async function PUT(
     name,
     drawing_collection: collection,
     description: description == "undefined" ? undefined : description,
-    image: imgRaw ? img : undefined,
+    image: newImg ? img : undefined,
     isForSale,
     price: +price || undefined,
     print_number_set: +print_number || undefined,

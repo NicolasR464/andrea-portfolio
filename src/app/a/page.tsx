@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 
 const fetchItems = async () => {
   try {
-    const drawings: any = await fetch("http://localhost:3000/api/art", {
+    const drawings: any = await fetch(process.env.DOMAIN + "/api/art", {
       next: { tags: ["drawings"] },
     });
     const drawingsRes = await drawings.json();

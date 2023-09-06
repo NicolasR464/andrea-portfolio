@@ -18,7 +18,7 @@ const Vignette: React.FC<Props> = ({ item }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [name, setName] = useState<any>("");
   const [drawingCollection, setDrawingCollection] = useState<string>("");
-  const [newImg, setNewImg] = useState<Object | undefined>(undefined);
+  const [newImg, setNewImg] = useState<Object>({});
   const [description, setDescription] = useState<string>("");
   const [imageUrl, setImageUrl] = useState<any>();
   const [image, setImage] = useState<any>(undefined);
@@ -128,7 +128,7 @@ const Vignette: React.FC<Props> = ({ item }) => {
       name,
       drawingCollection,
       description,
-      newImg ? newImg : undefined,
+      newImg,
       forSale,
       price,
       print_number,
@@ -142,10 +142,9 @@ const Vignette: React.FC<Props> = ({ item }) => {
     };
     try {
       const fetchRes = await fetch(`/api/art/${id}`, options);
-
+      console.log(fetchRes);
+      if (!fetchRes.ok) toast.error("something went wrong, try again...");
       router.refresh();
-      setNewImg(undefined);
-
       if (fetchRes.ok) toast.success("drawing info updated! 👌");
     } catch (err) {
       console.log(err);
@@ -165,7 +164,9 @@ const Vignette: React.FC<Props> = ({ item }) => {
       setDeleteModal(false);
       router.refresh();
 
-      if (fetchRes.ok) toast.info("drawing deleted 🗑");
+      fetchRes.ok
+        ? toast.info("drawing deleted 🗑")
+        : toast.error("something went wrong, try again...");
     } catch (err) {
       console.log(err);
       toast.error("something went wrong, try again...");
