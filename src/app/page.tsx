@@ -20,15 +20,17 @@ export default async function Home() {
   );
   // collections should be an object containing arrays of image urls separated by their category
 
-  imgs.data.forEach((img: any) => {
-    const coll = img.drawing_collection;
-    if (!collections.hasOwnProperty(img.drawing_collection)) {
-      collections[coll] = new Array();
-      collections[coll].push(img.image.url);
-    } else {
-      collections[coll].push(img.image.url);
-    }
-  });
+  if (imgs.data.length > 0) {
+    imgs.data.forEach((img: any) => {
+      const coll = img.drawing_collection;
+      if (!collections.hasOwnProperty(img.drawing_collection)) {
+        collections[coll] = new Array();
+        collections[coll].push(img.image.url);
+      } else {
+        collections[coll].push(img.image.url);
+      }
+    });
+  }
 
   return (
     <div>
@@ -42,7 +44,7 @@ export default async function Home() {
         </h1>
       )}
 
-      <Gallery collections={collections} />
+      {imgs && <Gallery collections={collections} />}
     </div>
   );
 }

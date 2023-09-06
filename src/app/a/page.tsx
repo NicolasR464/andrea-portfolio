@@ -23,7 +23,10 @@ export default async function Dashboard() {
   const items = await fetchItems();
   const user: any = await currentUser();
 
-  if (user?.emailAddresses[0].emailAddress !== process.env.HOST_EMAIL)
+  if (
+    user?.emailAddresses[0].emailAddress !== process.env.HOST_EMAIL ||
+    user?.emailAddresses[0].emailAddress !== process.env.DEV_EMAIL
+  )
     redirect("/");
 
   return (
