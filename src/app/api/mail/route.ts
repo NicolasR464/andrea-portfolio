@@ -29,5 +29,4 @@ export async function POST(req: NextRequest) {
       }
     }
   );
-  return NextResponse.json({ res: "email sent" }, { status: 200 });
 }

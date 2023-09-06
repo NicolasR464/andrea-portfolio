@@ -19,7 +19,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
   const formData = await req.formData();
   const imgRaw = formData.get("image") as string;
-  const name = formData.get("name") as string;
+  const nameInput = formData.get("name") as string;
   const collection = formData.get("collection") as string;
   const description = formData.get("description") as string;
   const active = formData.get("active") as string;
@@ -31,9 +31,15 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
   const isForSale = active === "true";
 
+  let name = nameInput.trim().toLowerCase();
+
+  console.log({ name });
+  console.log(typeof name);
+
+  if (nameInput == "") name = `${collection.trim()}_${Date.now()}_def`;
+
   const stripeMeta = {
-    name: name.toLowerCase(),
-    collection: collection.toLowerCase(),
+    collection: collection.trim().toLowerCase(),
     print_number_set: print_number,
     print_number_sold: 0,
     metadataX,
@@ -47,7 +53,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
   if (isForSale) {
     try {
       const product = await stripe.products.create({
-        name: name || `${collection}_${Date.now()}`,
+        name: name.trim().toLowerCase(),
         active: isForSale,
         images: [img.url],
         metadata: stripeMeta,
@@ -78,8 +84,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
   ///////////// TO MONGO
 
   const drawingObj = {
-    name:
-      name.toLowerCase() || `${collection.trim().toLowerCase()}_${Date.now()}`,
+    name: name.trim().toLowerCase(),
     drawing_collection: collection.trim().toLowerCase(),
     description: description || undefined,
 
