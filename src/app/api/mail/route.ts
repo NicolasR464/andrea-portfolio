@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     from: process.env.WEBSITE_EMAIL,
     subject,
     content: [
-      { type: "text/html", value: mailBody + "<br>my email: " + email },
+      { type: "text/html", value: mailBody + "<br>mon email: " + email },
     ],
   };
 
