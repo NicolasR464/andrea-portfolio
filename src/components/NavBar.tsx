@@ -8,7 +8,8 @@ import { headers } from "next/headers";
 export default async function NavBar({ params }: any) {
   const user = await currentUser();
   const isAdmin =
-    user?.emailAddresses[0]?.emailAddress === process.env.HOST_EMAIL;
+    user?.emailAddresses[0]?.emailAddress === process.env.HOST_EMAIL ||
+    user?.emailAddresses[0]?.emailAddress === process.env.DEV_EMAIL;
 
   const headersList = headers();
   const userAgent = headersList.get("user-agent");
