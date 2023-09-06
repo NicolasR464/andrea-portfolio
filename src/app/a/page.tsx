@@ -24,8 +24,10 @@ export default async function Dashboard() {
   const user: any = await currentUser();
 
   if (
-    user?.emailAddresses[0].emailAddress !== process.env.HOST_EMAIL ||
-    user?.emailAddresses[0].emailAddress !== process.env.DEV_EMAIL
+    !(
+      user?.emailAddresses[0].emailAddress === process.env.HOST_EMAIL ||
+      user?.emailAddresses[0].emailAddress === process.env.DEV_EMAIL
+    )
   )
     redirect("/");
 

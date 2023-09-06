@@ -62,9 +62,6 @@ export default function FormBio({
       if (fetchRes.ok) {
         toast.success("bio updated! ⭐️");
 
-        //EMPTY form values
-
-        // setText("");
         setImage("");
 
         router.refresh();
