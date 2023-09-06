@@ -27,12 +27,14 @@ export default function Contact() {
 
       const mailParsed = await mail.json();
 
-      if (mail.ok) {
+      if (mail.status == 200) {
         setMail("");
         setSubject("");
         setMailBody("");
 
         toast.success("email sent! 📮");
+      } else {
+        toast.error("something went wront, please try again.");
       }
     } catch (err) {
       console.log(err);

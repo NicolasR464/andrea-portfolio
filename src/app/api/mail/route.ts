@@ -16,17 +16,18 @@ export async function POST(req: NextRequest) {
     ],
   };
 
-  mail.send(msg).then(
+  const mailMsg = await mail.send(msg).then(
     () => {
-      return NextResponse.json({ res: "email sent" }, { status: 200 });
+      return 200;
     },
     (error: any) => {
       console.error(error);
-
-      if (error.response) {
-        console.error(error.response.body);
-        return NextResponse.json({ data: "Email couldn't go through...." });
-      }
+      return 400;
     }
+  );
+
+  return NextResponse.json(
+    { res: mailMsg === 200 ? "email sent" : "email error" },
+    { status: mailMsg }
   );
 }
