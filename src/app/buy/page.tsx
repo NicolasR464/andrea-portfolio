@@ -19,6 +19,8 @@ const fetchItems = async () => {
 export default async function Buy() {
   const items = await fetchItems();
 
+  console.log(items);
+
   const collections: any = new Object();
 
   if (items) {
