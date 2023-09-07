@@ -166,7 +166,7 @@ export async function POST(req: NextRequest) {
 
   const msg = {
     to: process.env.HOST_EMAIL!,
-    from: process.env.HOST_EMAIL!,
+    from: process.env.WEBSITE_EMAIL!,
 
     templateId: "d-81ff00f6727149ea99c707166127dd16",
     dynamicTemplateData: {
