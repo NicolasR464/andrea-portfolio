@@ -199,16 +199,20 @@ export async function DELETE(
     );
   }
 
-  try {
-    stripe.products.update(mongoData.stripe.productId, {
-      active: false,
-    });
-  } catch (err) {
-    console.log(err);
-    return NextResponse.json(
-      "An error occured with Stripe on 'delete product'",
-      { status: 500 }
-    );
+  // IF product id exists
+
+  if (mongoData.stripe.productId) {
+    try {
+      stripe.products.update(mongoData.stripe.productId, {
+        active: false,
+      });
+    } catch (err) {
+      console.log(err);
+      return NextResponse.json(
+        { msg: "An error occured with Stripe on 'delete product'" },
+        { status: 500 }
+      );
+    }
   }
 
   try {
