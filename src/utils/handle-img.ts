@@ -85,11 +85,12 @@ export const uploadImage = async (
 export const publicImgUpload = async (img: any) => {
   const cloudinaryForm = new FormData();
 
+  let folder = "andrea-drawing-portfolio";
+
+  if (process.env.NODE_ENV === "development")
+    folder = "andrea-drawing-portfolio-dev";
   cloudinaryForm.append("file", img);
-  cloudinaryForm.append(
-    "folder",
-    process.env.CLOUDINARY_UPLOAD_IMG_DRAWING_FOLDER!
-  );
+  cloudinaryForm.append("folder", folder);
   cloudinaryForm.append(
     "upload_preset",
     process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!
