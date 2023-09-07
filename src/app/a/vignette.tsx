@@ -106,13 +106,14 @@ const Vignette: React.FC<Props> = ({ item }) => {
   const editVignette = async (id: string) => {
     setIsEditing(true);
 
-    let img = undefined;
+    let img = {};
 
-    if (imageUrl) {
+    if (Object.keys(newImgFile).length > 0) {
       const img: any = await publicImgUpload(newImgFile);
 
       if (!img) {
-        toast.error("Something went wrong, please try again.");
+        toast.error("Something went wrong on image upload, please try again.");
+        setIsEditing(false);
         return;
       }
     }
@@ -154,8 +155,8 @@ const Vignette: React.FC<Props> = ({ item }) => {
       const fetchRes = await fetch(`/api/art/${id}`, options);
       console.log(fetchRes);
       if (!fetchRes.ok) toast.error("something went wrong, try again...");
-      router.refresh();
       if (fetchRes.ok) toast.success("drawing info updated! 👌");
+      router.refresh();
     } catch (err) {
       console.log(err);
       toast.error("something went wrong, try again...");
