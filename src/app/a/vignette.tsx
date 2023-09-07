@@ -16,6 +16,7 @@ interface Props {
 const Vignette: React.FC<Props> = ({ item }) => {
   const [forSale, setForSale] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [name, setName] = useState<any>("");
   const [drawingCollection, setDrawingCollection] = useState<string>("");
   const [newImg, setNewImg] = useState<Object>({});
@@ -155,6 +156,7 @@ const Vignette: React.FC<Props> = ({ item }) => {
 
   const handleDelete = async (id: string) => {
     setDeleteModal(true);
+    setIsDeleting(true);
 
     const options = {
       method: "DELETE",
@@ -172,6 +174,8 @@ const Vignette: React.FC<Props> = ({ item }) => {
       toast.error("something went wrong, try again...");
       router.replace("/a");
     }
+
+    setIsDeleting(false);
   };
 
   return (
@@ -351,10 +355,11 @@ const Vignette: React.FC<Props> = ({ item }) => {
                 cancel
               </button>
               <button
+                disabled={isDeleting}
                 onClick={() => handleDelete(item._id)}
                 className="btn m-1 btn-outline btn-error"
               >
-                delete
+                {isDeleting ? "deleting" : "delete"}
               </button>
             </div>
           </div>
