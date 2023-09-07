@@ -12,7 +12,7 @@ let connectMongoose: () => Promise<Mongoose | null> = async () => {
     console.log("MONGOOSE ✔");
     return connection;
   } catch (error) {
-    console.error("Error connecting to the database:", error);
+    console.error("Error connecting to the database: ", error);
     return null;
   }
 };
