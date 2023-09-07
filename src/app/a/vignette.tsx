@@ -21,7 +21,7 @@ const Vignette: React.FC<Props> = ({ item }) => {
   const [drawingCollection, setDrawingCollection] = useState<string>("");
   const [newImgFile, setNewImgFile] = useState<Object>({});
   const [description, setDescription] = useState<string>("");
-  const [imageUrl, setImageUrl] = useState<any>();
+  const [imageUrl, setImageUrl] = useState<any>(undefined);
   const [image, setImage] = useState<any>(undefined);
   const [price, setPrice] = useState<any>(undefined);
   const [print_number, setPrint_number] = useState<any>(undefined);
@@ -106,9 +106,16 @@ const Vignette: React.FC<Props> = ({ item }) => {
   const editVignette = async (id: string) => {
     setIsEditing(true);
 
-    const img: any = await publicImgUpload(newImgFile);
+    let img = undefined;
 
-    if (!img) toast.error("Something went wrong, please try again.");
+    if (imageUrl) {
+      const img: any = await publicImgUpload(newImgFile);
+
+      if (!img) {
+        toast.error("Something went wrong, please try again.");
+        return;
+      }
+    }
 
     if (forSale === true) {
       if (
