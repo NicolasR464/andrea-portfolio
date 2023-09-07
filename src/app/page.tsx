@@ -18,7 +18,8 @@ export default async function Home() {
   let isMobileView = userAgent!.match(
     /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i
   );
-  // collections should be an object containing arrays of image urls separated by their category
+
+  console.log(imgs);
 
   if (imgs.data.length > 0) {
     imgs.data.forEach((img: any) => {

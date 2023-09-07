@@ -172,15 +172,14 @@ export default function Gallery({ collections }: { collections: any }) {
             >
               {objectKeys &&
                 objectKeys.map((collection: any, index: number) => (
-                  <li className="flex justify-center" key={index}>
+                  <li
+                    onClick={() => goTo(collection)}
+                    className="flex justify-center"
+                    key={index}
+                  >
                     <a className="flex justify-center">
                       {" "}
-                      <span
-                        onClick={() => goTo(collection)}
-                        className="text-center"
-                      >
-                        {collection}
-                      </span>
+                      <span className="text-center">{collection}</span>
                     </a>
                   </li>
                 ))}
