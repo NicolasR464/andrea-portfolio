@@ -86,7 +86,10 @@ export const publicImgUpload = async (img: any) => {
   const cloudinaryForm = new FormData();
 
   cloudinaryForm.append("file", img);
-
+  cloudinaryForm.append(
+    "folder",
+    process.env.CLOUDINARY_UPLOAD_IMG_DRAWING_FOLDER!
+  );
   cloudinaryForm.append(
     "upload_preset",
     process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!
