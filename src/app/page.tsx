@@ -4,7 +4,9 @@ import Gallery from "@/components/Gallery";
 import { headers } from "next/headers";
 
 const getImgs = async () => {
-  const imgs: any = await fetch(process.env.DOMAIN + "/api/art?p=home");
+  const imgs: any = await fetch(process.env.DOMAIN + "/api/art?p=home", {
+    next: { tags: ["drawings"] },
+  });
 
   const imgsParsed = await imgs.json();
   return imgsParsed;
