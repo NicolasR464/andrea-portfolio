@@ -6,11 +6,14 @@ import { useState, useEffect } from "react";
 
 export default function CollectionMenu({
   collectionKeys,
+  page,
 }: {
   collectionKeys: any;
+  page: string;
 }) {
   const [collectionName, setCollectionName] = useState<string>();
   const [isMouseOut, setIsMouseOut] = useState(true);
+  const [pageRef, setPageRef] = useState<string | undefined>();
 
   gsap.registerPlugin(ScrollToPlugin);
 
@@ -24,6 +27,10 @@ export default function CollectionMenu({
   };
 
   useEffect(() => {
+    setPageRef(page);
+  }, [page]);
+
+  useEffect(() => {
     setCollectionName(collectionKeys[0]);
   }, [collectionKeys]);
 
@@ -35,12 +42,16 @@ export default function CollectionMenu({
     : { opacity: 1, visibility: "visible" };
 
   return (
-    <div className="z-[10] justify-center flex w-screen fixed bottom-4 left-0 right-0">
+    <div className="z-[10] justify-center flex w-screen sticky top-4 left-0 right-0">
       {collectionKeys && collectionName && (
         <div>
           <div
             onMouseEnter={() => setIsMouseOut(false)}
-            className=" dropdown dropdown-hover dropdown-top"
+            className={
+              pageRef === "a"
+                ? "dropdown dropdown-hover dropdown-bottom"
+                : " dropdown dropdown-hover dropdown-top"
+            }
           >
             <label tabIndex={0} className="btn m-1 w-40">
               {collectionName}

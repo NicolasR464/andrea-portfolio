@@ -18,7 +18,7 @@ export default function ShopCard({ item }: { item: any }) {
       </figure>
       <div className="card-body tablet:w-60">
         <h3 className="card-title">{item.drawing_collection}</h3>
-        {!item.name.includes("_") && <h4>{item.name}</h4>}
+        {!item.name.includes("_def") && <h4>{item.name}</h4>}
 
         <span>{item.price} €</span>
         <span>

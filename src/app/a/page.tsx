@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAnglesDown } from "@fortawesome/free-solid-svg-icons";
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
+import CollectionMenu from "@/components/CollectionMenu";
 
 const fetchItems = async () => {
   try {
@@ -20,7 +21,6 @@ const fetchItems = async () => {
 };
 
 export default async function Dashboard() {
-  const items = await fetchItems();
   const user: any = await currentUser();
 
   if (
@@ -31,8 +31,26 @@ export default async function Dashboard() {
   )
     redirect("/");
 
+  const items = await fetchItems();
+
+  const collections: any = new Object();
+
+  if (items) {
+    items.forEach((item: any) => {
+      const coll = item.drawing_collection;
+      if (!collections.hasOwnProperty(item.drawing_collection)) {
+        collections[coll] = new Array();
+        collections[coll].push(item);
+      } else {
+        collections[coll].push(item);
+      }
+    });
+  }
+
+  const collectionKeys = Object.keys(collections);
+
   return (
-    <div>
+    <div className="relative">
       <h1 className="text-center text-5xl">Drawings</h1>
       <Form />
       {!items ? (
@@ -62,11 +80,26 @@ export default async function Dashboard() {
               size="xs"
             />
           </div>
-
-          <div className="flex justify-center flex-row-reverse flex-wrap ">
-            {items.map((item: any, index: number) => (
-              <Vignette item={item} key={index} />
-            ))}
+          <CollectionMenu page="a" collectionKeys={collectionKeys} />
+          <div className="relative flex justify-center flex-row-reverse flex-wrap ">
+            {items &&
+              collectionKeys.map((collection: any, index: number) => {
+                return (
+                  <div
+                    className="flex items-center justify-center flex-col"
+                    key={index}
+                  >
+                    <h3 id={collection.replace(/ /g, "-")} className="text-xl">
+                      {collection}
+                    </h3>
+                    <section className="flex flex-wrap justify-center">
+                      {collections[collection].map((item: any, i: number) => {
+                        return <Vignette item={item} key={i} />;
+                      })}
+                    </section>
+                  </div>
+                );
+              })}
           </div>
         </>
       )}
@@ -79,3 +112,9 @@ export default async function Dashboard() {
 //   <span className="loading loading-ring loading-md"></span>
 // </div>
 // }}
+
+//
+// {/* alt */}
+// {items.map((item: any, index: number) => (
+//   <Vignette item={item} key={index} />
+// ))}
