@@ -18,6 +18,7 @@ const fetchItems = async () => {
 
 export default async function Buy() {
   const items = await fetchItems();
+  console.log("🔥");
 
   console.log(items);
 
@@ -44,23 +45,27 @@ export default async function Buy() {
           <h2 className="text-center text-5xl tracking-widest">shop</h2>
         </div>
 
-        {collectionKeys.map((collection: any, index: number) => {
-          return (
-            <div
-              className="flex items-center justify-center flex-col"
-              key={index}
-            >
-              <h3 id={collection.replace(/ /g, "-")} className="text-xl">
-                {collection}
-              </h3>
-              <section className="flex flex-wrap justify-center">
-                {collections[collection].map((item: any, i: number) => {
-                  return <ShopCard item={item} key={i} />;
-                })}
-              </section>
-            </div>
-          );
-        })}
+        {items.length > 0 ? (
+          collectionKeys.map((collection: any, index: number) => {
+            return (
+              <div
+                className="flex items-center justify-center flex-col"
+                key={index}
+              >
+                <h3 id={collection.replace(/ /g, "-")} className="text-xl">
+                  {collection}
+                </h3>
+                <section className="flex flex-wrap justify-center">
+                  {collections[collection].map((item: any, i: number) => {
+                    return <ShopCard item={item} key={i} />;
+                  })}
+                </section>
+              </div>
+            );
+          })
+        ) : (
+          <h4 className="text-xl text-center">nothing for sale for now!</h4>
+        )}
       </div>
       <CollectionMenu collectionKeys={collectionKeys} />
     </div>
