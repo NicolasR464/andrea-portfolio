@@ -67,7 +67,7 @@ export default async function Buy() {
           <h4 className="text-xl text-center">nothing for sale for now!</h4>
         )}
       </div>
-      <CollectionMenu collectionKeys={collectionKeys} />
+      <CollectionMenu page="home" collectionKeys={collectionKeys} />
     </div>
   );
 }
