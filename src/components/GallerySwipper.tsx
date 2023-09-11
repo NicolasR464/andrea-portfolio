@@ -1,11 +1,13 @@
 "use client";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, HashNavigation, Zoom } from "swiper/modules";
-import { SwiperOptions } from "swiper/types";
-import { CSSProperties } from "react";
+import { HashNavigation, Zoom, FreeMode, Scrollbar } from "swiper/modules";
+// import { SwiperOptions } from "swiper/types";
+// import { CSSProperties } from "react";
 
 import "swiper/css/pagination";
 import "swiper/css/hash-navigation";
+import "swiper/css/free-mode";
+import "swiper/css/scrollbar";
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
@@ -36,22 +38,26 @@ export default function GallerySwipper({ collections }: { collections: any }) {
       }
     : { opacity: 1, visibility: "visible" };
 
-  const swiperPaginationStyle = {
-    "--swiper-pagination-color": "#5a5a5a",
-  } as CSSProperties;
+  //   const swiperPaginationStyle = {
+  //     "--swiper-pagination-color": "#5a5a5a",
+  //   } as CSSProperties;
 
   return (
     <div className="h-[60vh] flex-col items-end ">
       <Swiper
         // spaceBetween={50}
-        style={swiperPaginationStyle}
+        // freeMode={true}
+        // style={swiperPaginationStyle}
+        scrollbar={{
+          hide: false,
+        }}
         zoom={true}
-        modules={[Pagination, HashNavigation, Zoom]}
+        modules={[HashNavigation, Zoom, Scrollbar]}
         hashNavigation={{
           watchState: true,
           replaceState: true,
         }}
-        pagination={{ clickable: true }}
+        // pagination={{ clickable: true }}
         slidesPerView={1}
         onSlideChange={(e) =>
           setCollectionName(
