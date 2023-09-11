@@ -1,4 +1,3 @@
-import Link from "next/link";
 import BackBtn from "@/components/BackBtn";
 import Image from "next/image";
 

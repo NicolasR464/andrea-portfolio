@@ -1,6 +1,7 @@
 // "use client";
 import Image from "next/image";
 import Gallery from "@/components/Gallery";
+import GallerySwipper from "@/components/GallerySwipper";
 import { headers } from "next/headers";
 
 const getImgs = async () => {
@@ -47,7 +48,8 @@ export default async function Home() {
         </h1>
       )}
 
-      {imgs && <Gallery collections={collections} />}
+      {imgs && !isMobileView && <Gallery collections={collections} />}
+      {imgs && isMobileView && <GallerySwipper collections={collections} />}
     </div>
   );
 }

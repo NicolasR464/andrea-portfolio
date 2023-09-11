@@ -136,6 +136,7 @@ export default function Gallery({ collections }: { collections: any }) {
 
   const goTo = (name: string | undefined) => {
     setCollectionName(name);
+    setIsMouseOut(true);
 
     const element = document.getElementById(name!);
     const rect = element?.getBoundingClientRect();
@@ -154,14 +155,14 @@ export default function Gallery({ collections }: { collections: any }) {
     : { opacity: 1, visibility: "visible" };
 
   return (
-    <div>
+    <div className="max-h-max	">
       {collectionName && (
         <div className="z-[10] fixed bottom-4  justify-center flex w-screen ">
           <div
             onMouseEnter={() => setIsMouseOut(false)}
             className=" dropdown dropdown-hover dropdown-top"
           >
-            <label tabIndex={0} className="btn m-1 w-40">
+            <label id="goFS" tabIndex={0} className="btn m-1 w-40">
               {collectionName}
             </label>
             <ul
@@ -201,7 +202,7 @@ export default function Gallery({ collections }: { collections: any }) {
                       <Image
                         key={index}
                         data-collection={collection}
-                        className="img h-[auto] max-w-[90vw] max-h-[70vh] tablet:max-w-[60vw]   tablet:min-w-[40vw] m-10 translate-y-28  "
+                        className="img h-[auto] max-w-[90vw] max-h-[70vh] tablet:max-w-[60vw]   tablet:min-w-[40vw] m-10 translate-y-28"
                         src={url}
                         width={500}
                         height={500}
