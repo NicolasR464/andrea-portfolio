@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+import { CldImage } from "next-cloudinary";
 
 let horizontalAnim: any;
 
@@ -199,7 +200,7 @@ export default function Gallery({ collections }: { collections: any }) {
                     // setImageNumber((prevNum) => prevNum + 1);
 
                     return (
-                      <Image
+                      <CldImage
                         key={index}
                         data-collection={collection}
                         className="img h-[auto] max-w-[90vw] max-h-[70vh] tablet:max-w-[60vw]   tablet:min-w-[40vw] m-10 translate-y-28"

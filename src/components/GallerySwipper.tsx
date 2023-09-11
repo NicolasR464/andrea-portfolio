@@ -1,4 +1,6 @@
 "use client";
+import { CldImage } from "next-cloudinary";
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import { HashNavigation, Zoom, FreeMode, Scrollbar } from "swiper/modules";
 // import { SwiperOptions } from "swiper/types";
@@ -80,7 +82,7 @@ export default function GallerySwipper({ collections }: { collections: any }) {
                       key={url}
                     >
                       <div className="swiper-zoom-container">
-                        <Image
+                        <CldImage
                           data-collection={collection}
                           className="img h-[auto] max-w-[90vw] max-h-[70vh] tablet:max-w-[60vw]   tablet:min-w-[40vw] m-10 "
                           src={url}
