@@ -55,7 +55,7 @@ export default function NavBurger() {
   return (
     <div>
       <span
-        className="m-3 z-30"
+        className="m-3 p-5 z-30"
         onClick={() =>
           useBurger.setState((state) => ({ isOpen: !state.isOpen }))
         }
