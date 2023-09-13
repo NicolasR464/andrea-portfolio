@@ -24,6 +24,31 @@ export default function GallerySwipper({ collections }: { collections: any }) {
   >();
 
   const [isMouseOut, setIsMouseOut] = useState(true);
+  const removeAccents = (str: any) => {
+    // Define the mapping of accented characters to their non-accented counterparts
+    const accentMap: any = {
+      à: "a",
+      â: "a",
+      ç: "c",
+      é: "e",
+      è: "e",
+      ê: "e",
+      ë: "e",
+      î: "i",
+      ï: "i",
+      ô: "o",
+      û: "u",
+      ù: "u",
+    };
+
+    const accentPattern = new RegExp(Object.keys(accentMap).join("|"), "g");
+
+    const replacedStr = str.replace(accentPattern, function (match: any) {
+      return accentMap[match];
+    });
+
+    return replacedStr;
+  };
 
   useEffect(() => {
     setCollectionName(Object.keys(collections)[0]);
@@ -73,12 +98,16 @@ export default function GallerySwipper({ collections }: { collections: any }) {
       >
         {objectKeys &&
           objectKeys.map((collection: any, index: number) => {
+            const collection_noaccent = removeAccents(collection);
+            console.log(collection_noaccent);
+
             return (
               <div className="flex items-end " id={collection} key={index}>
                 {collections[collection].map((url: any, i: number) => {
                   return (
                     <SwiperSlide
-                      data-hash={collection.replace(/ /g, "-")}
+                      //here
+                      data-hash={collection_noaccent.replace(/ /g, "-")}
                       key={url}
                     >
                       <div className="swiper-zoom-container">
@@ -116,21 +145,28 @@ export default function GallerySwipper({ collections }: { collections: any }) {
               className="z-[200] -translate-x-[22.5px] dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
             >
               {objectKeys &&
-                objectKeys.map((collection: any, ind: number) => (
-                  <li
-                    onClick={() => setIsMouseOut(true)}
-                    className="flex justify-center"
-                    key={ind}
-                  >
-                    <a
-                      href={`/#${collection.replace(/ /g, "-")}`}
+                objectKeys.map((collection: any, ind: number) => {
+                  const collection_noaccent = removeAccents(collection);
+                  console.log(collection_noaccent);
+                  return (
+                    <li
+                      onClick={() => setIsMouseOut(true)}
                       className="flex justify-center"
+                      key={ind}
                     >
-                      {" "}
-                      <span className="text-center text-lg">{collection}</span>
-                    </a>
-                  </li>
-                ))}
+                      <a
+                        //here
+                        href={`/#${collection_noaccent.replace(/ /g, "-")}`}
+                        className="flex justify-center"
+                      >
+                        {" "}
+                        <span className="text-center text-lg">
+                          {collection}
+                        </span>
+                      </a>
+                    </li>
+                  );
+                })}
             </ul>
           </div>
         </div>
