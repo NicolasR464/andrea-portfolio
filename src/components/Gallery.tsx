@@ -98,7 +98,7 @@ export default function Gallery({ collections }: { collections: any }) {
               trigger: img,
               start: "left center",
               toggleActions: "play none none reset",
-              end: "right center", // When the bottom of the image goes past the top of the viewport
+              end: "right center",
               scrub: 2,
               // markers: true,
               markers: false,

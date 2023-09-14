@@ -4,7 +4,6 @@ import StoreInitializer from "@/components/StoreInitializer";
 import CollectionMenu from "@/components/CollectionMenu";
 
 const fetchItems = async () => {
-  //will fetch all items - with a set revalidate tags to update the UI
   try {
     const data = await fetch(process.env.DOMAIN + "/api/shop", {
       next: { tags: ["drawings"] },
@@ -18,9 +17,6 @@ const fetchItems = async () => {
 
 export default async function Buy() {
   const items = await fetchItems();
-  console.log("🔥");
-
-  console.log(items);
 
   const collections: any = new Object();
 
@@ -44,7 +40,7 @@ export default async function Buy() {
         <div className="z-[100]">
           <h2 className="text-center text-5xl tracking-widest">shop</h2>
         </div>
-
+        <CollectionMenu page="a" collectionKeys={collectionKeys} />
         {items.length > 0 ? (
           collectionKeys.map((collection: any, index: number) => {
             return (
@@ -52,9 +48,9 @@ export default async function Buy() {
                 className="flex items-center justify-center flex-col"
                 key={index}
               >
-                <h3 id={collection.replace(/ /g, "-")} className="text-xl">
+                {/* <h3 id={collection.replace(/ /g, "-")} className="text-xl">
                   {collection}
-                </h3>
+                </h3> */}
                 <section className="flex flex-wrap justify-center">
                   {collections[collection].map((item: any, i: number) => {
                     return <ShopCard item={item} key={i} />;
@@ -67,7 +63,6 @@ export default async function Buy() {
           <h4 className="text-xl text-center">nothing for sale for now!</h4>
         )}
       </div>
-      <CollectionMenu page="home" collectionKeys={collectionKeys} />
     </div>
   );
 }

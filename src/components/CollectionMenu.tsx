@@ -2,7 +2,9 @@
 import Link from "next/link";
 import { gsap } from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
-import { useState, useEffect } from "react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+import { useState, useEffect, DOMElement } from "react";
 
 export default function CollectionMenu({
   collectionKeys,
@@ -16,6 +18,7 @@ export default function CollectionMenu({
   const [pageRef, setPageRef] = useState<string | undefined>();
 
   gsap.registerPlugin(ScrollToPlugin);
+  if (page == "a") gsap.registerPlugin(ScrollTrigger);
 
   const goTo = (collection: string) => {
     setCollectionName(collection);
@@ -41,6 +44,46 @@ export default function CollectionMenu({
       }
     : { opacity: 1, visibility: "visible" };
 
+  useEffect(() => {
+    if (page == "a") {
+      gsap.registerPlugin(ScrollTrigger);
+
+      const vignettes = gsap.utils.toArray("article");
+
+      vignettes.forEach((vignette: any) => {
+        ScrollTrigger.create({
+          trigger: vignette,
+          start: "top 170px",
+          end: "center",
+          // markers: true,
+          markers: false,
+
+          onEnter: (self) => {
+            console.log(self);
+
+            const element = self?.trigger;
+            const rect = element?.getBoundingClientRect();
+            console.log(element?.getAttribute("data-collection"));
+            setCollectionName(element?.getAttribute("data-collection")!);
+          },
+          onLeave: (self) => {
+            const element = self?.trigger;
+            console.log("ENTERED LEAVE");
+            console.log(element?.getAttribute("data-collection"));
+            const rect = element?.getBoundingClientRect();
+          },
+          onEnterBack: (self) => {
+            const element = self?.trigger;
+            console.log("ENTERED BACK");
+            console.log(element?.getAttribute("data-collection"));
+            const rect = element?.getBoundingClientRect();
+
+            setCollectionName(element?.getAttribute("data-collection")!);
+          },
+        });
+      });
+    }
+  }, [page]);
   return (
     <div className="z-[10] justify-center flex w-screen sticky top-4 left-0 right-0">
       {collectionKeys && collectionName && (

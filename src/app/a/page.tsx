@@ -88,10 +88,11 @@ export default async function Dashboard() {
                   <div
                     className="flex items-center justify-center flex-col"
                     key={index}
+                    id={collection.replace(/ /g, "-")}
                   >
-                    <h3 id={collection.replace(/ /g, "-")} className="text-xl">
+                    {/* <h3 id={collection.replace(/ /g, "-")} className="text-xl">
                       {collection}
-                    </h3>
+                    </h3> */}
                     <section className="flex flex-wrap justify-center">
                       {collections[collection].map((item: any, i: number) => {
                         return <Vignette item={item} key={i} />;

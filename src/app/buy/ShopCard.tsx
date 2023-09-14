@@ -4,7 +4,10 @@ import ShopBtn from "./ShopBtn";
 
 export default function ShopCard({ item }: { item: any }) {
   return (
-    <div className="card  transition duration-1000 tablet:hover:scale-105 m-5 tablet:card-side tablet:max-w-2xl bg-base-100 shadow-lg min-w-[350px] tablet:hover:shadow-xl tablet:w-[480px]">
+    <article
+      data-collection={item.drawing_collection}
+      className="card  transition duration-1000 tablet:hover:scale-105 m-5 tablet:card-side tablet:max-w-2xl bg-base-100 shadow-lg min-w-[350px] tablet:hover:shadow-xl tablet:w-[480px]"
+    >
       <figure>
         {item.image.url && (
           <Image
@@ -36,6 +39,6 @@ export default function ShopCard({ item }: { item: any }) {
           />
         </div>
       </div>
-    </div>
+    </article>
   );
 }

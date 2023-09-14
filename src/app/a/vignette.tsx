@@ -189,7 +189,10 @@ const Vignette: React.FC<Props> = ({ item }) => {
   };
 
   return (
-    <article className=" tablet:min-w-[400px] mt-2 p-2 tablet:m-4 flex flex-col  border-solid border-2 rounded-xl  tablet:max-w-2-3 items-center  transition duration-500 tablet:hover:scale-[103%] ">
+    <article
+      data-collection={drawingCollection}
+      className=" tablet:min-w-[400px] mt-2 p-2 tablet:m-4 flex flex-col  border-solid border-2 rounded-xl  tablet:max-w-2-3 items-center  transition duration-500 tablet:hover:scale-[103%] "
+    >
       {imageUrl && (
         <Image
           src={imageUrl}
