@@ -198,7 +198,11 @@ const Vignette: React.FC<Props> = ({ item }) => {
           src={imageUrl}
           width={200}
           height={200}
-          style={{ objectFit: "contain" }}
+          style={{
+            objectFit: "contain",
+            boxShadow:
+              "12px 12px 24px 0 rgba(0, 0, 0, 0.2), -12px -12px 24px 0 rgba(255, 255, 255, 0.5)",
+          }}
           alt="drawing picture"
         />
       )}

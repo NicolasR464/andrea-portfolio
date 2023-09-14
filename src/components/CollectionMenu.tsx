@@ -59,24 +59,16 @@ export default function CollectionMenu({
           markers: false,
 
           onEnter: (self) => {
-            console.log(self);
-
             const element = self?.trigger;
-            const rect = element?.getBoundingClientRect();
-            console.log(element?.getAttribute("data-collection"));
+
             setCollectionName(element?.getAttribute("data-collection")!);
           },
           onLeave: (self) => {
             const element = self?.trigger;
-            console.log("ENTERED LEAVE");
-            console.log(element?.getAttribute("data-collection"));
-            const rect = element?.getBoundingClientRect();
+            //
           },
           onEnterBack: (self) => {
             const element = self?.trigger;
-            console.log("ENTERED BACK");
-            console.log(element?.getAttribute("data-collection"));
-            const rect = element?.getBoundingClientRect();
 
             setCollectionName(element?.getAttribute("data-collection")!);
           },

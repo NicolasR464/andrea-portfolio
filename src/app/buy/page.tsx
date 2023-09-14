@@ -39,8 +39,14 @@ export default async function Buy() {
       <div className="translate-y-24">
         <div className="z-[100]">
           <h2 className="text-center text-5xl tracking-widest">shop</h2>
+          <p className="text-center text-xl tracking-widest">
+            limited edition prints
+          </p>
         </div>
-        <CollectionMenu page="a" collectionKeys={collectionKeys} />
+        {collectionKeys.length > 1 && (
+          <CollectionMenu page="a" collectionKeys={collectionKeys} />
+        )}
+
         {items.length > 0 ? (
           collectionKeys.map((collection: any, index: number) => {
             return (
@@ -48,9 +54,6 @@ export default async function Buy() {
                 className="flex items-center justify-center flex-col"
                 key={index}
               >
-                {/* <h3 id={collection.replace(/ /g, "-")} className="text-xl">
-                  {collection}
-                </h3> */}
                 <section className="flex flex-wrap justify-center">
                   {collections[collection].map((item: any, i: number) => {
                     return <ShopCard item={item} key={i} />;

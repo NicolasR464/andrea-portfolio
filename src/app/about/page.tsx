@@ -25,7 +25,7 @@ export default async function About() {
         width={400}
         height={400}
       />
-      <p className="text-center m-3 max-w-2-3">{data?.bio?.text}</p>
+      <p className="m-3 max-w-2-3">{data?.bio?.text}</p>
     </article>
   );
 }
