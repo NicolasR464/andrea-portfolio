@@ -8,7 +8,7 @@ export default function ShopCard({ item }: { item: any }) {
       data-collection={item.drawing_collection}
       className="bg-slate-50  card  transition duration-1000 tablet:hover:scale-105 m-5 tablet:card-side tablet:max-w-2xl bg-base-100 shadow-lg min-w-[350px] tablet:hover:shadow-xl tablet:w-[480px]"
     >
-      <figure className="z-[100] m-1">
+      <figure className="m-1">
         {item.image.url && (
           <Image
             className="rounded-lg"
