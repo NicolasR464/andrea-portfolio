@@ -96,7 +96,9 @@ const Vignette: React.FC<Props> = ({ item }) => {
         new Blob([file], { type: "image/jpg" })
       );
       setImageUrl(url);
-
+      console.log("💥");
+      console.log(file);
+      console.log(typeof file);
       setNewImgFile(file);
     }
   };
@@ -106,10 +108,17 @@ const Vignette: React.FC<Props> = ({ item }) => {
   const editVignette = async (id: string) => {
     setIsEditing(true);
 
-    let img = {};
+    let img;
+
+    console.log(newImgFile);
+    console.log(Object.keys(newImgFile).length);
+
+    if (newImgFile) console.log("NEW ❇️");
 
     if (Object.keys(newImgFile).length > 0) {
-      const img: any = await publicImgUpload(newImgFile);
+      console.log("🔥🔥🔥");
+
+      img = await publicImgUpload(newImgFile);
 
       if (!img) {
         toast.error("Something went wrong on image upload, please try again.");
@@ -195,6 +204,7 @@ const Vignette: React.FC<Props> = ({ item }) => {
     >
       {imageUrl && (
         <Image
+          className="rounded-sm"
           src={imageUrl}
           width={200}
           height={200}
