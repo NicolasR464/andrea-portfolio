@@ -116,6 +116,6 @@ export const publicImgUpload = async (img: any) => {
     }
   } catch (err) {
     console.log(err);
-    return err;
+    return { message: err };
   }
 };

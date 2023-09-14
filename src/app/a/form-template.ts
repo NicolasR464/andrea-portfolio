@@ -14,7 +14,7 @@ export default function form(
   formData.append("name", name);
   formData.append("collection", collection);
   formData.append("description", description);
-  formData.append("image", JSON.stringify(image));
+  if (image) formData.append("image", JSON.stringify(image));
   formData.append("active", for_sale);
   formData.append("price", price);
   formData.append("print_number", print_number);

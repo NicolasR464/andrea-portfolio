@@ -36,17 +36,23 @@ export async function PUT(
     public_id?: string;
     url?: string;
   }
-
-  let img: imgObject = JSON.parse(imgRaw)!;
   let newImg = false;
 
-  if (Object.keys(img).length > 0) {
-    console.log(img);
+  let img: imgObject | undefined;
+  console.log(imgRaw);
+  console.log(typeof imgRaw);
 
+  if (imgRaw) {
+    img = JSON.parse(imgRaw)!;
     newImg = true;
-    console.log(newImg);
-    console.log(img);
   }
+
+  // if (Object.keys(img).length > 0) {
+  //   console.log(img);
+
+  //   console.log(newImg);
+  //   console.log(img);
+  // }
 
   let stripeId = mongoData.stripe.productId || undefined;
   let priceId = mongoData.stripe.priceId || undefined;
@@ -114,7 +120,7 @@ export async function PUT(
         stripe.products.update(mongoData.stripe.productId, {
           name,
           active: isForSale,
-          images: newImg ? [img.url] : [mongoData.image.url],
+          images: newImg ? [img?.url] : [mongoData.image.url],
           metadata: stripeMeta,
           default_price: priceId,
         });
@@ -130,7 +136,7 @@ export async function PUT(
         const product = await stripe.products.create({
           name: name,
           active: isForSale,
-          images: newImg ? [img.url] : [mongoData.image.url],
+          images: newImg ? [img?.url] : [mongoData.image.url],
           metadata: stripeMeta,
           default_price_data: {
             unit_amount: +price * 100,

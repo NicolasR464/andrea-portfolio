@@ -14,7 +14,7 @@ export default function FormBio({
   bioImgUrl: string;
 }) {
   const [text, setText] = useState<string>("");
-  const [image, setImage] = useState<any>();
+  const [image, setImage] = useState<Object | undefined>();
   const [imageUrl, setImageUrl] = useState<any>();
   const [isPosting, setPosting] = useState<boolean>(false);
 
@@ -44,7 +44,11 @@ export default function FormBio({
     event.preventDefault();
     setPosting(true);
 
-    const img = await publicImgUpload(event.target.image.files[0]);
+    let img;
+
+    if (image) {
+      img = await publicImgUpload(event.target.image.files[0]);
+    }
 
     const form = new FormData();
 

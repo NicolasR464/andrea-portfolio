@@ -19,7 +19,7 @@ const Vignette: React.FC<Props> = ({ item }) => {
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [name, setName] = useState<any>("");
   const [drawingCollection, setDrawingCollection] = useState<string>("");
-  const [newImgFile, setNewImgFile] = useState<Object>({});
+  const [newImgFile, setNewImgFile] = useState<Object | undefined>();
   const [description, setDescription] = useState<string>("");
   const [imageUrl, setImageUrl] = useState<any>(undefined);
   const [image, setImage] = useState<any>(undefined);
@@ -111,11 +111,11 @@ const Vignette: React.FC<Props> = ({ item }) => {
     let img;
 
     console.log(newImgFile);
-    console.log(Object.keys(newImgFile).length);
+    // console.log(Object.keys(newImgFile).length);
 
     if (newImgFile) console.log("NEW ❇️");
 
-    if (Object.keys(newImgFile).length > 0) {
+    if (newImgFile) {
       console.log("🔥🔥🔥");
 
       img = await publicImgUpload(newImgFile);
