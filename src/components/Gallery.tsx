@@ -158,7 +158,7 @@ export default function Gallery({ collections }: { collections: any }) {
   return (
     <div className="max-h-max	">
       {collectionName && (
-        <div className="z-[10] fixed bottom-4  justify-center flex w-screen ">
+        <div className="z-[10] fixed bottom-2  justify-center flex w-screen ">
           <div
             onMouseEnter={() => setIsMouseOut(false)}
             className=" dropdown dropdown-hover dropdown-top"

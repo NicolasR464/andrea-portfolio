@@ -39,7 +39,7 @@ export default async function Home() {
   return (
     <div>
       {!isMobileView && (
-        <h1 className="hidden tablet:block text-xl tablet:text-2xl laptop:text-3xl fixed top-[30px] translate-x-[-50%] left-[50%] z-[100] text-center tracking-[.20em]">
+        <h1 className="hidden tablet:block text-xl tablet:text-2xl laptop:text-3xl fixed top-[30px] translate-x-[-50%] -translate-y-3 left-[50%] z-[100] text-center tracking-[.20em]">
           <span className=" tracking-[.18em] ">ANDREA</span>
           <br />
           <span className=" tracking-[.40em] -translate-y-3">ROCAGEL</span>
