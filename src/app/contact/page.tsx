@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { z } from "zod";
 
 export default function Contact() {
   const [email, setMail] = useState<string>("");
@@ -9,6 +10,23 @@ export default function Contact() {
   const [isPosting, setPosting] = useState<boolean>(false);
 
   const handleSend = async () => {
+    const emailSchema = z.string().email();
+
+    const emailCheck = emailSchema.safeParse(email);
+
+    if (!emailCheck.success) {
+      emailCheck.error;
+      toast.error("Invalid email!");
+      return;
+    }
+
+    if (email === "" || subject === "" || mailBody === "") {
+      toast.info(
+        "Your email must have your e-mail address informed, a subject and a message."
+      );
+      return;
+    }
+
     setPosting(true);
 
     const form = {
