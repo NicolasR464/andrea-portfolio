@@ -9,20 +9,15 @@ const getOrderDetail = async (id: string) => {
     return orderParsed
 }
 
-interface PageProps {
-    params: {
-        id: string
-        [key: string]: string // For any other potential params
-    }
-    searchParams: {
-        [key: string]: string | string[] | undefined
-    }
-}
+export default async function OrderPage({
+    searchParams,
+}: {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+    const { id } = await searchParams
 
-export default async function OrderPage({ params, searchParams }: PageProps) {
-    const { id } = params
-
-    const orderDetail: any = await getOrderDetail(id)
+    const orderDetail: any =
+        id && typeof id === 'string' ? await getOrderDetail(id) : null
 
     return (
         <article>
