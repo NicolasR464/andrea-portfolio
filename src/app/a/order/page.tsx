@@ -9,12 +9,18 @@ const getOrderDetail = async (id: string) => {
     return orderParsed
 }
 
-export default async function Details({
-    searchParams,
-}: {
-    searchParams: Promise<{ id: string }>
-}) {
-    const { id } = await searchParams
+interface PageProps {
+    params: {
+        id: string
+        [key: string]: string // For any other potential params
+    }
+    searchParams: {
+        [key: string]: string | string[] | undefined
+    }
+}
+
+export default async function OrderPage({ params, searchParams }: PageProps) {
+    const { id } = params
 
     const orderDetail: any = await getOrderDetail(id)
 
