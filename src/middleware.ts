@@ -1,36 +1,36 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { authMiddleware, redirectToSignIn } from "@clerk/nextjs";
+import {
+    clerkMiddleware,
+    createRouteMatcher,
+    clerkClient,
+} from '@clerk/nextjs/server'
+import { NextResponse } from 'next/server'
 
-export default authMiddleware({
-  publicRoutes: [
-    "/",
-    "/buy",
-    "/success",
-    "/error",
-    "/about",
-    "/contact",
-    "/api/art",
-    "/api/art/[id]",
-    "/api/shop",
-    "/api/stripe",
-    "/api/stripe-hooks",
-    "/api/orders",
-    "/api/order",
-    "/api/about",
-    "/api/mail",
-    "try",
-  ],
+const isAdminRoute = createRouteMatcher(['/a/(.*)', '/a'])
 
-  // ignoredRoutes: ["/((?!api|trpc))(_next|.+..+)(.*)", "/api/shop", "/api/art"],
+export default clerkMiddleware(async (auth, req) => {
+    if (isAdminRoute(req)) {
+        const { userId, redirectToSignIn } = await auth()
 
-  afterAuth(auth, req, evt) {
-    if (!auth.userId && !auth.isPublicRoute) {
-      return redirectToSignIn({ returnBackUrl: req.url });
+        if (!userId) {
+            redirectToSignIn()
+        }
+
+        const client = await clerkClient()
+
+        const user = await client.users.getUser(userId as string)
+
+        if (user.privateMetadata.role !== 'admin') {
+            const url = new URL('/', req.url)
+            return NextResponse.redirect(url)
+        }
     }
-  },
-});
+})
 
 export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
-};
+    matcher: [
+        // Skip Next.js internals and all static files, unless found in search params
+        '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+        // Always run for API routes
+        '/(api|trpc)(.*)',
+    ],
+}
