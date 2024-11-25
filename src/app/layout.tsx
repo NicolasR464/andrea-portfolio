@@ -3,10 +3,9 @@ import { Inter, Tilt_Prism, Tenor_Sans } from 'next/font/google'
 import Script from 'next/script'
 import NavBar from '../components/NavBar'
 import CartDrawer from '../components/CartDrawer'
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 import { ClerkProvider } from '@clerk/nextjs'
 import { Analytics } from '@vercel/analytics/react'
+import { Toaster } from 'react-hot-toast'
 
 const inter = Inter({
     subsets: ['latin'],
@@ -44,14 +43,11 @@ export default async function RootLayout({
                 lang="en"
             >
                 <head></head>
+
                 <body className={inter.className}>
+                    <Toaster />
                     <NavBar />
                     <CartDrawer />
-                    <ToastContainer
-                        position="top-center"
-                        hideProgressBar
-                        theme="colored"
-                    />
                     <div>{children}</div>
                     <Analytics />
                     <Script

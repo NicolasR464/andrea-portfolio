@@ -2,67 +2,71 @@
 @tailwind components;
 @tailwind utilities;
 
-h1,
-h2 {
-  font-family: var(--font-tilt_prism), fallback, sans-serif;
+nextjs-portal {
+    display: none;
 }
 
-input[type="number"] {
-  -webkit-appearance: textfield;
-  -moz-appearance: textfield;
-  appearance: textfield;
+h1,
+h2 {
+    font-family: var(--font-tilt_prism), fallback, sans-serif;
 }
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
+
+input[type='number'] {
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
 }
 
 html {
-  overflow-x: hidden;
-  /* overflow-y: hidden; */
+    overflow-x: hidden;
+    /* overflow-y: hidden; */
 }
 
 ::placeholder {
-  text-align: center;
+    text-align: center;
 }
 
 ::-webkit-input-placeholder {
-  text-align: center;
+    text-align: center;
 }
 
 :-moz-placeholder {
-  /* Firefox 18- */
-  text-align: center;
+    /* Firefox 18- */
+    text-align: center;
 }
 
 ::-moz-placeholder {
-  /* Firefox 19+ */
-  text-align: center;
+    /* Firefox 19+ */
+    text-align: center;
 }
 
 :-ms-input-placeholder {
-  text-align: center;
+    text-align: center;
 }
 
 .scrollable-container::before,
 .scrollable-container::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 3%;
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 3%;
 
-  pointer-events: none;
-  z-index: 2;
-  height: 100vh;
+    pointer-events: none;
+    z-index: 2;
+    height: 100vh;
 }
 
 .scrollable-container::before {
-  left: 0;
-  background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+    left: 0;
+    background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
 }
 
 .scrollable-container::after {
-  right: 0;
-  background: linear-gradient(to left, #fff, rgba(255, 255, 255, 0));
+    right: 0;
+    background: linear-gradient(to left, #fff, rgba(255, 255, 255, 0));
 }
