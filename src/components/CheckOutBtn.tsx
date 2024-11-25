@@ -25,7 +25,7 @@ export default function CheckOutBtn() {
                 isOpen: true,
             })
         }
-    }, [])
+    }, [searchParams])
 
     useEffect(() => {
         setErrPage(pathname === '/error' ? true : false)

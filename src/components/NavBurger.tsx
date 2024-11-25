@@ -53,7 +53,7 @@ export default function NavBurger() {
         : { transform: 'translateY(0px)' }
 
     return (
-        <div>
+        <div className="z-30">
             <span
                 className="m-3 p-5 z-30"
                 onClick={() =>
@@ -65,9 +65,10 @@ export default function NavBurger() {
             </span>
             <div
                 style={blurLayoutAnimation}
-                className="overflow-x-hidden drawer cart-drawer transition-all duration-1000 w-screen  -translate-y-full border-2  h-screen z-20 absolute top-0 right-0 backdrop-blur-lg"
+                className="overflow-x-hidden drawer cart-drawer transition-all duration-1000 w-screen -translate-y-full h-screen z-20 absolute top-0 right-0 backdrop-blur-3xl bg-white/40 backdrop-saturate-150"
             >
-                <div className="w-screen flex justify-center items-center flex-col">
+                <div className="absolute inset-0 backdrop-blur-3xl bg-white/30" />
+                <div className="relative w-screen flex justify-center items-center flex-col">
                     <Link
                         onClick={() =>
                             useBurger.setState((state) => ({
